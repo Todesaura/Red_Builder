@@ -1,7 +1,7 @@
 import {restoreSessionForms} from './session-guide.js?v=guide5';
 import {renderSessionReport} from './ui-session-report.js?v=guide5';
 import { attributeLabel, localizeAttributeText } from './attribute-labels.js';
-import { renderPortraitGallery } from './ui-portraits.js?v=gallery100';
+import { renderPortraitGallery } from './ui-portraits.js?v=portraitpaths1';
 import { renderEquipmentWarnings } from './ui-equipment-warnings.js?v=cemk1';
 import { renderOwnedWeaponOptions } from './ui-weapon-options.js?v=session6';
 import { renderLifepath, renderLifepathSummary } from './ui-lifepath.js?v=session6';

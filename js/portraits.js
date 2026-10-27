@@ -3,7 +3,7 @@ import { PORTRAITS } from './portrait-catalog.js?v=100';
 export async function readGalleryPortrait(id) {
   const entry = PORTRAITS.find(portrait => portrait.id === id);
   if (!entry) throw new Error('Dieses Porträt ist nicht in der Galerie.');
-  const response = await fetch(entry.src);
+  const response = await fetch(new URL('../' + entry.src, import.meta.url));
   if (!response.ok) throw new Error('Das Porträt konnte nicht geladen werden. Bitte erneut versuchen.');
   return readPortrait(await response.blob());
 }

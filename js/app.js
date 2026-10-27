@@ -15,8 +15,8 @@ import { baseStats, bindBodyDrag } from './ui-body.js?v=session6';
 import { initialInstallationLocation } from './cyberware-ui-model.js?v=session6';
 import { buyEquipment, removeEquipment, buyWeaponWithAmmo, saveCustomEquipment, addWeaponAttachment, removeWeaponAttachment } from './economy.js?v=session6';
 import { loadCharacter, saveCharacter, STORAGE_KEY } from './storage.js?v=session6';
-import { render } from './ui.js?v=guide5';
-import { readPortrait, readGalleryPortrait } from './portraits.js?v=gallery100';
+import { render } from './ui.js?v=portraitpaths1';
+import { readPortrait, readGalleryPortrait } from './portraits.js?v=portraitpaths1';
 import { assignSkill, addSpecialty, skillPointsRemaining, markSkillsEdited, resetSkillPoints } from './skills.js?v=session6';
 import { applySkillRecommendation, automaticallyRecommendSkills, isInitialSkillAllocation } from './skill-recommendations.js?v=session6';
 

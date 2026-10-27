@@ -14,7 +14,7 @@ export function renderPortraitGallery(character, rules) {
     return `<h4>${gender === 'M' ? 'Männliche Porträts' : 'Weibliche Porträts'}</h4><div class="portrait-options">${options.map(portrait => {
       const selected = character.portraitSource === portrait.id && !!character.portrait;
       const label = `${role.name} · ${gender === 'M' ? 'männlich' : 'weiblich'} · Bild ${portrait.number}`;
-      return `<button type="button" class="portrait-option ${selected ? 'selected' : ''}" data-portrait="${portrait.id}" aria-label="${escapeHtml(label)}" aria-pressed="${selected}"><img src="${portrait.thumbnail}" width="180" height="220" loading="lazy" alt=""><span>Bild ${portrait.number}${selected ? ' · Ausgewählt' : ''}</span></button>`;
+      return `<button type="button" class="portrait-option ${selected ? 'selected' : ''}" data-portrait="${portrait.id}" aria-label="${escapeHtml(label)}" aria-pressed="${selected}"><img src="${escapeHtml(new URL('../' + portrait.thumbnail, import.meta.url).href)}" width="180" height="220" loading="lazy" alt=""><span>Bild ${portrait.number}${selected ? ' · Ausgewählt' : ''}</span></button>`;
     }).join('')}</div>`;
   }).join('')}</section>`;
 }
