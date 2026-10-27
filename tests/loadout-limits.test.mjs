@@ -47,8 +47,8 @@ test('Anschlagschaft wird als Zweihandwaffe gezählt; Hinzufügen und Entfernen 
  assert.equal(addWeaponAttachment(c,rules,'medium-pistol','pistol-stock').ok,false);assert.deepEqual(c,before);
  const d=completeCharacter();buy(d,'medium-pistol','heavy-pistol');assert.ok(addWeaponAttachment(d,rules,'medium-pistol','pistol-stock').ok);buy(d,'light-melee');
  assert.deepEqual(evaluateLoadout(d,rules).counts,{oneHanded:2,twoHanded:1,grenades:0});const saved=structuredClone(d);
- assert.equal(removeWeaponAttachment(d,rules,'medium-pistol','pistol-stock').ok,false);assert.deepEqual(d,saved);
- removeEquipment(d,'light-melee');assert.ok(removeWeaponAttachment(d,rules,'medium-pistol','pistol-stock').ok);assert.equal(evaluateLoadout(d,rules).counts.twoHanded,0);
+ assert.ok(removeWeaponAttachment(d,rules,'medium-pistol','pistol-stock').ok);assert.deepEqual(evaluateLoadout(d,rules).counts,{oneHanded:3,twoHanded:0,grenades:0});
+ assert.equal(buyEquipment(d,rules,'assault-rifle').ok,false);
 });
 
 test('Zusatzläufe, Netzprogramme und normale Munition verbrauchen keine weiteren Trageplätze',()=>{
@@ -57,7 +57,7 @@ test('Zusatzläufe, Netzprogramme und normale Munition verbrauchen keine weitere
 });
 
 test('Bestehende Überbestände bleiben vollständig ladbar und blockieren den Export bis zur Korrektur',()=>{
- for(const [id,quantity,key] of [['hand-grenade-frag',4,'grenades'],['medium-pistol',3,'oneHanded'],['assault-rifle',2,'twoHanded']]){
+ for(const [id,quantity,key] of [['hand-grenade-frag',4,'grenades'],['medium-pistol',4,'oneHanded'],['assault-rifle',2,'twoHanded']]){
   const original=completeCharacter();original.equipment.items=[{catalogId:id,quantity}];
   const c=validateCharacter(JSON.parse(JSON.stringify(original)),rules);assert.deepEqual(c,original);assert.equal(evaluateLoadout(c,rules).counts[key],quantity);
   assert.equal(characterSheetReadiness(c,rules).ready,false);assert.throws(()=>characterSheetData(c,rules),/höchstens/);

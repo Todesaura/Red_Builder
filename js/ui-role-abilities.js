@@ -1,8 +1,8 @@
-import {roleRank} from './campaign-state.js?v=session6';
+import {roleRank} from './campaign-state.js?v=budget2';
 import { attributeLabel, localizeAttributeText } from './attribute-labels.js';
-import { renderRolePoints, rolePointsSummary } from './ui-role-points.js?v=session6';
+import { renderRolePoints, rolePointsSummary } from './ui-role-points.js?v=budget2';
 import { escapeHtml as e } from './html.js';
-import { ROLE_ABILITIES, STARTING_ROLE_RANK, roleAbilityExamples } from './role-abilities.js?v=session6';
+import { ROLE_ABILITIES, STARTING_ROLE_RANK, roleAbilityExamples } from './role-abilities.js?v=budget2';
 
 export function renderRoleAbilitySummary(character, rules) {
   const ability = ROLE_ABILITIES[character.role];

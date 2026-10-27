@@ -16,7 +16,7 @@ function fresh(){const c=createCharacter(rules);c.name='Test';c.role='solo';retu
 function install(c,id,location,r=rules){const ev=evaluateCharacter(c,r),candidate=cyberwareCandidate(c,r,id,location);return installCyberware(c,r,id,location,candidate.parent,Object.fromEntries(Object.entries(ev.attributes).map(([id,v])=>[id,v.base])));}
 const own=(c,overrides={},id=null)=>saveCustomEquipment(c,rules,{name:'Eigener Koffer',cost:200,quantity:2,notes:'Für meinen Auftrag.',...overrides},id);
 test('Cyberarm schaltet frühere DLC-Optionen frei und prüft Kapazität und Ausbauabhängigkeiten',()=>{
- const c=fresh();assert.equal(install(c,'chainripp','arm-left').ok,false);assert.ok(install(c,'cyberarm','arm-left').ok);assert.ok(install(c,'chainripp','arm-left').ok);
+ const c=fresh();c.campaign.sessionUnlocked=true;assert.equal(install(c,'chainripp','arm-left').ok,false);assert.ok(install(c,'cyberarm','arm-left').ok);assert.ok(install(c,'chainripp','arm-left').ok);
  const before=structuredClone(c);assert.equal(install(c,'cyberpillow','arm-left').ok,false);assert.deepEqual(c,before);
  assert.equal(removeCyberware(c,rules,c.cyberware.items[0].id,{},0).ok,false);
  assert.ok(removeCyberware(c,rules,c.cyberware.items[1].id,{},0).ok);assert.ok(install(c,'cyberpillow','arm-left').ok);

@@ -1,5 +1,5 @@
-import { createCharacter, migrateCharacter, validateCharacter, MAX_PORTRAIT_LENGTH } from './model.js?v=session6';
-import { STORAGE_KEY } from './storage.js?v=session6';
+import { createCharacter, migrateCharacter, validateCharacter, MAX_PORTRAIT_LENGTH } from './model.js?v=budget2';
+import { STORAGE_KEY } from './storage.js?v=budget2';
 const PREFIX = 'red-builder.character.archive.';
 export const ACTIVE_ARCHIVE_KEY = 'red-builder.character.activeArchive';
 
@@ -77,5 +77,5 @@ export function switchCharacter(current,next,rules,storage,options={}) {
 
 export function resetCharacterUi(state, character) {
   state.pendingArchiveDeletion=null;state.sessionSaved=null;state.sessionPage='info';state.sessionTask='';state.sessionFields=null;state.sessionDraft=null;state.sessionCyber=null;state.sessionEditing=null;state.sessionCorrection=null;
-  Object.assign(state,{character,lifepathQuestion:null,error:'',pdfExportMessage:'',skillSearch:'',skillCategory:'all',customSkillFields:[],cyberSearch:'',cyberCategory:'accessories',cyberSort:'foundation',onlyInstallable:false,selectedCyberware:null,pendingLocation:null,inspectedLocation:null,installationOpen:false,equipmentTab:'cyberware',cyberDraft:[],removingCyberware:null,removalFee:'',customEquipmentDraft:{id:null,name:'',cost:'',quantity:'1',notes:''}});
+  Object.assign(state,{character,drugFilters:{},lifepathSection:null,lifepathQuestion:null,error:'',pdfExportMessage:'',skillSearch:'',skillCategory:'all',customSkillFields:[],cyberSearch:'',cyberCategory:'accessories',cyberSort:'foundation',onlyInstallable:false,cyberPlacement:null,selectedCyberware:null,pendingLocation:null,inspectedLocation:null,installationOpen:false,equipmentTab:'cyberware',cyberDraft:[],removingCyberware:null,removalFee:'',customEquipmentDraft:{id:null,name:'',cost:'',quantity:'1',notes:''}});
 }

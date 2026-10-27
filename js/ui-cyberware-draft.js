@@ -1,9 +1,10 @@
-import {humanityRollText} from './campaign-rules.js?v=session6';
-import {previewSession,createSessionDraft} from './session-report.js?v=guide5';
-import {evaluateCharacter} from './rules.js?v=session6';
+import {cyberwareRemovalItems} from './cyberware.js?v=budget2';
+import {humanityRollText} from './campaign-rules.js?v=budget2';
+import {previewSession,createSessionDraft} from './session-report.js?v=budget2';
+import {evaluateCharacter} from './rules.js?v=budget2';
 import { attributeLabel } from './attribute-labels.js';
 import { escapeHtml as e } from './html.js';
-import { evaluateCyberwareDraft } from './cyberware-draft.js?v=session6';
+import { evaluateCyberwareDraft } from './cyberware-draft.js?v=budget2';
 const money = value => `${value.toLocaleString('de-DE')} eb`;
 const place = (rules, id) => rules.cyberwareRules.locations.find(location => location.id === id)?.name ?? id;
 
@@ -37,6 +38,7 @@ export function renderCyberwareDraft(character, rules, state) {
 export function renderRemoval(character, rules, evaluated, state) {
   const item = evaluated.cyberware.entries.find(entry => entry.id === state.removingCyberware);
   if (!item) return '';
+  if(evaluated.cyberware.canUndoPurchases){const removals=cyberwareRemovalItems(character,rules,item.id);return `<section class="removal-panel" id="removal-panel" tabindex="-1"><h3>Kauf rückgängig machen</h3><p>Vor „Session 1 überstanden“ kostenlos: Kaufpreis und Fashion-Zuschuss werden zurückgerechnet, Menschlichkeit und freie Plätze wiederhergestellt.</p><p>Folgende Implantate werden entfernt: <strong>${removals.map(i=>e(rules.cyberwareRules.items.find(d=>d.id===i.catalogId).name)).join(', ')}</strong>.</p><form id="cyberware-removal-form"><button class="primary">Kostenlos entfernen</button><button type="button" class="secondary" data-action="cancel-removal">Abbrechen</button></form></section>`;}
   const dependencies = character.cyberware.items.filter(other => other.parent === item.id || rules.cyberwareRules.items.find(definition => definition.id === other.catalogId)?.requirements?.requires?.includes(item.catalogId) && !character.cyberware.items.some(other => other.id !== item.id && other.catalogId === item.catalogId));
   return `<section class="removal-panel" id="removal-panel" tabindex="-1" aria-label="Cyberware ausbauen"><h3>${e(item.definition.name)} ausbauen</h3><p>Ein Ausbau ist ein eigener Eingriff. Der Kaufpreis wird nicht erstattet. Verlorene Menschlichkeit kommt durch den Ausbau allein nicht zurück; das erreichbare Maximum steigt wieder. Ausgebaute Teile werden hier weder weiterverkauft noch als Ersatzteile verwaltet.</p>${dependencies.length ? `<p class="notice">Baue zuerst die abhängigen Komponenten aus: ${dependencies.map(other => e(rules.cyberwareRules.items.find(entry => entry.id === other.catalogId)?.name)).join(', ')}.</p>` : ''}<form id="cyberware-removal-form"><label for="removal-fee">Vereinbarte Ausbaukosten (eb)</label><input id="removal-fee" name="fee" type="number" min="0" max="1000000" step="1" required value="${e(state.removalFee ?? '')}"><p>Preis mit der Spielleitung vereinbaren. Es wird kein pauschaler Regelbuchpreis angenommen. 0 eb ist etwa bei einer kostenlosen Behandlung möglich.</p><button class="primary" ${dependencies.length || (state.cyberDraft?.length ?? 0) ? 'disabled' : ''}>Ausbau verbindlich bestätigen</button><button class="text-button" type="button" data-action="cancel-removal">Abbrechen</button></form>${state.cyberDraft?.length ? '<p class="notice">Installiere oder leere zuerst deinen offenen Installationsentwurf.</p>' : ''}</section>`;
 }

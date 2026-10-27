@@ -1,5 +1,5 @@
 import { escapeHtml as e } from './html.js';
-import { ROLE_POOLS, PHARMACEUTICALS, evaluateRolePoints } from './role-points.js?v=session6';
+import { ROLE_POOLS, PHARMACEUTICALS, evaluateRolePoints } from './role-points.js?v=budget2';
 
 export function renderRolePoints(character, evaluated) {
   const current = evaluated.roleAbilities ?? evaluateRolePoints(character);

@@ -1,30 +1,31 @@
-import {bindSessionEvents} from './session-events.js?v=guide5';
-import { quickAddCyberware } from './cyberware-quick-add.js?v=session6';
+import {needsCyberwareSide} from './cyberware-placement.js?v=budget2';
+import {bindSessionEvents} from './session-events.js?v=budget2';
+import { quickAddCyberware } from './cyberware-quick-add.js?v=budget2';
 import { emptyCustomEquipmentDraft } from './ui-custom-equipment.js';
-import { characterSheetReadiness } from './pdf-character-data.js?v=session6';
-import { archivedCharacters, readArchivedCharacter, switchCharacter, resetCharacterUi, deleteArchivedCharacter } from './character-library.js?v=guide5';
+import { characterSheetReadiness } from './pdf-character-data.js?v=budget2';
+import { archivedCharacters, readArchivedCharacter, switchCharacter, resetCharacterUi, deleteArchivedCharacter } from './character-library.js?v=budget2';
 import { removeCustomEquipment } from './custom-equipment.js';
-import { chooseLifepath, editLifepath, evaluateLifepath } from './lifepath.js?v=session6';
-import { assignRolePoint, choosePharmaceutical } from './role-points.js?v=session6';
-import { equipArmor } from './armor.js?v=session6';
-import { createCharacter } from './model.js?v=session6';
-import { assignAttribute, applyRecommendation, pointsRemaining, evaluateCharacter } from './rules.js?v=session6';
-import { removeCyberware } from './cyberware.js?v=session6';
-import { addToCyberwareDraft, removeFromCyberwareDraft, commitCyberwareDraft } from './cyberware-draft.js?v=session6';
-import { baseStats, bindBodyDrag } from './ui-body.js?v=session6';
-import { initialInstallationLocation } from './cyberware-ui-model.js?v=session6';
-import { buyEquipment, removeEquipment, buyWeaponWithAmmo, saveCustomEquipment, addWeaponAttachment, removeWeaponAttachment } from './economy.js?v=session6';
-import { loadCharacter, saveCharacter, STORAGE_KEY } from './storage.js?v=session6';
-import { render } from './ui.js?v=portraitpaths1';
-import { readPortrait, readGalleryPortrait } from './portraits.js?v=portraitpaths1';
-import { assignSkill, addSpecialty, skillPointsRemaining, markSkillsEdited, resetSkillPoints } from './skills.js?v=session6';
-import { applySkillRecommendation, automaticallyRecommendSkills, isInitialSkillAllocation } from './skill-recommendations.js?v=session6';
+import { chooseLifepath, editLifepath, editLifepathCost, evaluateLifepath } from './lifepath.js?v=budget2';
+import { assignRolePoint, choosePharmaceutical } from './role-points.js?v=budget2';
+import { equipArmor } from './armor.js?v=budget2';
+import { createCharacter } from './model.js?v=budget2';
+import { assignAttribute, applyRecommendation, pointsRemaining, evaluateCharacter } from './rules.js?v=budget2';
+import { removeCyberware, canUndoCyberwarePurchase, cyberwareRemovalItems } from './cyberware.js?v=budget2';
+import { addToCyberwareDraft, removeFromCyberwareDraft, commitCyberwareDraft } from './cyberware-draft.js?v=budget2';
+import { baseStats, bindBodyDrag } from './ui-body.js?v=budget2';
+import { initialInstallationLocation } from './cyberware-ui-model.js?v=budget2';
+import { buyEquipment, removeEquipment, useStreetDrug, buyWeaponWithAmmo, saveCustomEquipment, addWeaponAttachment, removeWeaponAttachment } from './economy.js?v=budget2';
+import { loadCharacter, saveCharacter, STORAGE_KEY } from './storage.js?v=budget2';
+import { render } from './ui.js?v=budget2';
+import { readPortrait, readGalleryPortrait } from './portraits.js?v=budget2';
+import { assignSkill, addSpecialty, skillPointsRemaining, markSkillsEdited, resetSkillPoints } from './skills.js?v=budget2';
+import { applySkillRecommendation, automaticallyRecommendSkills, isInitialSkillAllocation } from './skill-recommendations.js?v=budget2';
 
 const root = document.getElementById('app');
 
 async function start() {
   let portraitRequest = 0;
-  const responses = await Promise.all(['rules.json', 'skills.json', 'cyberware.json', 'equipment.json'].map(file => fetch(new URL(`../data/${file}?v=session6`, import.meta.url))));
+  const responses = await Promise.all(['rules.json', 'skills.json', 'cyberware.json', 'equipment.json'].map(file => fetch(new URL(`../data/${file}?v=budget2`, import.meta.url))));
   if (responses.some(response => !response.ok)) throw new Error('Die Regelkonfiguration konnte nicht geladen werden.');
   const [rules, skillRules, cyberwareRules, equipmentRules] = await Promise.all(responses.map(response => response.json()));
   rules.skillRules = skillRules;
@@ -67,6 +68,7 @@ async function start() {
   }
   function navigate(view) {
     if (!views.includes(view)) return;
+    if(view==='session'&&!state.character.campaign.sessionUnlocked)view='review';
     if (view !== 'identity' && (!state.character.name.trim() || !state.character.role)) {
       state.view = 'identity';
       state.error = 'Gib zuerst einen Namen ein und wähle deine Rolle.';
@@ -123,9 +125,9 @@ async function start() {
   function insertCyberware(id, location) {
     const result = addToCyberwareDraft(state.character,rules,state.cyberDraft,id,location);
     state.error = result.ok ? '' : result.error;
-    if (result.ok) { state.cyberDraft = result.additions; state.installationOpen = true; state.selectedCyberware = null; state.pendingLocation = null; }
+    if(result.ok){const purchase=commitCyberwareDraft(state.character,rules,result.additions);state.error=purchase.ok?'':purchase.error;if(purchase.ok){state.cyberDraft=[];state.cyberPlacement=null;state.selectedCyberware=null;state.pendingLocation=null;persist();}}
     refresh(); announceBudget();
-    if (result.ok) document.getElementById('announcement').textContent = `${state.cyberDraft.length} Implantate im Entwurf. Noch nicht installiert.`;
+    if (result.ok&&!state.error) document.getElementById('announcement').textContent = 'Cyberware gekauft und eingebaut.';
   }
   function selectCyberware(id,location) {
     const item=rules.cyberwareRules.items.find(item=>item.id===id);
@@ -145,6 +147,7 @@ async function start() {
   root.addEventListener('input', event => {
     if (event.target.id === 'removal-fee') { state.removalFee = event.target.value; return; }
     if (event.target.dataset.customField && ['name','cost','quantity','notes'].includes(event.target.dataset.customField)) { state.customEquipmentDraft[event.target.dataset.customField] = event.target.value; return; }
+    if(event.target.dataset.lifepathCost){if(event.target.validity.badInput)return;const result=editLifepathCost(state.character,event.target.dataset.lifepathCost,event.target.value===''?undefined:Number(event.target.value));state.error=result.ok?'':result.error;if(result.ok)persist();refresh();return;}
     if (event.target.dataset.lifepathText) {
       const result = editLifepath(state.character, event.target.dataset.lifepathText, event.target.value);
       state.error = result.ok ? '' : result.error; persist(); refresh(); return;
@@ -180,6 +183,7 @@ async function start() {
     refresh(); announceBudget();
   });
   root.addEventListener('change', async event => {
+    if(event.target.dataset.drugFilter){state.drugFilters={...state.drugFilters,[event.target.dataset.drugFilter]:event.target.value};refresh();return;}
     if (event.target.dataset.lifepathChoice) {
       const id = event.target.dataset.lifepathChoice;
       const result = chooseLifepath(state.character, id, event.target.value);
@@ -228,7 +232,13 @@ async function start() {
   root.addEventListener('click', async event => {
     const button = event.target.closest('button');
     if (!button) return;
-    if (state.character.campaign?.active && !button.dataset.view && !['generate-character-sheet','new-character','resume-storage','cancel-delete-character','confirm-delete-character'].includes(button.dataset.action) && !button.dataset.openCharacter && !button.dataset.deleteCharacter) return;
+    if(button.dataset.useDrug){
+      const result=useStreetDrug(state.character,rules,button.dataset.useDrug);
+      state.error=result.ok?'':result.error;if(result.ok)persist();refresh();return;
+    }
+    if (state.character.campaign?.active && !button.dataset.view && !['generate-character-sheet','new-character','resume-storage','cancel-delete-character','confirm-delete-character','lifepath-next','unlock-session'].includes(button.dataset.action) && !button.dataset.openCharacter && !button.dataset.deleteCharacter && !button.dataset.lifepathEdit && !button.dataset.lifepathClear && !button.dataset.lifepathSection && !button.dataset.equipmentTab && !button.dataset.warningEquipment) return;
+    if (button.dataset.action==='unlock-session') { state.character.campaign.sessionUnlocked=true;persist();return navigate('session'); }
+    if(button.dataset.hometown){updateSkillName('hometown',button.dataset.hometown);persist();refresh();return;}
     if (button.dataset.view) return navigate(button.dataset.view);
     if (button.dataset.openCharacter) {
       const character=readArchivedCharacter(button.dataset.openCharacter,rules);
@@ -285,7 +295,7 @@ async function start() {
       const snapshot=structuredClone(state.character);
       state.pdfExportBusy=true;state.pdfExportMessage='';state.error='';refresh();
       try {
-        const { downloadCharacterSheet } = await import('./pdf-character.js?v=session6');
+        const { downloadCharacterSheet } = await import('./pdf-character.js?v=budget2');
         const filename=await downloadCharacterSheet(snapshot,rules);
         state.pdfExportMessage=`PDF erstellt: ${filename}. Der Download wurde gestartet.`;
       } catch (error) { state.error=`Charactersheet konnte nicht erstellt werden: ${error.message}`; }
@@ -293,7 +303,8 @@ async function start() {
       return;
     }
     state.error = '';
-    if (button.dataset.lifepathEdit) { state.lifepathQuestion=button.dataset.lifepathEdit; refresh(); document.getElementById('lifepath-step')?.scrollIntoView({block:'start'}); return; }
+    if(button.dataset.lifepathSection){state.lifepathSection=button.dataset.lifepathSection;state.lifepathQuestion=null;refresh();document.getElementById('lifepath-step')?.focus({preventScroll:true});return;}
+    if (button.dataset.lifepathEdit) { state.lifepathSection=null;state.lifepathQuestion=button.dataset.lifepathEdit; refresh(); document.getElementById('lifepath-step')?.scrollIntoView({block:'start'}); return; }
     if (button.dataset.action === 'lifepath-next') { state.lifepathQuestion=null; refresh(); document.getElementById('lifepath-step')?.focus({preventScroll:true}); return; }
     if (button.dataset.warningEquipment) { state.equipmentTab=button.dataset.warningEquipment; navigate('cyberware'); return; }
     if (button.dataset.equipmentTab) { state.equipmentTab = button.dataset.equipmentTab; refresh(); return; }
@@ -301,10 +312,18 @@ async function start() {
       state.cyberCategory=button.dataset.cyberCategory; state.selectedCyberware=null; state.pendingLocation=null; state.installationOpen=false; refresh(); return;
     }
     if (button.dataset.selectCyberware) { if (state.selectedCyberware === button.dataset.selectCyberware) { state.selectedCyberware = null; state.pendingLocation = null; refresh(); } else selectCyberware(button.dataset.selectCyberware); return; }
-    if (button.dataset.queueCyberware) {
-      const result=quickAddCyberware(state.character,rules,state.cyberDraft,button.dataset.queueCyberware);
+    if(button.dataset.action==='cancel-cyber-placement'){state.cyberPlacement=null;refresh();return;}
+    if (button.dataset.queueCyberware||button.dataset.confirmCyberLocation) {
+      const id=button.dataset.queueCyberware??state.cyberPlacement?.id;
+      if(!id)return;
+      if(!button.dataset.confirmCyberLocation&&needsCyberwareSide(rules,id)){state.cyberPlacement={id};refresh();return;}
+      const result=quickAddCyberware(state.character,rules,state.cyberDraft,id,button.dataset.confirmCyberLocation??null);
       state.error=result.ok?'':result.error;
-      if(result.ok){state.cyberDraft=result.additions;state.installationOpen=true;state.selectedCyberware=null;state.pendingLocation=null;}
+      if(result.ok){
+        const purchase=commitCyberwareDraft(state.character,rules,result.additions);
+        state.error=purchase.ok?'':purchase.error;
+        if(purchase.ok){state.cyberDraft=[];state.cyberPlacement=null;state.selectedCyberware=null;state.pendingLocation=null;persist();}
+      }
       refresh();announceBudget();
       return;
     }
@@ -362,6 +381,7 @@ async function start() {
     }
     else if (button.dataset.removeEquipment) removeEquipment(state.character,button.dataset.removeEquipment);
     else if (button.dataset.removeCyberware) {
+      if(canUndoCyberwarePurchase(state.character)&&cyberwareRemovalItems(state.character,rules,button.dataset.removeCyberware).length===1){const result=removeCyberware(state.character,rules,button.dataset.removeCyberware,baseStats(evaluateCharacter(state.character,rules)),0);state.error=result.ok?'':result.error;if(result.ok)persist();refresh();announceBudget();return;}
       state.removingCyberware = button.dataset.removeCyberware; state.removalFee = '';
       refresh(); document.getElementById('removal-panel')?.scrollIntoView({block:'nearest',behavior:'instant'}); document.getElementById('removal-panel')?.focus({preventScroll:true}); return;
     }
@@ -394,6 +414,7 @@ async function start() {
     }
     else if (button.dataset.adjust) {
       const id = button.dataset.stat;
+      if (state.character.method === 'recommendation') { const result = applyRecommendation(state.character, rules); if (!result.ok) { state.error=result.error;refresh();return; } }
       const result = assignAttribute(state.character, rules, id, state.character.allocations.points[id] + Number(button.dataset.adjust));
       if (!result.ok) state.error = result.error;
     } else if (button.dataset.action === 'reset') {

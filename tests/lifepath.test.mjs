@@ -12,9 +12,9 @@ const rules=await json('rules');rules.skillRules=await json('skills');rules.cybe
 const fresh=()=>{const c=createCharacter(rules);c.name='Test';c.role='solo';return c;};
 test('Lebensweg bietet vier unterschiedliche Vorschläge je Frage und wirkt nicht auf Spielwerte',()=>{
  const c=fresh(),before=evaluateCharacter(c,rules);
- assert.equal(LIFEPATH_QUESTIONS.length,14);
+ assert.equal(LIFEPATH_QUESTIONS.length,20);
  for(const question of LIFEPATH_QUESTIONS){assert.equal(question.options.length,4);assert.equal(new Set(question.options).size,4);assert.ok(chooseLifepath(c,question.id,'first').ok);}
- const after=evaluateCharacter(c,rules);assert.equal(after.lifepath.answered,14);
+ const after=evaluateCharacter(c,rules);assert.equal(after.lifepath.answered,20);
  for(const key of ['attributes','skills','funds','roleAbilities','derived'])assert.deepEqual(after[key],before[key]);
 });
 test('Eigene Idee, Vorschläge und Zurücknehmen bewahren den persönlichen Textentwurf',()=>{

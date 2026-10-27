@@ -1,14 +1,14 @@
-import {ATTACHMENTS,attachmentList} from './weapon-attachments.js?v=session6';
-import {createCampaign,roleRank} from './campaign-state.js?v=session6';
-import {validateCharacter} from './model.js?v=session6';
-import {evaluateCharacter} from './rules.js?v=session6';
-import {evaluateFunds,buyEquipment,removeEquipment,saveCustomEquipment,addWeaponAttachment,removeWeaponAttachment} from './economy.js?v=session6';
-import {commitCyberwareDraft} from './cyberware-draft.js?v=session6';
-import {removeCyberware} from './cyberware.js?v=session6';
-import {equipArmor} from './armor.js?v=session6';
-import {rolePool,validateRolePoints,PHARMACEUTICALS} from './role-points.js?v=session6';
-import {improvementCost,THERAPIES,TRANSACTION_TYPES,humanityRollBounds} from './campaign-rules.js?v=session6';
-import {evaluateLifepath} from './lifepath.js?v=session6';
+import {ATTACHMENTS,attachmentList} from './weapon-attachments.js?v=budget2';
+import {createCampaign,roleRank} from './campaign-state.js?v=budget2';
+import {validateCharacter} from './model.js?v=budget2';
+import {evaluateCharacter} from './rules.js?v=budget2';
+import {evaluateFunds,buyEquipment,removeEquipment,saveCustomEquipment,addWeaponAttachment,removeWeaponAttachment} from './economy.js?v=budget2';
+import {commitCyberwareDraft} from './cyberware-draft.js?v=budget2';
+import {removeCyberware} from './cyberware.js?v=budget2';
+import {equipArmor} from './armor.js?v=budget2';
+import {rolePool,validateRolePoints,PHARMACEUTICALS} from './role-points.js?v=budget2';
+import {improvementCost,THERAPIES,TRANSACTION_TYPES,humanityRollBounds} from './campaign-rules.js?v=budget2';
+import {evaluateLifepath} from './lifepath.js?v=budget2';
 
 const number=(n,min=0,max=1000000)=>{if(!Number.isSafeInteger(n)||n<min||n>max)throw Error(`Gib eine ganze Zahl von ${min} bis ${max} ein.`);return n;};
 const string=(s,max=1000)=>{if(typeof s!=='string'||s.length>max)throw Error(`Text darf höchstens ${max} Zeichen enthalten.`);return s.trim();};

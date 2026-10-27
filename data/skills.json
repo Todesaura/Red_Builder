@@ -69,7 +69,8 @@
       "category": "awareness",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Unter Stress fokussiert bleiben und Ablenkungen ausblenden."
     },
     {
       "id": "conceal-reveal",
@@ -78,7 +79,8 @@
       "category": "awareness",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Kleine Gegenstände am Körper verstecken oder versteckte Gegenstände entdecken."
     },
     {
       "id": "lip-reading",
@@ -87,7 +89,8 @@
       "category": "awareness",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Gesprochene Worte an den Lippen erkennen, wenn du nichts hören kannst."
     },
     {
       "id": "perception",
@@ -96,7 +99,8 @@
       "category": "awareness",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Gefahren, auffällige Details und verborgene Hinweise bemerken."
     },
     {
       "id": "tracking",
@@ -105,7 +109,8 @@
       "category": "awareness",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Spuren lesen und Bewegungen von Personen oder Tieren verfolgen."
     },
     {
       "id": "athletics",
@@ -114,7 +119,8 @@
       "category": "body",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Klettern, Springen, Schwimmen und Gegenstände oder Handgranaten werfen."
     },
     {
       "id": "contortionist",
@@ -123,7 +129,8 @@
       "category": "body",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Dich durch enge Öffnungen zwängen oder aus Fesseln winden."
     },
     {
       "id": "dance",
@@ -132,7 +139,8 @@
       "category": "body",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Tanzen und choreografierte Bewegungen aufführen."
     },
     {
       "id": "endurance",
@@ -141,7 +149,8 @@
       "category": "body",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Lange Anstrengung, Schlafmangel oder schwierige Umweltbedingungen aushalten."
     },
     {
       "id": "resist-torture-drugs",
@@ -150,7 +159,8 @@
       "category": "body",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Folter und den Wirkungen von Drogen oder Giften widerstehen."
     },
     {
       "id": "stealth",
@@ -159,7 +169,8 @@
       "category": "body",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Unbemerkt bewegen, verbergen und an Beobachtern vorbeischleichen."
     },
     {
       "id": "drive-land",
@@ -168,7 +179,8 @@
       "category": "control",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Autos, Motorräder und andere Bodenfahrzeuge in schwierigen Situationen fahren."
     },
     {
       "id": "pilot-air",
@@ -177,7 +189,8 @@
       "category": "control",
       "cost": 2,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Flugzeuge und andere Luftfahrzeuge sicher steuern."
     },
     {
       "id": "pilot-sea",
@@ -186,7 +199,8 @@
       "category": "control",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Boote und Schiffe sicher steuern."
     },
     {
       "id": "riding",
@@ -195,7 +209,8 @@
       "category": "control",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Reittiere führen und in schwierigen Situationen beherrschen."
     },
     {
       "id": "accounting",
@@ -204,7 +219,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Bücher prüfen, Geldflüsse verfolgen und Unregelmäßigkeiten finden."
     },
     {
       "id": "animal-handling",
@@ -213,7 +229,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Tiere beruhigen, trainieren und ihr Verhalten verstehen."
     },
     {
       "id": "bureaucracy",
@@ -222,7 +239,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Behördenwege, Formulare und die richtige zuständige Stelle finden."
     },
     {
       "id": "business",
@@ -231,7 +249,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Geschäfte einschätzen und kaufmännische Entscheidungen verstehen."
     },
     {
       "id": "composition",
@@ -240,7 +259,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Texte, Lieder und andere eigene Werke verfassen."
     },
     {
       "id": "criminology",
@@ -249,7 +269,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Tatorte und kriminelle Methoden fachlich untersuchen."
     },
     {
       "id": "cryptography",
@@ -258,7 +279,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Verschlüsselungen analysieren und Codes entschlüsseln."
     },
     {
       "id": "deduction",
@@ -267,7 +289,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Einzelne Hinweise zu einer schlüssigen Erklärung verbinden."
     },
     {
       "id": "education",
@@ -276,7 +299,8 @@
       "category": "education",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Allgemeinwissen und schulische Kenntnisse abrufen."
     },
     {
       "id": "gamble",
@@ -285,7 +309,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Glücksspiele einschätzen und mit Können statt nur Zufall spielen."
     },
     {
       "id": "streetslang",
@@ -294,7 +319,8 @@
       "category": "education",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Den gemeinsamen Straßenslang Night Citys sprechen und verstehen."
     },
     {
       "id": "language",
@@ -303,7 +329,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": true
+      "specialized": true,
+      "use": "In der gewählten Sprache sprechen, verstehen und lesen."
     },
     {
       "id": "library-search",
@@ -312,7 +339,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "In Datenbanken, Archiven und Bibliotheken gezielt Informationen finden."
     },
     {
       "id": "local-home",
@@ -321,7 +349,8 @@
       "category": "education",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Straßen, Treffpunkte und Besonderheiten deiner Heimat kennen."
     },
     {
       "id": "local-expert",
@@ -330,7 +359,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": true
+      "specialized": true,
+      "use": "Im gewählten Gebiet Wege, Bewohner und örtliche Besonderheiten kennen."
     },
     {
       "id": "science",
@@ -339,7 +369,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": true
+      "specialized": true,
+      "use": "Fachwissen deiner gewählten Wissenschaft anwenden."
     },
     {
       "id": "tactics",
@@ -348,7 +379,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Gefechtslagen einschätzen und taktische Pläne entwickeln."
     },
     {
       "id": "wilderness-survival",
@@ -357,7 +389,8 @@
       "category": "education",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Draußen Nahrung, Wasser, Schutz und einen sicheren Weg finden."
     },
     {
       "id": "brawling",
@@ -366,7 +399,8 @@
       "category": "fighting",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Unbewaffnet schlagen, greifen, würgen und werfen."
     },
     {
       "id": "evasion",
@@ -375,7 +409,8 @@
       "category": "fighting",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Nahkampfangriffen ausweichen; bei REF 8+ auch geeigneten Fernkampfangriffen."
     },
     {
       "id": "martial-arts",
@@ -390,7 +425,8 @@
         "Judo",
         "Karate",
         "Taekwondo"
-      ]
+      ],
+      "use": "Mit deiner gewählten Kampfkunst angreifen und ihre Spezialmanöver einsetzen."
     },
     {
       "id": "melee-weapon",
@@ -399,7 +435,8 @@
       "category": "fighting",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Mit Messern, Schwertern, Schlägern und anderen Nahkampfwaffen angreifen."
     },
     {
       "id": "acting",
@@ -408,7 +445,8 @@
       "category": "performance",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Rollen glaubhaft spielen, Gefühle vortäuschen und dich als jemand anderes ausgeben."
     },
     {
       "id": "play-instrument",
@@ -417,7 +455,8 @@
       "category": "performance",
       "cost": 1,
       "min": 0,
-      "specialized": true
+      "specialized": true,
+      "use": "Dein gewähltes Instrument spielen und vor Publikum auftreten."
     },
     {
       "id": "archery",
@@ -426,7 +465,8 @@
       "category": "ranged",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Mit Bögen und Armbrüsten gezielt schießen."
     },
     {
       "id": "autofire",
@@ -435,7 +475,8 @@
       "category": "ranged",
       "cost": 2,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Dauerfeuer und Unterdrückungsfeuer mit geeigneten Schusswaffen einsetzen."
     },
     {
       "id": "handgun",
@@ -444,7 +485,8 @@
       "category": "ranged",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Pistolen und Revolver für normale oder gezielte Schüsse einsetzen."
     },
     {
       "id": "heavy-weapons",
@@ -453,7 +495,8 @@
       "category": "ranged",
       "cost": 2,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Granatwerfer, Raketenwerfer und andere schwere Waffen einsetzen."
     },
     {
       "id": "shoulder-arms",
@@ -462,7 +505,8 @@
       "category": "ranged",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Gewehre, Schrotflinten und Scharfschützengewehre abfeuern."
     },
     {
       "id": "bribery",
@@ -471,7 +515,8 @@
       "category": "social",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Die richtige Bestechung anbieten und einschätzen, wer käuflich ist."
     },
     {
       "id": "conversation",
@@ -480,7 +525,8 @@
       "category": "social",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Im lockeren Gespräch Informationen gewinnen, ohne offen zu verhören."
     },
     {
       "id": "human-perception",
@@ -489,7 +535,8 @@
       "category": "social",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Stimmung, Absichten und mögliche Täuschung deines Gegenübers einschätzen."
     },
     {
       "id": "interrogation",
@@ -498,7 +545,8 @@
       "category": "social",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Mit gezielten Fragen Informationen aus jemandem herausbekommen."
     },
     {
       "id": "persuasion",
@@ -507,7 +555,8 @@
       "category": "social",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Andere durch Argumente, Auftreten und Überzeugung zum Handeln bewegen."
     },
     {
       "id": "personal-grooming",
@@ -516,7 +565,8 @@
       "category": "social",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Dein Äußeres pflegen, Make-up einsetzen und einen gewünschten Eindruck erzeugen."
     },
     {
       "id": "streetwise",
@@ -525,7 +575,8 @@
       "category": "social",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Kontakte und Angebote der Straße finden und kriminelle Milieus einschätzen."
     },
     {
       "id": "trading",
@@ -534,7 +585,8 @@
       "category": "social",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Preise verhandeln, Waren bewerten und gute Abschlüsse erzielen."
     },
     {
       "id": "wardrobe-style",
@@ -543,7 +595,8 @@
       "category": "social",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Kleidung passend kombinieren und in einer Szene oder Gesellschaftsschicht auftreten."
     },
     {
       "id": "air-vehicle-tech",
@@ -552,7 +605,8 @@
       "category": "technique",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Luftfahrzeuge warten, reparieren und technische Fehler finden."
     },
     {
       "id": "basic-tech",
@@ -561,7 +615,8 @@
       "category": "technique",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Alltagsgeräte und grundlegende mechanische Technik reparieren."
     },
     {
       "id": "cybertech",
@@ -570,7 +625,8 @@
       "category": "technique",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Cyberware untersuchen, warten und reparieren. Das ersetzt keine chirurgische Installation."
     },
     {
       "id": "demolitions",
@@ -579,7 +635,8 @@
       "category": "technique",
       "cost": 2,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Sprengstoff sicher einsetzen, Sprengladungen bauen oder entschärfen."
     },
     {
       "id": "electronics-security",
@@ -588,7 +645,8 @@
       "category": "technique",
       "cost": 2,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Elektronik und Sicherheitssysteme verstehen, reparieren und überwinden."
     },
     {
       "id": "first-aid",
@@ -597,7 +655,8 @@
       "category": "technique",
       "cost": 1,
       "min": 2,
-      "specialized": false
+      "specialized": false,
+      "use": "Verletzte stabilisieren und einfache Verletzungen versorgen."
     },
     {
       "id": "forgery",
@@ -606,7 +665,8 @@
       "category": "technique",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Dokumente und Unterschriften fälschen oder Fälschungen erkennen."
     },
     {
       "id": "land-vehicle-tech",
@@ -615,7 +675,8 @@
       "category": "technique",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Bodenfahrzeuge warten, reparieren und technische Fehler finden."
     },
     {
       "id": "paint-draw-sculpt",
@@ -624,7 +685,8 @@
       "category": "technique",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Zeichnungen, Gemälde oder Skulpturen gestalten."
     },
     {
       "id": "paramedic",
@@ -633,7 +695,8 @@
       "category": "technique",
       "cost": 2,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Schwere Verletzungen fachgerecht behandeln und erweiterte Notfallhilfe leisten."
     },
     {
       "id": "photography-film",
@@ -642,7 +705,8 @@
       "category": "technique",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Bilder und Filme aufnehmen, bearbeiten und Szenen wirkungsvoll darstellen."
     },
     {
       "id": "pick-lock",
@@ -651,7 +715,8 @@
       "category": "technique",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Mechanische Schlösser ohne passenden Schlüssel öffnen."
     },
     {
       "id": "pick-pocket",
@@ -660,7 +725,8 @@
       "category": "technique",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Gegenstände unbemerkt aus Taschen oder direkt von Personen entwenden."
     },
     {
       "id": "sea-vehicle-tech",
@@ -669,7 +735,8 @@
       "category": "technique",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Wasserfahrzeuge warten, reparieren und technische Fehler finden."
     },
     {
       "id": "weaponstech",
@@ -678,7 +745,8 @@
       "category": "technique",
       "cost": 1,
       "min": 0,
-      "specialized": false
+      "specialized": false,
+      "use": "Waffen warten, reparieren und ihre Technik beurteilen."
     }
   ],
   "recommendations": {
@@ -1407,28 +1475,14 @@
     }
   },
   "languages": [
-    "Deutsch",
     "Englisch",
     "Spanisch",
-    "Japanisch",
     "Mandarin",
-    "Kantonesisch",
+    "Japanisch",
     "Koreanisch",
     "Russisch",
-    "Italienisch",
-    "Französisch",
-    "Portugiesisch",
-    "Polnisch",
-    "Ukrainisch",
-    "Arabisch",
-    "Farsi",
-    "Türkisch",
-    "Hindi",
-    "Urdu",
-    "Swahili",
-    "Amharisch",
-    "Filipino",
-    "Vietnamesisch"
+    "Deutsch",
+    "Arabisch"
   ],
   "locations": [
     "Little Europe",

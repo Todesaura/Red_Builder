@@ -94,7 +94,7 @@ Pro Origin/Port besteht eigener Browserspeicher. Er ist kein portables Backup. M
 node --test tests/*.test.mjs
 ```
 
-314 Tests prüfen Regeln, Grenzen, Abhängigkeiten, Migrationen, Speicherschutz, Waffenoptionen und gemeinsames Budget. Browserprüfungen stehen in `tests/VERIFICATION.md`.
+Die Tests prüfen Regeln, Grenzen, Abhängigkeiten, Migrationen, Speicherschutz, Waffenoptionen und gemeinsames Budget. Browserprüfungen stehen in `tests/VERIFICATION.md`.
 
 Relative Modul-/Datenpfade und `.nojekyll` unterstützen GitHub Pages ohne Build-Prozess. Dateien in ein Repository laden, unter Settings → Pages den Branch und `/(root)` wählen. Noch nicht veröffentlicht. Repository-Unterpfad lokal prüfen:
 
@@ -295,3 +295,49 @@ TP, Stabilisierung, Ruhe und kritische Verletzungen werden getrennt geführt. Ke
 Kontakte, Feinde, Ereignisse und Ziele liegen einmal in den Kampagnennotizen und werden im bestehenden Lebensweg abgeleitet ergänzt. Abgeschlossene Reports enthalten Datum/Nummer, Ausgangs- und Endwerte, kontrollierte Feldänderungen und Protokoll. Öffnen bucht nichts. Der letzte unveränderte Report kann mit Begründung durch einen neuen Korrekturbericht zurückgebucht werden; der Originalbericht bleibt erhalten. Pro Report und für den gesamten Charakter gibt es JSON-Export. Der bestehende vierseitige PDF-Export enthält die aktuellen Werte, IP/Ruf, Verletzungshinweise, Munition und den dynamischen Rollenrang.
 
 Format 11 ergänzt Kampagnendaten; Format 10 und ältere Versionen werden mit bestehenden Backups übernommen. Alles bleibt lokal im Browser, ohne Serverkonto oder Speicherung in GitHub. Historien sind zum Schutz des Browsers begrenzt (200 Reports und 1,5 MB); bei Überschreitung oder Speicherknappheit gibt es einen Fehler statt stillen Datenverlusts. Wichtige Charaktere und Reports als JSON sichern.
+
+
+### Alltag, Kleidung und vereinfachte Erstellung
+
+Empfehlungen haben direkte Minus-/Plus-Schalter. Die erste Änderung übernimmt die empfohlenen Werte als eigene Punkteverteilung. Sprache und Heimat stehen als Pflichtblock vor dem Fertigkeitsbudget. Acht gängige Sprachen plus eigene Namen, eine schematische Night-City-Karte mit Hervorhebung bei Mauszeiger und Tastaturfokus sowie kurze Verwendungsbeschreibungen erleichtern die Auswahl.
+
+Unter Normale Kleidung stehen 49 Teile in sieben Stilgruppen. Kleidung und Mode-Cyberware teilen den Fashion-Zuschuss; Überschüsse belasten das Hauptbudget. Kleidung schützt nicht als Rüstung. Die normalen Cyberware-Käufe werden mit einem Klick gekauft und eingebaut, einschließlich angezeigter benötigter Basisimplantate. Die Körperansicht bleibt optional. Medizinischer Ausbau und Kampagnen-Einbau mit gewürfeltem Menschlichkeitsverlust bleiben getrennte Vorgänge. Netrunner-Ausstattung wird für andere Rollen ausgeblendet. Ohne Zweihandwaffe sind drei Einhandwaffen erlaubt, sonst zwei plus eine Zweihandwaffe; maximal drei Granaten bleiben bestehen.
+
+Die Fragen zum aktuellen Leben erfassen Sicherheit, Wohnen, Alltag im Viertel, Lebensstil und persönliche Verpflichtungen. Je Frage stehen mehrere Vorschläge sowie eine eigene Idee mit Monatsbetrag zur Wahl. Miete und Lebensstil werden zur monatlichen Gesamtsumme addiert, nicht automatisch vom Startkapital abgebucht. Alte Charaktere erhalten offene Zusatzfragen; bestehende Antworten bleiben erhalten. Auch Kampagnencharaktere können den erzählerischen Lebensweg ergänzen. Das PDF übernimmt Kleidung und Mode-Cyberware in Mode, außerdem Unterkunft, Miete und Lebensstil in die vorgesehenen Felder.
+
+Schritt 8 bleibt verborgen, bis unter Überprüfung auf Session 1 überstanden geklickt wird. Diese Freischaltung wird pro Charakter gespeichert und bucht noch keinen Report. Preisreferenz: RTG Night Market Index v1.24, Kleidung S. 31–34 und Lebensstil/Unterkunft S. 44 (Grundregelwerk S. 356, 377–379). Kartenorientierung: RTG Night City Atlas; eigene schematische Darstellung ohne maßstabsgetreue Grenzen.
+
+
+### Cyberware: Seitenwahl und kostenlose Korrektur vor der ersten Session
+
+Der Biomonitor ist auf ein Exemplar begrenzt. Zusätzliche Käufe und Installationsentwürfe werden abgewiesen. Vorhandene Mehrfacheinbauten bleiben beim Laden erhalten und werden zur manuellen Korrektur markiert, ohne die Effekte anderer Implantate zu deaktivieren. Andere bewusst mehrfach installierbare Fashionware bleibt unverändert.
+
+Vor „Session 1 überstanden“ können Cyberware-Käufe kostenlos rückgängig gemacht werden: Hauptbudget/Fashion-Zuschuss, Menschlichkeit und Kapazitäten werden zurückgerechnet; es entsteht kein Ausbauhistorieneintrag. Einzelne Optionen werden direkt entfernt, Basisimplantate mit abhängigen Optionen erst nach einer gemeinsamen Auflistung und Bestätigung. Nach Freischaltung oder vorhandenem Kampagnenfortschritt gelten weiterhin die medizinischen Ausbauvorgänge ohne Kaufpreiserstattung.
+
+Augen, Arme und Beine öffnen beim Kauf eine Seitenwahl. Links und rechts zeigen bestehende Implantate, freie Plätze, erforderliche Basisimplantate und den jeweiligen Gesamtpreis. Die ausdrücklich gewählte Seite wird strikt eingehalten. Abbrechen kauft nichts. Das Menü wird auch beim Session-Einbau verwendet, dort bleibt der Einbau zunächst ein Entwurf mit gewürfeltem Menschlichkeitsverlust.
+
+
+### Erweiterte Garderobe
+
+Alle sieben Kleidungsstile haben jetzt jeweils 14 Teile (98 insgesamt). 49 zusätzliche eigene Rollenspiel-Varianten beschreiben Materialien, Schnitte, Farben, persönliche Erinnerungen und Details ohne neue Spielboni. Ihre Preise orientieren sich am Stil; die Oberfläche unterscheidet diese Preisorientierung von offiziellen Grundpreisen einmal gemeinsam. Vorhandene Grundteile haben ergänzende Beschreibungen. IDs und Preise bisheriger Käufe bleiben erhalten.
+
+Jedes Katalog-Kleidungsstück lässt sich nur einmal besitzen/kaufen. Die Schaltfläche zeigt bei vorhandenen Teilen Bereits im Kleiderschrank und ist gesperrt; dieselbe Sperre gilt in buyEquipment und damit auch bei Session-Käufen/Beute. Entfernen gibt den Kauf wieder frei. Alte Mehrfachkäufe werden nicht automatisch gelöscht; Einzelexemplare lassen sich wie bisher entfernen. Der gemeinsame Fashion-Zuschuss und die PDF-Übernahme bleiben bestehen.
+
+
+### Lebensweg: Flair und aktuelles Monatsbudget
+
+Der Lebensweg trennt 14 reine Hintergrund-/Persönlichkeitsfragen und sieben Fragen zum aktuellen Leben: Sicherheit, Wohnen, Alltag im Viertel, Lebensstil, finanzielle Verantwortung, alte Verpflichtungen/Einnahmen und persönliche Ausgaben. Die vom Projektinhaber vorgegebenen Antworten und Monatsbeträge sind übernommen; je Frage gibt es vier bis neun Vorschläge plus eigene Idee. Die sequentielle Frageführung und Zusammenfassung bleiben bestehen. Sprache und Heimat werden weiterhin ausschließlich bei den Fertigkeiten erfasst.
+
+Nullkosten sind ausdrücklich möglich. Regelmäßige Einnahmen reduzieren die monatlichen Gesamtkosten; Ausgaben und Einnahmen werden getrennt ausgewiesen. Lebensstil umfasst den gesamten Alltag, nicht nur Essen. Alle ersten Vorschläge ergeben zusammen 100 eb Monatskosten. Das ist eine Budgetübersicht, keine automatische Abbuchung vom Startkapital oder Charakterkonto. Die eigenen Monatsbeträge bleiben anpassbar; bestehende Möglichkeiten für eigene negative Beträge bleiben erhalten.
+
+Gespeicherte ältere Budgetantworten werden anhand ihrer bisherigen Fragen/Optionen gelesen und mit dem ursprünglichen Text und Betrag als eigene Antworten erhalten. Die frühere Viertel-Frage wird unter „Alltag im Viertel“ übernommen; die Sicherheitsfrage ist neu und zunächst offen. Eine kleine Versionskennung pro Budgetantwort verhindert erneutes Umdeuten beim nächsten Laden. Neue Auswahlpositionen bis zur neunten Antwort werden pro Frage validiert; Flair-Fragen behalten vier Vorschläge.
+
+Das PDF nennt Netto-Monatsbelastung und einzelne zusätzliche Verpflichtungen/Einnahmen. Bei vielen Kleidungsstücken bleibt Mode mit einer kompakten Stilübersicht lesbar, die vollständigen Einträge stehen weiter im Inventar und in den bearbeitbaren Formularwerten.
+
+### Straßendrogen: Kauf und Vorrat
+
+Ausstattung → Straßendrogen enthält die 18 gewünschten offiziellen RED-Drogen, alphabetisch mit Preis-/Quellen-/Wirkungsfilter. Aufklappbare Karten erklären Primärwirkung, Sekundärwirkung, Dauer, Widerstands-SG, Abhängigkeit und Regelquelle. Die Preise sind mit dem offiziellen RTG Night Market Index v1.24 abgeglichen; Gewichte werden nicht erfunden. Airhypo (50 eb, Grundregelwerk S. 352) ist als normale Ausrüstung zusätzlich kaufbar, auch direkt vom Drogenmenü aus.
+
+Die Spielleitung verwaltet Wirkungen, Dauer, Widerstandsproben und Sucht. Es gibt keine automatische Drogen-Engine oder Änderungen an Attributen/Fertigkeiten. „1 Dosis verwendet“ streicht lediglich eine Inventareinheit, für Eigengebrauch oder Verabreichen an Gegner; der Kaufpreis bleibt ausgegeben. „Kauf rückgängig“ korrigiert wie bisher nur noch vorhandene Startkäufe. Käufe und Restmengen nutzen die bestehende Speicherung und PDF-Inventarliste. Nachkäufe beim Kampagnencharakter erfolgen wie andere Ausrüstung im Session-Bericht.
+
+Regelquellen: Cyberpunk RED Grundregelwerk S. 227–229/357–358; Hornet’s Pharmacy v1.11 S. 2–3; Black Chrome+ v1.21; Jumpstart Kit Conversion Guide v1.1 S. 4; Interface RED Vol. 5 v1.1 S. 127–129, Red Lace und Mortalis zusätzlich im offiziellen DLC Seeing Double S. 7–8. Links stehen direkt an den Karten. Gegen unwillige Ziele beschreibt das Menü den Airhypo-Nahkampfangriff laut Grundregelwerk S. 227; keine automatische Gegner- oder Kampfverwaltung.

@@ -13,7 +13,17 @@ test('Galerie enthält sämtliche benannten Originale, eindeutige IDs und erreic
   assert.equal(new Set(PORTRAITS.map(entry=>entry.id)).size,files.length);
   for (const entry of PORTRAITS) {
     assert.ok(rules.roles.some(role=>role.id===entry.role));
-    await access(new URL('../'+entry.thumbnail,import.meta.url));
+    for (const reference of [entry.src, entry.thumbnail]) {
+      // Windows tolerates casing differences; GitHub Pages does not.
+      let directory = new URL('../', import.meta.url);
+      for (const segment of reference.split('/')) {
+        assert.ok((await readdir(directory)).includes(segment), `Fehlender oder falsch geschriebener Bildpfad: ${reference}`);
+        directory = new URL(segment + '/', directory);
+      }
+      await access(new URL('../' + reference, import.meta.url));
+      const pagesUrl = new URL('../' + reference, 'https://todesaura.github.io/Red_Builder/js/portraits.js');
+      assert.equal(pagesUrl.pathname, '/Red_Builder/' + reference);
+    }
   }
 });
 

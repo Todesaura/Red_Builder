@@ -1,25 +1,44 @@
 import { escapeHtml as e } from './html.js';
 import { LIFEPATH_GROUPS, LIFEPATH_QUESTIONS } from './lifepath-data.js';
-import { evaluateLifepath, MAX_LIFEPATH_TEXT, LIFEPATH_CHOICES } from './lifepath.js?v=session6';
+import { evaluateLifepath, livingCosts, MAX_LIFEPATH_TEXT, LIFEPATH_CHOICES } from './lifepath.js?v=budget2';
+
+const sections=[['flair','Hintergrund & Persönlichkeit','Deine Geschichte, Beziehungen und dein Stil. Diese Antworten verändern weder Geld noch Spielwerte.'],['daily','Aktuelles Leben & Monatsbudget','Wo du heute lebst, wen du unterstützt und wofür du Geld ausgibst oder regelmäßig welches bekommst.']];
+const inSection=(q,section)=>(q.group==='daily'?'daily':'flair')===section;
+const eb=value=>value===null?'noch offen':value.toLocaleString('de-DE')+' eb';
 
 export function renderLifepathSummary(character, editable = false) {
-  const life = evaluateLifepath(character);
-  return `<section class="review-lifepath"><h3>Dein Lebensweg</h3><p>${life.answered} von ${life.total} Fragen beantwortet.</p>${life.answered ? `<dl class="lifepath-summary">${life.entries.filter(entry => entry.answer).map(entry => `<div><dt>${e(entry.title)}</dt><dd>${e(entry.answer)}${editable ? `<button class="text-button" data-lifepath-edit="${entry.id}">Antwort ändern</button>` : ''}</dd></div>`).join('')}</dl>` : '<p>Deine Hintergrundgeschichte ist noch offen.</p>'}${editable ? '' : '<button class="text-button" data-view="lifepath">Lebensweg bearbeiten →</button>'}</section>`;
+ const life=evaluateLifepath(character);
+ return `<section class="review-lifepath"><h3>Dein Lebensweg</h3><p>${life.answered} von ${life.total} Fragen vollständig beantwortet.</p>${sections.map(([id,title])=>{
+  const entries=life.entries.filter(q=>inSection(q,id)&&q.answer);
+  return `<section class="lifepath-summary-section"><h4>${e(title)}</h4>${entries.length?`<dl class="lifepath-summary">${entries.map(entry=>`<div><dt>${e(entry.title)}</dt><dd>${e(entry.answer)}${editable?`<button class="text-button" data-lifepath-edit="${entry.id}">Antwort ändern</button>`:''}</dd></div>`).join('')}</dl>`:'<p>Noch offen.</p>'}</section>`;
+ }).join('')}${editable?'':renderLivingCosts(character)}${editable?'':'<button class="text-button" data-view="lifepath">Lebensweg bearbeiten →</button>'}</section>`;
 }
 
-export function activeLifepathQuestion(character, state = {}) {
-  return LIFEPATH_QUESTIONS.find(q=>q.id===state.lifepathQuestion) ?? evaluateLifepath(character).entries.find(q=>!q.answer) ?? null;
+export function activeLifepathQuestion(character,state={}){
+ const selected=LIFEPATH_QUESTIONS.find(q=>q.id===state.lifepathQuestion);
+ if(selected)return selected;
+ return evaluateLifepath(character).entries.find(q=>!q.complete&&(!state.lifepathSection||inSection(q,state.lifepathSection)))??null;
 }
-export function renderLifepath(character, state = {}) {
-  const life = evaluateLifepath(character), question=activeLifepathQuestion(character,state);
-  let card='';
-  if(question){
-    const entry=character.lifepath[question.id], index=LIFEPATH_QUESTIONS.findIndex(q=>q.id===question.id);
-    const answer=life.entries.find(q=>q.id===question.id)?.answer;
-    card=`<section class="panel lifepath-step" id="lifepath-step" tabindex="-1" aria-label="Aktuelle Lebensweg-Frage"><p class="eyebrow">Frage ${index+1} von ${life.total} · ${e(LIFEPATH_GROUPS.find(([id])=>id===question.group)[1])}</p><fieldset class="lifepath-card" id="life-card-${question.id}"><legend>${e(question.title)}</legend>${[...question.options,'Eigene Idee'].map((text,i)=>{
-      const choice=[...LIFEPATH_CHOICES,'custom'][i];
-      return `<label class="lifepath-option"><input id="life-choice-${question.id}-${choice}" type="radio" name="life-${question.id}" data-lifepath-choice="${question.id}" value="${choice}" ${entry.choice===choice?'checked':''}><span>${e(text)}</span></label>`;
-    }).join('')}${entry.choice==='custom'?`<label class="field-label" for="life-text-${question.id}">Deine Idee</label><textarea id="life-text-${question.id}" data-lifepath-text="${question.id}" rows="4" maxlength="${MAX_LIFEPATH_TEXT}" aria-describedby="life-count-${question.id}">${e(entry.custom)}</textarea><small id="life-count-${question.id}">${entry.custom.length} / ${MAX_LIFEPATH_TEXT} Zeichen</small><button class="primary" data-action="lifepath-next" ${!answer?'disabled':''}>Antwort übernehmen →</button>`:''}</fieldset><div class="lifepath-step-actions">${index?`<button class="text-button" data-lifepath-edit="${LIFEPATH_QUESTIONS[index-1].id}">← Vorherige Frage</button>`:''}${entry.choice!==null?`<button class="text-button" data-lifepath-clear="${question.id}">Auswahl zurücknehmen</button>`:''}</div></section>`;
-  }
-  return `<section class="panel lifepath-intro"><div class="section-heading"><span class="section-index">05</span><div><h2>Wer steckt hinter deinem Namen?</h2><p>Vier unterschiedliche Antworten oder deine eigene Idee. Nach deiner Auswahl geht es mit der nächsten Frage weiter.</p></div></div><p class="lifepath-progress" role="status">${life.answered} von ${life.total} Fragen beantwortet</p></section>${card||'<section class="panel lifepath-complete"><h2>Dein Lebensweg ist vollständig.</h2><p>Unten kannst du jede Antwort wieder ändern.</p></section>'}<section class="panel lifepath-preview"><h2>Deine Geschichte bisher</h2>${renderLifepathSummary(character,true)}</section><div class="bottom-bar"><button class="secondary" data-view="role-abilities">← Zurück zu den Rollenfähigkeiten</button><button class="primary" data-view="cyberware">Weiter zur Ausstattung →</button></div>`;
+
+export function renderLifepath(character,state={}){
+ const life=evaluateLifepath(character),question=activeLifepathQuestion(character,state);
+ const section=question?(question.group==='daily'?'daily':'flair'):(state.lifepathSection??'daily');
+ const current=sections.find(([id])=>id===section);
+ const groupQuestions=LIFEPATH_QUESTIONS.filter(q=>inSection(q,section));
+ let card='';
+ if(question){
+  const entry=character.lifepath[question.id]??{choice:null,custom:''};
+  const index=groupQuestions.findIndex(q=>q.id===question.id);
+  const evaluated=life.entries.find(q=>q.id===question.id);
+  card=`<section class="panel lifepath-step" id="lifepath-step" tabindex="-1" aria-label="Aktuelle Lebensweg-Frage"><p class="eyebrow">${section==='daily'?'Aktuelles Leben':'Flair'} · Frage ${index+1} von ${groupQuestions.length} · ${e(LIFEPATH_GROUPS.find(([id])=>id===question.group)[1])}</p><fieldset class="lifepath-card" id="life-card-${question.id}"><legend>${e(question.title)}</legend>${question.note?`<p class="inline-note">${e(question.note)}</p>`:''}${[...question.options,'Eigene Idee'].map((text,i)=>{
+   const choice=i===question.options.length?'custom':LIFEPATH_CHOICES[i];
+   return `<label class="lifepath-option"><input id="life-choice-${question.id}-${choice}" type="radio" name="life-${question.id}" data-lifepath-choice="${question.id}" value="${choice}" ${entry.choice===choice?'checked':''}><span>${e(text)}</span></label>`;
+  }).join('')}${entry.choice==='custom'?`<label class="field-label" for="life-text-${question.id}">Deine Idee</label><textarea id="life-text-${question.id}" data-lifepath-text="${question.id}" rows="4" maxlength="${MAX_LIFEPATH_TEXT}">${e(entry.custom)}</textarea><small>${entry.custom.length} / ${MAX_LIFEPATH_TEXT} Zeichen</small>${question.monthlyCosts?`<label class="field-label" for="life-cost-${question.id}">${question.allowIncome?'Monatsbetrag: Ausgabe positiv, Einnahme negativ':'Deine monatlichen Kosten'} (eb)</label><input id="life-cost-${question.id}" data-lifepath-cost="${question.id}" type="number" min="${question.allowIncome?-1000000:0}" max="1000000" step="1" value="${entry.monthlyCost??''}" placeholder="${question.allowIncome?'z. B. 500 für Kosten oder −150 für Einnahmen':'z. B. 0 bei kostenloser Unterkunft'}"><small>0 ist möglich, wenn das mit der Spielleitung zu deinem Charakter passt.</small>`:''}<button class="primary" data-action="lifepath-next" ${!evaluated.complete?'disabled':''}>Antwort übernehmen →</button>`:''}</fieldset><div class="lifepath-step-actions">${index?`<button class="text-button" data-lifepath-edit="${groupQuestions[index-1].id}">← Vorherige Frage</button>`:''}${entry.choice!==null?`<button class="text-button" data-lifepath-clear="${question.id}">Auswahl zurücknehmen</button>`:''}</div></section>`;
+ }
+ return `<section class="panel lifepath-intro"><div class="section-heading"><span class="section-index">05</span><div><h2>Deine Geschichte. Dein heutiges Leben.</h2><p>Zwei getrennte Bereiche, jeweils eine Frage auf einmal. Wähle eine der Antworten oder ergänze deine eigene Idee.</p></div></div><div class="lifepath-sections" role="group" aria-label="Lebensweg-Bereich">${sections.map(([id,title])=>{const entries=life.entries.filter(q=>inSection(q,id));return `<button class="${section===id?'selected':''}" data-lifepath-section="${id}" aria-pressed="${section===id}"><strong>${e(title)}</strong><small>${entries.filter(q=>q.complete).length} / ${entries.length} beantwortet · ${id==='daily'?'mit Monatsbudget':'nur Flair'}</small></button>`;}).join('')}</div><h3>${e(current[1])}</h3><p>${e(current[2])}</p>${section==='daily'?'<p class="inline-note">Die üblichen Mietunterkünfte und Lebensstile folgen den Grundpreisen. Alternative Wohnformen, Sicherheit, Alltag im Viertel und persönliche Verpflichtungen sind eigene Erzählbudgets. Einnahmen mit der Spielleitung vereinbaren: Sie ersetzen keine Rollenfähigkeit oder Hustle-Probe. Hier wird nichts automatisch vom Charakterkonto abgebucht.</p>':''}<p class="lifepath-progress" role="status">${life.answered} von ${life.total} Fragen vollständig beantwortet</p></section>${card||`<section class="panel lifepath-complete"><h2>${life.answered===life.total?'Dein Lebensweg ist vollständig.':section==='flair'?'Dein Hintergrund ist vollständig.':'Dein aktuelles Leben ist erfasst.'}</h2>${section==='flair'?'<button class="primary" data-lifepath-section="daily">Weiter zum aktuellen Leben →</button>':'<p>Unten kannst du deine Antworten und das Monatsbudget prüfen.</p>'}</section>`}${section==='daily'?renderLivingCosts(character):''}<section class="panel lifepath-preview"><h2>Deine Geschichte bisher</h2>${renderLifepathSummary(character,true)}</section><div class="bottom-bar"><button class="secondary" data-view="role-abilities">← Zurück zu den Rollenfähigkeiten</button><button class="primary" data-view="cyberware">Weiter zur Ausstattung →</button></div>`;
+}
+
+export function renderLivingCosts(character){
+ const costs=livingCosts(character);
+ return `<aside class="living-costs"><h3>Dein Monatsbudget</h3><dl class="living-budget-items">${costs.items.map(item=>`<div class="${item.amount<0?'monthly-income':''}"><dt>${e(item.label)}</dt><dd>${item.amount===null?'noch offen':item.amount<0?'+'+eb(-item.amount)+' Einnahme':eb(item.amount)+' Ausgabe'}</dd></div>`).join('')}</dl><dl class="living-budget-total"><div><dt>Ausgaben ${costs.complete?'':'bisher'}</dt><dd>${eb(costs.expenses)}</dd></div><div><dt>Einnahmen ${costs.complete?'':'bisher'}</dt><dd>${eb(costs.income)}</dd></div><div><dt>${costs.total!==null&&costs.total<0?'Monatlicher Überschuss':'Monatliche Belastung'}</dt><dd><strong>${costs.total===null?'noch offen':eb(Math.abs(costs.total))}</strong></dd></div></dl><p>Ausgaben minus Einnahmen ergibt deine monatliche Belastung. Offene Beträge sind kein kostenloser Lebensstil. Die Übersicht verändert weder Startkapital noch Kontostand; die Abrechnung erfolgt gemeinsam mit der Spielleitung.</p><small>Reguläre Mietunterkünfte/Lebensstile: Grundregelwerk S. 377–379 / RTG Night Market Index. Andere Beträge: eigene Erzählbudgets, keine zusätzlichen Spielboni. Lebensstil umfasst den gesamten Alltag, nicht nur Essen.</small></aside>`;
 }

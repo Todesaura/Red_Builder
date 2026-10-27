@@ -39,3 +39,166 @@ const additionalOptions = {
  boundary: ['Ich vernichte kein Wissen und keine unwiederbringlichen Kunstwerke, selbst wenn ein Auftrag es verlangt.', 'Ich arbeite niemals für die Organisation, die meine Familie zerstört hat, egal welche Vorteile sie mir bietet.']
 };
 for (const question of LIFEPATH_QUESTIONS) question.options.push(...additionalOptions[question.id]);
+
+LIFEPATH_GROUPS.push(['daily','Dein aktuelles Leben']);
+// Monthly budgets supplied by the project owner; no automatic account deductions.
+LIFEPATH_QUESTIONS.push(...[
+  {
+    "id": "security",
+    "group": "daily",
+    "budgetLabel": "Sicherheit",
+    "title": "Wie sorgst du im Alltag für deine Sicherheit?",
+    "monthlyCosts": [
+      0,
+      25,
+      50,
+      100,
+      150,
+      250
+    ],
+    "options": [
+      "Ich verlasse mich auf meine Instinkte und passe selbst auf mich auf. 0 eb/Monat.",
+      "Ich pflege gute Beziehungen zu meinen Nachbarn, damit wir aufeinander achten. 25 eb/Monat.",
+      "Ich bezahle lokale Kontakte für Warnungen und Informationen. 50 eb/Monat.",
+      "Ich nutze einfache Überwachungs- und Sicherheitssysteme. 100 eb/Monat.",
+      "Ich zahle einer lokalen Gang für Schutz und Ruhe. 150 eb/Monat.",
+      "Ich bezahle einen privaten Sicherheitsdienst für regelmäßige Kontrollen. 250 eb/Monat."
+    ]
+  },
+  {
+    "id": "housing",
+    "group": "daily",
+    "budgetLabel": "Wohnen",
+    "title": "Wie wohnst du aktuell?",
+    "monthlyCosts": [
+      0,
+      0,
+      100,
+      250,
+      500,
+      1000,
+      1500,
+      2500,
+      0
+    ],
+    "options": [
+      "Ich lebe auf der Straße. 0 eb/Monat.",
+      "Ich schlafe in meinem eigenen Fahrzeug. 0 eb/Monat.",
+      "Ich schlafe bei Freunden oder Bekannten auf der Couch. 100 eb/Monat.",
+      "Ich teile mir eine einfache Unterkunft. 250 eb/Monat.",
+      "Ich wohne in einem Kapselhotel. 500 eb/Monat.",
+      "Ich wohne in einem Mietcontainer. 1.000 eb/Monat.",
+      "Ich habe ein Studio-Apartment. 1.500 eb/Monat.",
+      "Ich wohne in einer Zweizimmerwohnung. 2.500 eb/Monat.",
+      "Meine Unterkunft wird von einer Organisation oder einem Arbeitgeber bezahlt. 0 eb/Monat."
+    ]
+  },
+  {
+    "id": "neighborhood",
+    "group": "daily",
+    "budgetLabel": "Alltag im Viertel",
+    "title": "Wie kommst du in deinem Viertel zurecht?",
+    "monthlyCosts": [
+      0,
+      50,
+      100,
+      150
+    ],
+    "options": [
+      "Ich kenne die Straßen und brauche keine bezahlte Hilfe. 0 eb/Monat.",
+      "Ich beteilige mich an einer Nachbarschaftsgemeinschaft. 50 eb/Monat.",
+      "Ich nutze regelmäßig sichere Transportmöglichkeiten. 100 eb/Monat.",
+      "Ich bezahle für zusätzlichen Schutz und Sicherheit. 150 eb/Monat."
+    ]
+  },
+  {
+    "id": "lifestyle",
+    "group": "daily",
+    "budgetLabel": "Lebensstil & Essen",
+    "title": "Was isst du und wie lebst du im Alltag?",
+    "monthlyCosts": [
+      100,
+      300,
+      600,
+      1500
+    ],
+    "options": [
+      "Kibble – billige, industriell hergestellte Nahrung. 100 eb/Monat.",
+      "Einfache Fertigkost – zweckmäßig und einigermaßen genießbar. 300 eb/Monat.",
+      "Gute Fertigkost – abwechslungsreicher und angenehmer. 600 eb/Monat.",
+      "Frische Lebensmittel – hochwertiges Essen und gehobener Alltag. 1.500 eb/Monat."
+    ],
+    "note": "Die Beträge repräsentieren den gesamten Lebensstil und nicht ausschließlich Lebensmittel."
+  },
+  {
+    "id": "dependents",
+    "group": "daily",
+    "budgetLabel": "Angehörige & Unterhalt",
+    "title": "Für wen trägst du finanziell Verantwortung?",
+    "monthlyCosts": [
+      0,
+      50,
+      100,
+      150,
+      250,
+      400
+    ],
+    "options": [
+      "Ich bin nur für mich selbst verantwortlich. 0 eb/Monat.",
+      "Ich unterstütze gelegentlich Freunde oder Bekannte. 50 eb/Monat.",
+      "Ich unterstütze meine Wahlfamilie. 100 eb/Monat.",
+      "Ich unterstütze eine frühere Partnerperson. 150 eb/Monat.",
+      "Ich komme für ein Kind auf. 250 eb/Monat.",
+      "Ich unterstütze ein pflegebedürftiges Familienmitglied. 400 eb/Monat."
+    ],
+    "allowIncome": true
+  },
+  {
+    "id": "commitments",
+    "group": "daily",
+    "budgetLabel": "Verpflichtungen & Einnahmen",
+    "title": "Welche Verpflichtung oder Einnahme verbindet dich mit deinem alten Leben?",
+    "monthlyCosts": [
+      0,
+      150,
+      250,
+      200,
+      -200,
+      -100
+    ],
+    "options": [
+      "Ich habe keine alten finanziellen Verpflichtungen. 0 eb/Monat.",
+      "Ich zahle eine alte Schuld ab. 150 eb/Monat.",
+      "Ich begleiche eine frühere medizinische Rechnung. 250 eb/Monat.",
+      "Ich bezahle jemanden, damit ein Geheimnis verborgen bleibt. 200 eb/Monat.",
+      "Ich erhalte regelmäßige Zahlungen aus einer früheren Tätigkeit. −200 eb/Monat (Einnahme).",
+      "Ein alter Kontakt lässt mir regelmäßig etwas Geld zukommen. −100 eb/Monat (Einnahme)."
+    ],
+    "allowIncome": true,
+    "note": "Negative Werte sind Einnahmen und reduzieren die monatlichen Gesamtkosten."
+  },
+  {
+    "id": "pastime",
+    "group": "daily",
+    "budgetLabel": "Persönliche Ausgaben",
+    "title": "Wofür gibst du außerhalb deiner Arbeit regelmäßig Geld aus?",
+    "monthlyCosts": [
+      0,
+      25,
+      50,
+      100,
+      150,
+      200
+    ],
+    "options": [
+      "Ich lebe sparsam und verzichte auf unnötige Ausgaben. 0 eb/Monat.",
+      "Ich kaufe gelegentlich kleine persönliche Dinge. 25 eb/Monat.",
+      "Ich investiere in meine sozialen Kontakte. 50 eb/Monat.",
+      "Ich pflege ein Hobby, das regelmäßig Geld kostet. 100 eb/Monat.",
+      "Ich lege besonderen Wert auf Kleidung, Pflege und Auftreten. 150 eb/Monat.",
+      "Ich gönne mir regelmäßig besondere Annehmlichkeiten. 200 eb/Monat."
+    ],
+    "allowIncome": true
+  }
+]);
+export const DAILY_LIFEPATH_QUESTIONS=LIFEPATH_QUESTIONS.filter(q=>q.group==='daily');

@@ -1,7 +1,7 @@
 import { recommendationPriority } from './equipment-recommendations.js';
-import { installationErrors, installCyberware } from './cyberware.js?v=session6';
-import { evaluateFunds } from './economy.js?v=session6';
-import { evaluateCharacter } from './rules.js?v=session6';
+import { installationErrors, installCyberware } from './cyberware.js?v=budget2';
+import { evaluateFunds } from './economy.js?v=budget2';
+import { evaluateCharacter } from './rules.js?v=budget2';
 
 export const baseStats = evaluated => Object.fromEntries(Object.entries(evaluated.attributes).map(([id,value])=>[id,value.base]));
 export function cyberwareCandidate(character,rules,id,location) {
@@ -11,6 +11,8 @@ export function cyberwareCandidate(character,rules,id,location) {
   return {id:'preview',catalogId:id,location,parent};
 }
 export function candidateErrors(character,rules,id,location,evaluated) {
+  const definition=rules.cyberwareRules.items.find(d=>d.id===id);
+  if(definition?.requirements?.maxInstalled&&character.cyberware.items.filter(i=>i.catalogId===id).length>=definition.requirements.maxInstalled)return [`${definition.name}: höchstens ${definition.requirements.maxInstalled} Exemplar installierbar.`];
   const next={...character.cyberware,items:[...character.cyberware.items,cyberwareCandidate(character,rules,id,location)]};
   return [...installationErrors(next,rules.cyberwareRules,baseStats(evaluated)),...evaluateFunds({...character,cyberware:next},rules).errors];
 }

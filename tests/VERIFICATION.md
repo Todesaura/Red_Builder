@@ -1,3 +1,65 @@
+# Straßendrogen-Kaufmenü – Prüfung (27.10.2026)
+
+330 Tests bestanden, 0 fehlgeschlagen. Vollständige Suite seriell: test-results/drugshop-suite-final.txt (ca. 68 Sekunden). Nach Ergänzung der Airhypo-Kaufhilfe zusätzlich 26 gezielte Ausrüstungs-/Drogentests bestanden.
+
+Fünf neue Tests prüfen alle 18 Namen/Preise, eindeutige IDs, Regeldetails, Kauf/Mengen/Speicherung/PDF-Inventardaten, Verbrauch ohne Rückerstattung oder Attribut-/Fertigkeitsänderung, Kaufkorrektur nur unbenutzter Dosen und alphabetische Darstellung mit Preis-/Quellen-/Wirkungsfiltern. Keine automatische Wirkungs-, Zeit- oder Suchtverwaltung.
+
+Browser im getrennten localhost-Testprofil: 18/18 Einträge sichtbar, Black Lace gekauft (2450 → 2400 eb), eine Dosis verwendet (Inventar leer, weiterhin 2400 eb). Aufklappbare Hinweise erklären Eigengebrauch und Airhypo-Nahkampfangriff gegen Gegner. Airhypo für 50 eb separat kaufbar. Vorhandene Charaktere unter 127.0.0.1 nicht verändert. Screenshot: test-results/drugshop.jpg.
+
+---
+
+# Getrennter Lebensweg und erweitertes Monatsbudget – Prüfung (27.10.2026)
+
+325 Tests bestanden, 0 fehlgeschlagen, vollständige Suite ca. 39 Sekunden. Protokoll: test-results/lifepath-budget-suite-final.txt. Sechs zusätzliche Tests prüfen Trennung der Flair-Fragen, sechs finanzielle Fragen, Summen 2.700/1.500/7.050 eb, getrennte Einnahmen und Ausgaben, unverändertes Charakterkonto, negative eigene Einnahmen/Grenzen, unvollständige Monatsangaben, alte Speicherstände und PDF-Übernahme ohne Verdrängen bestehender Gegenstände.
+
+Browser: bestehenden Charakter F nur geöffnet; 14/14 Flair- und 3/6 Alltagsfragen übernommen, neue Angehörigenfrage mit vier verschiedenen Ausgaben plus eigener Idee sichtbar. Getrennte Bereichsschalter, eine Frage, bekannte Ausgaben 3.350 eb und offene neue Beträge korrekt dargestellt. Keine Antworten ausgewählt und kein Charaktergeld verändert. Screenshot: test-results/lifepath-budget.jpg; neue Fassung lifeledger1 geöffnet.
+
+PDF-Beispiel mit 14 Kleidungsstücken, Techhair, Mietcontainer, guter Fertigkost und drei zusätzlichen Verpflichtungen: vier Seiten. Monatliche Belastung 3.200 eb; Verpflichtungen als Monatszeilen in den bestehenden Notizen, Kleidung/Mode und Unterkunft korrekt zugeordnet. Seite 2 gerendert und visuell geprüft (tmp/pdfs/lifepath-budget-page-2.png); kompakte Mode-Vorschau verhindert Abschneiden von Budget/Mode-Cyberware. Vollständige Formularwerte einschließlich monatlicher Ausgaben, Einnahmen und Nettobelastung unabhängig mit pypdf gelesen.
+
+---
+
+# Gesamtsuite nach Fehlerbehebung (27.10.2026)
+
+319 Tests bestanden, 0 fehlgeschlagen, 0 übersprungen. Vollständiger Lauf mit node --test --test-concurrency=2 --test-reporter=spec --test-reporter-destination=test-results/full-suite-fixed.txt tests/*.test.mjs; Dauer ca. 37 Sekunden. Protokoll: test-results/full-suite-fixed.txt.
+
+Tatsächlicher Laufzeitfehler behoben: Die neue Biomonitor-Dopplungswarnung akzeptiert wie die übrige Auswertung einen fehlenden Cyberware-Katalog. Attribut-/Fertigkeitstests mit bewusst reduzierter Regelkonfiguration funktionieren dadurch wieder, ohne die neuen Grenzen aufzuheben.
+
+Bestehende Prüfungen zu medizinischem Ausbau setzen jetzt ausdrücklich die Session-Freischaltung voraus; alle bisherigen Kosten-, Menschlichkeits- und Abhängigkeitsassertionen bleiben bestehen. Der CEMK-Test verlangt bei explizitem vollem linken Arm einen Fehler ohne Mutation und prüft den automatischen rechten Arm nur ohne vorgegebene Seite. Die normale Kaufansicht wird anhand der aktuellen direkten Kaufsteuerung geprüft.
+
+Fünf zusätzliche Regressionstests in tests/creation-updates.test.mjs sichern kostenlose Korrektur inklusive Basis/Optionen und Rückrechnung, Biomonitor-Grenze an beiden Mutationseingängen sowie korrigierbare alte Dopplungen, Seitenwahl/Belegung/Gesamtpreise ohne Mutation, 98 unterschiedliche Kleidungsstücke in sieben Stilen und atomare Doppelkaufsperre samt Besitzanzeige und Wiederfreigabe.
+
+---
+
+# Erweiterte Garderobe – Sichtprüfung (27.10.2026)
+
+Keine automatisierten Tests ausgeführt. Kataloginventur: 98 Kleidungsstücke, jeweils 14 in allen sieben Stilen, davon 49 zusätzliche eigene Rollenspiel-Varianten mit individuellen Beschreibungen und Preisen. Vorhandene IDs und Preise erhalten. Syntax und Änderungen kontrolliert.
+
+Im Browser neue Beschreibungen für Trenchcoat, Netzoberteil und Faltenrock visuell geprüft. Vorhandene Anzughose zeigt Bereits im Kleiderschrank und gesperrten Kaufknopf. Keine Käufe, Entfernungen oder Charakteränderungen vorgenommen. Dieselbe Dublettensperre liegt in buyEquipment und gilt dadurch auch für Käufe/Beute im Session-Report. Vorhandene alte Mehrfachkäufe werden nicht automatisch gelöscht. Screenshot: test-results/clothing-roleplay.jpg. Neue Fassung wardrobe1 im separaten Tab geöffnet.
+
+---
+
+# Cyberware-Seitenwahl und kostenlose Erstellungskorrektur – Sichtprüfung (27.10.2026)
+
+Keine automatisierten Tests ausgeführt. Syntax und Änderungen kontrolliert. Separates localhost-Profil: Biomonitor einmal gekauft, erneuter Kauf gesperrt. Direkte kostenlose Entfernung stellte die 800 eb Fashion-Zuschuss wieder her.
+
+Cyberauge explizit links eingebaut. Anschließend Chyron-Seitenwahl mit vorhandener linker Basis (100 eb, danach 2/3 Optionen frei) und natürlichem rechten Auge (200 eb inklusive neuer Basis, danach 2/3 frei). Explizite Wahl rechts installierte Cyberauge und Chyron tatsächlich rechts. Vor kostenlosem Entfernen der rechten Basis wurden beide betroffenen Komponenten aufgelistet. Bestätigung entfernte beide, ließ das linke Auge erhalten und stellte 2.450 eb, 33/38 HUM, EMP 3 und eine installierte Komponente her. Keine Ausbauhistorie für diese Erstellungskorrektur. Screenshot: test-results/cyber-side-selection.jpg.
+
+Vorhandene gespeicherte Mehrfacheinbauten werden nicht automatisch gelöscht. Neue Grenzprüfung sowohl beim Einzelkauf als auch beim Übernehmen eines Entwurfs; explizite Seitenwahl verwendet keinen Ausweichort. Cachekennung cybersides1.
+
+---
+
+# Alltag und vereinfachte Erstellung – Sichtprüfung (27.10.2026)
+
+Keine automatisierten Tests ausgeführt (Nutzervorgabe). Bestehende Erwartungen für Fragenzahl und alternative Tragegrenze angepasst. Syntax und Modulimporte kontrolliert.
+
+Browser mit separatem localhost-Profil: Empfehlung INT 6 auf 5 vermindert, automatischer Wechsel zu Punkteverteilung und ein freier Punkt sichtbar. Sprache/Heimat vor dem Budget, acht Sprachen, Kartenauswahl Watson mit hervorgehobener Position. Solo sieht keinen Netrunner-Tab. Techhair direkt gekauft und eingebaut: 100 eb aus Zuschuss, Hauptbudget 2.550 eb. Stadtjacke für 50 eb danach: Zuschuss 650 eb, Hauptbudget unverändert. Lebensweg vollständig durchlaufen; Mietcontainer 1.000 plus gute Fertigkost 600 ergibt 1.600 eb monatlich. Schritt 8 zunächst verborgen, erst Freischaltknopf öffnet ihn; noch kein Report gebucht.
+
+PDF-Beispiel unter tmp/pdfs/everyday-example.pdf mit sieben Kleidungsstücken und Techhair: vier Seiten. Modefeld, Unterkunft, Miete und Lebensstil sowie Cheatsheet gerendert und visuell geprüft. Modetext kompakt, ohne abgeschnittene letzte Zeile; vollständige Inhalte als editierbare Formularwerte erhalten. Vier neue Formularfelder unabhängig mit pypdf einschließlich geerbter Widgetwerte und Appearance-Streams kontrolliert. Rendering: tmp/pdfs/everyday-page-2.png.
+
+Bestehender Charakter S nur geöffnet und neue, unbeantwortete Alltagsfrage angezeigt; keine Antwort, kein Kauf, kein Session-Abschluss vorgenommen. Alter Tab unverändert. Neue Fassung everyday3 im separaten Tab geöffnet. Screenshot: test-results/everyday-lifepath.jpg.
+
+---
+
 # Geführter After Session Report – Prüfung (27.10.2026)
 
 314 Tests bestanden (`test-results/session-guide-tests.txt`), darunter zehn neue Tests für sieben Einzelfragen, bedingte Formulare, Belohnungsänderungen ohne Doppelbuchungen, Notizerhalt, stabile Besitzreferenzen, Bearbeiten und Abschluss. Nach der letzten Eingabefokus-Korrektur erneut alle 57 gezielten Session-Tests bestanden.

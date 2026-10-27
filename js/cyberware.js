@@ -1,4 +1,4 @@
-import { evaluateFunds } from './economy.js?v=session6';
+import { evaluateFunds } from './economy.js?v=budget2';
 export const CYBERWARE_EFFECT_TYPES = Object.freeze({ PERMANENT: 'permanent', SITUATIONAL: 'situational', SKILL: 'skill' });
 export const createCyberware = () => ({ items: [], limit: null, removed: [] });
 
@@ -83,14 +83,18 @@ export function evaluateCyberware(character, rules, stats) {
   const effects = effectEntries.filter((effect,index)=>!effect.nonStacking || effectEntries.findIndex(other=>other.type===effect.type && other.target===effect.target && other.label===effect.label)===index);
   if (active.filter(item => item.definition.lightTattoo).length >= 3) effects.push({ type: 'skill', target: 'wardrobe-style', value: 2, label: 'Mindestens drei Light-Tattoo-Installationen', source: 'Must Have Cyberware Deals, S. 3; Grundregelwerk S. 358' });
   if (active.some(item => item.catalogId === 'chemskin') && active.some(item => item.catalogId === 'techhair')) effects.push({ type: 'skill', target: 'personal-grooming', value: 2, label: 'Chemskin und Techhair', source: 'Grundregelwerk S. 358' });
+  const duplicateWarnings=(config?.items??[]).filter(d=>d.requirements?.maxInstalled&&entries.filter(e=>e.catalogId===d.id).length>d.requirements.maxInstalled).map(d=>`${d.name} ist mehrfach eingebaut. Entferne überzählige Exemplare; erlaubt: ${d.requirements.maxInstalled}.`);
   const warnings = current !== null && current < 10 ? ['EMP ist auf 0 gesunken. Kläre Cyberpsychose und Spielbarkeit mit deiner Spielleitung.'] : [];
+  warnings.push(...duplicateWarnings);
   const removed = (plan.removed ?? []).map(item => ({ ...item, definition: config?.items.find(definition => definition.id === item.catalogId) })).filter(item => item.definition);
-  return { entries, removed, errors, warnings, effects, loss, depression, start, maximum, current,
+  return { canUndoPurchases:canUndoCyberwarePurchase(character), entries, removed, errors, warnings, effects, loss, depression, start, maximum, current,
     empathy: current === null ? null : Math.max(0, Math.floor(current / 10)),
     adjustment:character.campaign?.humanityAdjustment??0, cost: entries.reduce((sum, item) => sum + item.definition.cost, 0), limit: plan.limit };
 }
 
 export function installCyberware(character, rules, catalogId, location, parent, stats) {
+  const definition=rules.cyberwareRules.items.find(d=>d.id===catalogId);
+  if(definition?.requirements?.maxInstalled&&character.cyberware.items.filter(i=>i.catalogId===catalogId).length>=definition.requirements.maxInstalled)return {ok:false,error:`${definition.name}: höchstens ${definition.requirements.maxInstalled} Exemplar installierbar.`};
   const plan = character.cyberware;
   if (plan.items.length >= 60) return { ok: false, error: 'Dein Charakter hat bereits 60 Cyberware-Komponenten.' };
   let number = 1;
@@ -107,6 +111,7 @@ export function removeCyberware(character, rules, id, stats, fee) {
   const next = { ...character.cyberware, items: character.cyberware.items.filter(item => item.id !== id) };
   const removed = character.cyberware.items.find(item => item.id === id);
   if (!removed) return { ok: false, error: 'Diese Komponente ist nicht eingebaut.' };
+  if(canUndoCyberwarePurchase(character)){next.items=next.items.filter(item=>!cyberwareRemovalItems(character,rules,id).some(removed=>removed.id===item.id));character.cyberware=next;return {ok:true};}
   const dependencies = next.items.filter(item => item.parent === id || rules.cyberwareRules.items.find(definition => definition.id === item.catalogId)?.requirements?.requires?.includes(removed.catalogId) && !next.items.some(other => other.catalogId === removed.catalogId));
   if (dependencies.length) return { ok: false, error: 'Entferne zuerst die abhängigen Optionen dieser Komponente.' };
   if (!Number.isInteger(fee) || fee < 0 || fee > 1000000) return { ok: false, error: 'Trage die mit der Spielleitung vereinbarten Ausbaukosten ein (0 bis 1.000.000 eb).' };
@@ -116,4 +121,15 @@ export function removeCyberware(character, rules, id, stats, fee) {
   if (funds.remaining < 0 && fee > 0) return { ok: false, error: 'Dein Guthaben reicht für diesen Ausbau nicht aus.' };
   character.cyberware = next;
   return { ok: true };
+}
+
+export function canUndoCyberwarePurchase(character){return !character.campaign?.sessionUnlocked&&!character.campaign?.active&&!(character.campaign?.history?.length);}
+export function cyberwareRemovalItems(character,rules,id){
+ const removed=new Set([id]);let changed=true;
+ while(changed){changed=false;const remaining=character.cyberware.items.filter(i=>!removed.has(i.id));
+  for(const item of remaining){const d=rules.cyberwareRules.items.find(d=>d.id===item.catalogId);
+   if(removed.has(item.parent)||d.requirements?.requires?.some(required=>character.cyberware.items.some(original=>removed.has(original.id)&&original.catalogId===required)&&!remaining.some(i=>i.catalogId===required))){removed.add(item.id);changed=true;}
+  }
+ }
+ return character.cyberware.items.filter(i=>removed.has(i.id));
 }

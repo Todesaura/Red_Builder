@@ -23,7 +23,7 @@ test('Cyberware-Katalog enthält Quellen und explizite Verluste für alle Katalo
   }
 });
 test('Menschlichkeit wird vom unveränderten EMP-Grundwert berechnet, ohne kumulative Verluste',()=>{
-  const c=character(), initial=evaluateCharacter(c,rules); const snapshot=structuredClone(c.allocations);
+  const c=character();c.campaign.sessionUnlocked=true;const initial=evaluateCharacter(c,rules); const snapshot=structuredClone(c.allocations);
   assert.ok(install(c,'neutongue','internal').ok);
   const result=evaluateCharacter(c,rules), start=initial.attributes.EMP.base*10;
   assert.equal(result.cyberware.current,start-7); assert.equal(result.cyberware.maximum,start-2);
@@ -79,7 +79,7 @@ const fixture={locations:[{id:'arm',capacity:1}],items:[
   {id:'strength',name:'Testvoraussetzung',installationSlots:['arm'],requirements:{minimumStats:{BODY:8}},cost:0,humanity:0,maxHumanityLoss:0}
 ]};
 test('Basis, Kapazität, Abhängigkeiten und Entfernen einer noch benötigten Basis',()=>{
-  const c=character(), r={...rules,cyberwareRules:fixture};
+  const c=character();c.campaign.sessionUnlocked=true;const r={...rules,cyberwareRules:fixture};
   assert.equal(installCyberware(c,r,'option','arm',null,{BODY:8}).ok,false);
   assert.ok(installCyberware(c,r,'base','arm',null,{BODY:8}).ok); const parent=c.cyberware.items[0].id;
   assert.ok(installCyberware(c,r,'option','arm',parent,{BODY:8},0).ok);

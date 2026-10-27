@@ -1,12 +1,13 @@
-import {SESSION_PAGES,sessionActionPage,sessionActionTask,setSessionRewards} from './session-guide.js?v=guide5';
-import {createSessionDraft,previewSession,completeSession} from './session-report.js?v=guide5';
-import {sessionCyberState} from './ui-session-report.js?v=guide5';
-import {quickAddCyberware} from './cyberware-quick-add.js?v=session6';
-import {addToCyberwareDraft,removeFromCyberwareDraft} from './cyberware-draft.js?v=session6';
-import {initialInstallationLocation} from './cyberware-ui-model.js?v=session6';
-import {saveCharacter,loadCharacter} from './storage.js?v=session6';
-import {evaluateCharacter} from './rules.js?v=session6';
-import {ROLE_POOLS} from './role-points.js?v=session6';
+import {needsCyberwareSide} from './cyberware-placement.js?v=budget2';
+import {SESSION_PAGES,sessionActionPage,sessionActionTask,setSessionRewards} from './session-guide.js?v=budget2';
+import {createSessionDraft,previewSession,completeSession} from './session-report.js?v=budget2';
+import {sessionCyberState} from './ui-session-report.js?v=budget2';
+import {quickAddCyberware} from './cyberware-quick-add.js?v=budget2';
+import {addToCyberwareDraft,removeFromCyberwareDraft} from './cyberware-draft.js?v=budget2';
+import {initialInstallationLocation} from './cyberware-ui-model.js?v=budget2';
+import {saveCharacter,loadCharacter} from './storage.js?v=budget2';
+import {evaluateCharacter} from './rules.js?v=budget2';
+import {ROLE_POOLS} from './role-points.js?v=budget2';
 
 function downloadJson(value,name){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name.replace(/[<>:"/\\|?*]/g,'');a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 export function bindSessionEvents(root,state,rules,refresh){
@@ -26,7 +27,9 @@ export function bindSessionEvents(root,state,rules,refresh){
   }
   function queueCyber(id,location=null,ownedId=null){
     if(!state.sessionDraft)return;
-    const c=current(),ui=cyber(),planningRules={...rules,equipmentRules:{...rules.equipmentRules,startingCash:rules.equipmentRules.startingCash+10000000}},result=location?addToCyberwareDraft(c,planningRules,ui.cyberDraft,id,location):quickAddCyberware(c,planningRules,ui.cyberDraft,id);
+    const c=current(),ui=cyber();
+    if(!location&&needsCyberwareSide(rules,id)){ui.cyberPlacement={id,ownedId};state.sessionPage='cyber';state.sessionTask='install';refresh();return;}
+    const planningRules={...rules,equipmentRules:{...rules.equipmentRules,startingCash:rules.equipmentRules.startingCash+10000000}},result=quickAddCyberware(c,planningRules,ui.cyberDraft,id,location);
     if(!result.ok){error(result.error);return;}
     ui.cyberDraft=result.additions;
     if(ownedId){const entry=result.additions.toReversed().find(i=>i.catalogId===id&&!ui.owned[i.id]);if(entry)ui.owned[entry.id]=ownedId;}
@@ -39,6 +42,8 @@ export function bindSessionEvents(root,state,rules,refresh){
     if(config){event.preventDefault();event.stopImmediatePropagation();const ui=cyber();
       if(button.dataset.cyberCategory)ui.cyberCategory=button.dataset.cyberCategory;
       else if(button.dataset.selectCyberware){const d=rules.cyberwareRules.items.find(d=>d.id===button.dataset.selectCyberware);ui.selectedCyberware=ui.selectedCyberware===d.id?null:d.id;ui.pendingLocation=initialInstallationLocation(d);}
+      else if(button.dataset.action==='cancel-cyber-placement')ui.cyberPlacement=null;
+      else if(button.dataset.confirmCyberLocation){const selected=ui.cyberPlacement;if(!selected)return;ui.cyberPlacement=null;return queueCyber(selected.id,button.dataset.confirmCyberLocation,selected.ownedId);}
       else if(button.dataset.queueCyberware)return queueCyber(button.dataset.queueCyberware);
       else if(button.dataset.bodyLocation){if(ui.selectedCyberware)return queueCyber(ui.selectedCyberware,button.dataset.bodyLocation);ui.inspectedLocation=button.dataset.bodyLocation;}
       else if(button.dataset.removeDraft)return removeCyberDraft(button.dataset.removeDraft);

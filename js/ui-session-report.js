@@ -1,12 +1,12 @@
-import {renderSessionWelcome,renderSessionGuide} from './session-guide.js?v=guide5';
-import {ATTACHMENTS} from './weapon-attachments.js?v=session6';
+import {renderSessionWelcome,renderSessionGuide} from './session-guide.js?v=budget2';
+import {ATTACHMENTS} from './weapon-attachments.js?v=budget2';
 import {escapeHtml as e} from './html.js';
-import {previewSession,sessionSnapshot} from './session-report.js?v=guide5';
-import {THERAPIES,TRANSACTION_TYPES,SESSION_SOURCES,INJURY_STATUS} from './campaign-rules.js?v=session6';
-import {evaluateCharacter} from './rules.js?v=session6';
-import {ROLE_POOLS,PHARMACEUTICALS} from './role-points.js?v=session6';
-import {renderCyberware} from './ui-cyberware.js?v=guide5';
-import {characterSheetReadiness} from './pdf-character-data.js?v=session6';
+import {previewSession,sessionSnapshot} from './session-report.js?v=budget2';
+import {THERAPIES,TRANSACTION_TYPES,SESSION_SOURCES,INJURY_STATUS} from './campaign-rules.js?v=budget2';
+import {evaluateCharacter} from './rules.js?v=budget2';
+import {ROLE_POOLS,PHARMACEUTICALS} from './role-points.js?v=budget2';
+import {renderCyberware} from './ui-cyberware.js?v=budget2';
+import {characterSheetReadiness} from './pdf-character-data.js?v=budget2';
 
 const options=(entries,selected='')=>entries.map(([value,label])=>`<option value="${e(String(value))}" ${String(value)===String(selected)?'selected':''}>${e(String(label))}</option>`).join('');
 const input=(name,label,type='text',attrs='')=>`<label>${e(label)}<input name="${name}" type="${type}" ${attrs}></label>`;

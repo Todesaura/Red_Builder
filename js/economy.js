@@ -1,6 +1,6 @@
 import { validateCustomEquipment, customEquipmentCost, MAX_CUSTOM_ITEMS } from './custom-equipment.js';
-import { ATTACHMENTS,validateAttachments,weaponConfiguration,attachmentList } from './weapon-attachments.js?v=grenades1';
-import {evaluateLoadout,isGrenade,LOADOUT_LIMITS} from './loadout-limits.js?v=grenades1';
+import { ATTACHMENTS,validateAttachments,weaponConfiguration,attachmentList } from './weapon-attachments.js?v=budget2';
+import {evaluateLoadout,isGrenade,LOADOUT_LIMITS} from './loadout-limits.js?v=budget2';
 export const createEquipment = () => ({ items: [], custom: [], attachments: [], armor: { head: null, body: null } });
 export function validateEquipment(input, rules) {
   if (!input || !Array.isArray(input.items) || input.items.length > 100) throw new Error('Die Ausrüstung ist ungültig.');
@@ -25,15 +25,16 @@ export function evaluateFunds(character, rules) {
   const allowance = rules.equipmentRules?.fashionAllowance ?? 800;
   const implants = [...(character.cyberware?.items ?? []), ...(character.cyberware?.removed ?? [])].map(item => rules.cyberwareRules?.items.find(definition => definition.id === item.catalogId)).filter(Boolean);
   const removalCost = (character.cyberware?.removed ?? []).reduce((sum, item) => sum + item.fee, 0);
-  const fashionCost = implants.filter(item => item.funding === 'fashion').reduce((sum, item) => sum + item.cost, 0);
+  const clothingCost=(character.equipment?.items??[]).reduce((sum,entry)=>{const item=rules.equipmentRules?.items.find(i=>i.id===entry.catalogId);return sum+(item?.funding==='fashion'?item.cost*entry.quantity:0);},0);
+  const fashionCost = clothingCost + implants.filter(item => item.funding === 'fashion').reduce((sum, item) => sum + item.cost, 0);
   const cyberCost = implants.filter(item => item.funding !== 'fashion').reduce((sum, item) => sum + item.cost, 0);
   const customCost = customEquipmentCost(character);
   const attachmentCost=(character.equipment?.attachments??[]).reduce((sum,e)=>sum+(ATTACHMENTS.find(a=>a.id===e.attachmentId)?.cost??0)*(character.equipment.items.find(i=>i.catalogId===e.weaponId)?.quantity??0),0);
   const equipmentCost = customCost + attachmentCost + (character.equipment?.items ?? []).reduce((sum, item) => sum + (rules.equipmentRules?.items.find(definition => definition.id === item.catalogId)?.cost ?? 0) * item.quantity, 0);
   const fashionUsed = Math.min(allowance, fashionCost);
-  const spent = cyberCost + equipmentCost + Math.max(0, fashionCost - allowance) + removalCost;
+  const spent = cyberCost + equipmentCost - clothingCost + Math.max(0, fashionCost - allowance) + removalCost;
   const remaining = starting - spent + (character.campaign?.cashAdjustment??0);
-  return { campaign:character.campaign?.active??false, starting, allowance, cyberCost, fashionCost, equipmentCost, fashionUsed, fashionRemaining: allowance - fashionUsed, customCost, removalCost, spent, remaining,
+  return { campaign:character.campaign?.active??false, starting, allowance, cyberCost, fashionCost, clothingCost, equipmentCost, fashionUsed, fashionRemaining: allowance - fashionUsed, customCost, removalCost, spent, remaining,
     errors: remaining < 0 ? [`Dein ${character.campaign?.active?'Guthaben':'Startkapital'} ist um ${-remaining} eb überschritten. Entferne Cyberware oder Ausrüstung.`] : [] };
 }
 
@@ -41,6 +42,7 @@ export function buyEquipment(character, rules, catalogId) {
   if (!rules.equipmentRules?.items.some(item => item.id === catalogId)) return { ok: false, error: 'Unbekannte Ausrüstung.' };
   const items = character.equipment.items.map(item => ({ ...item }));
   const existing = items.find(item => item.catalogId === catalogId);
+  if(existing&&rules.equipmentRules.items.find(item=>item.id===catalogId)?.category==='clothing')return {ok:false,error:'Dieses Kleidungsstück ist bereits in deinem Kleiderschrank. Jedes Teil kann nur einmal gekauft werden.'};
   if (existing?.quantity >= 99) return { ok: false, error: 'Du kannst höchstens 99 Stück mitnehmen.' };
   if (existing) existing.quantity++; else items.push({ catalogId, quantity: 1 });
   const candidate={ ...character, equipment: { ...character.equipment, items } };
@@ -48,6 +50,16 @@ export function buyEquipment(character, rules, catalogId) {
   if (errors.length) return { ok: false, error: errors.join(' ') };
   character.equipment.items = items;
   return { ok: true };
+}
+
+// A used dose leaves the inventory without undoing its purchase or changing stats.
+export function useStreetDrug(character,rules,catalogId) {
+  const definition=rules.equipmentRules.items.find(item=>item.id===catalogId&&item.kind==='drug');
+  const owned=character.equipment.items.find(item=>item.catalogId===catalogId);
+  if(!definition||!owned)return {ok:false,error:'Diese Straßendroge befindet sich nicht im Inventar.'};
+  removeEquipment(character,catalogId);
+  character.campaign.cashAdjustment-=definition.cost;
+  return {ok:true};
 }
 
 // Two magazine fills, rounded up to complete packs; bows receive 20 arrows.

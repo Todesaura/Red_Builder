@@ -1,7 +1,7 @@
-import { installationErrors, installCyberware } from './cyberware.js?v=session6';
-import { evaluateFunds } from './economy.js?v=session6';
-import { evaluateCharacter } from './rules.js?v=session6';
-import { baseStats, cyberwareCandidate } from './cyberware-ui-model.js?v=session6';
+import { installationErrors, installCyberware } from './cyberware.js?v=budget2';
+import { evaluateFunds } from './economy.js?v=budget2';
+import { evaluateCharacter } from './rules.js?v=budget2';
+import { baseStats, cyberwareCandidate } from './cyberware-ui-model.js?v=budget2';
 
 // Only additions live in the draft. Installed components cannot be undone by dragging.
 export function draftCharacter(character, additions = []) {
@@ -35,6 +35,7 @@ export function removeFromCyberwareDraft(character, rules, additions, id) {
 export function evaluateCyberwareDraft(character, rules, additions = []) {
   const projected = draftCharacter(character, additions);
   const errors = [...installationErrors(projected.cyberware, rules.cyberwareRules, baseStats(evaluateCharacter(character, rules))), ...evaluateFunds(projected, rules).errors];
+  for(const definition of rules.cyberwareRules.items){const max=definition.requirements?.maxInstalled;if(!max)continue;const before=character.cyberware.items.filter(i=>i.catalogId===definition.id).length,after=projected.cyberware.items.filter(i=>i.catalogId===definition.id).length;if(after>max&&after>before)errors.push(`${definition.name}: höchstens ${max} Exemplar installierbar.`);}
   if (projected.cyberware.items.length > 60) errors.push('Höchstens 60 Cyberware-Komponenten sind möglich.');
   const ids = new Set(character.cyberware.items.map(item => item.id));
   for (const item of additions) {

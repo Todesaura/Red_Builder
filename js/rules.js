@@ -1,11 +1,11 @@
-import { evaluateLifepath } from './lifepath.js?v=session6';
-import { evaluateRolePoints } from './role-points.js?v=session6';
-import { evaluateSkills, skillValidation } from './skills.js?v=session6';
-import { deriveValues } from './derived.js?v=session6';
-import { evaluateCyberware } from './cyberware.js?v=session6';
-import { evaluateArmor } from './armor.js?v=session6';
-import { evaluateFunds } from './economy.js?v=session6';
-import {evaluateLoadout} from './loadout-limits.js?v=grenades1';
+import { evaluateLifepath } from './lifepath.js?v=budget2';
+import { evaluateRolePoints } from './role-points.js?v=budget2';
+import { evaluateSkills, skillValidation } from './skills.js?v=budget2';
+import { deriveValues } from './derived.js?v=budget2';
+import { evaluateCyberware } from './cyberware.js?v=budget2';
+import { evaluateArmor } from './armor.js?v=budget2';
+import { evaluateFunds } from './economy.js?v=budget2';
+import {evaluateLoadout} from './loadout-limits.js?v=budget2';
 
 export function pointsRemaining(character, rules) {
   return rules.pointBuy.budget - Object.values(character.allocations.points).reduce((sum, value) => sum + value, 0);

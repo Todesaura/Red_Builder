@@ -1,6 +1,6 @@
-import {INJURY_STATUS} from './campaign-rules.js?v=session6';
+import {INJURY_STATUS} from './campaign-rules.js?v=budget2';
 // Coordinates measured on the supplied, unmodified 1500 x 1165 rendering.
-import {CYBERWARE_PRINT_SUMMARIES,CYBERWARE_PRINT_NAMES} from './pdf-cyberware-summary.js?v=cemk1';
+import {CYBERWARE_PRINT_SUMMARIES,CYBERWARE_PRINT_NAMES} from './pdf-cyberware-summary.js?v=budget2';
 // Each rectangle is inside the printed cell, below its printed label.
 export const TEMPLATE_SHA256 = '4d5ed61178ef9c927178d0236f596642098af73bf5baff9d3d5046e5b55e4b4c';
 export function characterSheetFields(data) {
@@ -72,8 +72,18 @@ export function characterSheetFields(data) {
   const answer=id=>data.lifepath.find(entry=>entry.id===id)?.answer ?? '';
   for(const [id,x,y,w,h] of [['roots',125,343,275,24],['personality',427,343,274,24],['appearance',125,401,275,23],['values',125,459,275,23],['keepsake',427,517,274,23],['family',125,575,275,23],['turning-point',125,634,275,23],['goal',427,634,274,23],['friend',165,699,235,43],['love',470,699,231,43],['enemy',238,907,82,46]]) add(`lifepath.${id}`,1,x,y,w,h,answer(id),7);
   add('lifepath.career',1,747,916,686,145,`Beruf: ${answer('career')}\n\nRuf: ${answer('reputation')}\n\nGrenze: ${answer('boundary')}`,8);
+  const outfit=(data.clothing??[]).map(i=>`${i.quantity}× ${i.definition.name}`).join('; ');
+  const cosmetics=(data.fashionware??[]).map(i=>i.definition.name).join('; ');
+  const costs=data.livingCosts,eb=n=>n===null||n===undefined?'offen':`${n} eb/Monat`;
+  const styles=[...new Set((data.clothing??[]).map(i=>i.definition.style))];
+  const outfitPreview=(data.clothing??[]).length?`${data.clothing.length} Teile · ${styles.slice(0,2).join(', ')}${styles.length>2?' + weitere Stile':''} (Einzelteile im Inventar)`:'';
+  add('fashion.outfit',1,747,710,686,70,[outfit?'Kleidung: '+outfit:'',cosmetics?'Mode-Cyberware: '+cosmetics:'',`Monatlich: Ausgaben ${eb(costs?.expenses)}, Einnahmen ${eb(costs?.income)}, Nettobelastung ${eb(costs?.total)}`].filter(Boolean).join('\n'),7.5,{minSize:7,displayValue:['Nettobelastung monatlich: '+eb(costs?.total),cosmetics?'Mode-Cyberware: '+cosmetics:'',outfitPreview?'Kleidung: '+outfitPreview:''].filter(Boolean).join('\n')});
+  add('living.housing',1,747,832,305,18,[data.hometown,answer('housing')].filter(Boolean).join(' · '),7,{displayValue:[(data.hometown??'').split(' – ')[0],answer('housing').split(' – ')[0]].filter(Boolean).join(' · ')});
+  add('living.rent',1,1060,832,130,18,eb(costs?.housing),7);
+  add('living.lifestyle',1,1205,832,225,18,answer('lifestyle'),7,{displayValue:answer('lifestyle').split(' – ')[0]+': '+eb(costs?.lifestyle)});
   add('lifepath.event',1,395,185,305,56,answer('turning-point'),7);
-  const gear=[...(data.campaign?.injuries??[]).map(i=>({name:'Verletzung: '+i.name,notes:INJURY_STATUS[i.status]+' · '+i.notes})),...(data.campaign?.obligations??[]).map(note=>({name:'Verpflichtung',notes:note})),...(data.weaponAttachments??[]).flatMap(e=>e.attachments.map(a=>({name:`${e.quantity??1}x ${a.name}`,notes:`An ${e.weapon.shortName??e.weapon.name} · ${a.slots} ${a.slots===1?'Montageplatz':'Montageplätze'} · ${a.cost} eb je Exemplar` }))),...data.equipment.map(entry=>({name:`${entry.quantity}x ${entry.definition.name}`,notes:entry.definition.description??''})),...data.custom.map(entry=>({name:`${entry.quantity}x ${entry.name}`,notes:entry.notes}))];
+  const monthly=(costs?.items??[]).filter(i=>!['housing','lifestyle'].includes(i.id)&&i.amount!==null).map(i=>({name:'Monatlich: '+i.label,notes:`${i.amount<0?'Einnahme':'Ausgabe'} ${Math.abs(i.amount)} eb · ${i.answer}`}));
+  const gear=[...(data.campaign?.injuries??[]).map(i=>({name:'Verletzung: '+i.name,notes:INJURY_STATUS[i.status]+' · '+i.notes})),...(data.campaign?.obligations??[]).map(note=>({name:'Verpflichtung',notes:note})),...(data.weaponAttachments??[]).flatMap(e=>e.attachments.map(a=>({name:`${e.quantity??1}x ${a.name}`,notes:`An ${e.weapon.shortName??e.weapon.name} · ${a.slots} ${a.slots===1?'Montageplatz':'Montageplätze'} · ${a.cost} eb je Exemplar` }))),...data.equipment.map(entry=>({name:`${entry.quantity}x ${entry.definition.name}`,notes:entry.definition.description??''})),...data.custom.map(entry=>({name:`${entry.quantity}x ${entry.name}`,notes:entry.notes})),...monthly];
   gear.slice(0,18).forEach((entry,i)=>{
     const extra=i===17?gear.slice(18).map(e=>`${e.name}: ${e.notes}`).join('; '):'';
     add(`equipment.${i}.name`,1,747,141+i*26,185,21,entry.name,7,{minSize:5.5});

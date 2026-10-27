@@ -1,6 +1,6 @@
 import {escapeHtml as e} from './html.js';
-import {improvementCost,THERAPIES,INJURY_STATUS} from './campaign-rules.js?v=session6';
-import {renderCyberware} from './ui-cyberware.js?v=guide5';
+import {improvementCost,THERAPIES,INJURY_STATUS} from './campaign-rules.js?v=budget2';
+import {renderCyberware} from './ui-cyberware.js?v=budget2';
 
 export const SESSION_PAGES=[['info','Session'],['rewards','Belohnung'],['health','Gesundheit'],['inventory','Ausrüstung'],['cyber','Cyberware'],['story','Geschichte'],['review','Prüfen']];
 export function sessionActionPage(a){

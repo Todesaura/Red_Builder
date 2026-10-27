@@ -1,5 +1,5 @@
-import {COMMUNITY_ATTACHMENTS} from './weapon-attachments-community.js?v=grenades1';
-export {COMMUNITY_SOURCE} from './weapon-attachments-community.js?v=grenades1';
+import {COMMUNITY_ATTACHMENTS} from './weapon-attachments-community.js?v=budget2';
+export {COMMUNITY_SOURCE} from './weapon-attachments-community.js?v=budget2';
 // Configuration is shared by all copies of a catalog weapon; each copy is charged.
 export const ATTACHMENTS = Object.freeze([
   {id:'smartgun',name:'Smartgun-Anbindung',cost:500,slots:2,group:'link',description:'+1 auf Angriffe mit dieser Waffe, nur mit Neuralimplantat und Schnittstellenbuchsen oder subdermalem Griff. Montage: 1 Stunde.'},

@@ -315,7 +315,9 @@
       "installationSlots": [
         "fashion"
       ],
-      "requirements": {},
+      "requirements": {
+        "maxInstalled": 1
+      },
       "funding": "fashion",
       "humanityRoll": {
         "dice": 0,

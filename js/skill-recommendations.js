@@ -1,4 +1,4 @@
-import { createSkills, validateSkillState } from './skills.js?v=session6';
+import { createSkills, validateSkillState } from './skills.js?v=budget2';
 
 export function isInitialSkillAllocation(skills, config) {
   return !skills.recommendation && skills.nativeLanguage.level === config.nativeLanguageFreeRank && skills.specialties.length === 0

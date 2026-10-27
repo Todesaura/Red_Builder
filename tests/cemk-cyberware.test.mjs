@@ -53,14 +53,15 @@ test('Monodraht hat 6 m Reichweite und kritische Auswahl; Waffen auf Seite 1 und
   assert.match(text,/zweimal auf der Verletzungstabelle/);assert.match(text,/Zusatzschaden nur einmal/);assert.match(characterSheetFields(data).find(f=>f.name==='weapons.0.name').value,/Monodraht/);
 });
 test('Ausbau wahrt Abhängigkeiten und entfernt Waffen; ungültige Pläne geben keine Cyberwaffen',()=>{
-  const c=completeCharacter();add(c,'mantis-blade');const base=c.cyberware.items.find(e=>e.catalogId==='cyberarm'),option=c.cyberware.items.find(e=>e.catalogId==='mantis-blade'),stats=Object.fromEntries(Object.entries(evaluateCharacter(c,rules).attributes).map(([k,v])=>[k,v.base]));
+  const c=completeCharacter();c.campaign.sessionUnlocked=true;add(c,'mantis-blade');const base=c.cyberware.items.find(e=>e.catalogId==='cyberarm'),option=c.cyberware.items.find(e=>e.catalogId==='mantis-blade'),stats=Object.fromEntries(Object.entries(evaluateCharacter(c,rules).attributes).map(([k,v])=>[k,v.base]));
   assert.equal(removeCyberware(c,rules,base.id,stats,0).ok,false);
   const invalid=structuredClone(c);invalid.cyberware.items.find(e=>e.catalogId==='mantis-blade').parent=null;assert.deepEqual(installedCyberWeapons(invalid,rules,evaluateCharacter(invalid,rules)),[]);
   assert.ok(removeCyberware(c,rules,option.id,stats,50).ok);assert.equal(evaluateCharacter(c,rules).cyberware.loss,21);assert.deepEqual(characterSheetData(c,rules).weapons,[]);
 });
 test('Cyberwaffen überschreiten keine tragbaren Waffenlimits; volle Armkapazität bleibt gesperrt',()=>{
   const c=completeCharacter();add(c,'mantis-blade',richRules,'arm-left');add(c,'gorilla-arm',richRules,'arm-left');
-  const offer=quickAddCyberware(c,richRules,[],'monowire','arm-left');assert.ok(offer.ok);assert.equal(offer.location,'arm-right');
+  const before=structuredClone(c);assert.equal(quickAddCyberware(c,richRules,[],'monowire','arm-left').ok,false);assert.deepEqual(c,before);
+  const offer=quickAddCyberware(c,richRules,[],'monowire');assert.ok(offer.ok);assert.equal(offer.location,'arm-right');
   for(const id of ['heavy-pistol','light-melee','assault-rifle'])assert.ok(buyEquipment(c,richRules,id).ok);
   assert.deepEqual(evaluateCharacter(c,richRules).loadout.counts,{grenades:0,oneHanded:2,twoHanded:1});
   assert.deepEqual(evaluateCharacter(c,richRules).loadout.errors,[]);

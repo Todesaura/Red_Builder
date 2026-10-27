@@ -1,4 +1,4 @@
-export const createCampaign = () => ({active:false,cashAdjustment:0,ip:0,roleRank:4,skillPointsAdded:0,humanityAdjustment:0,hp:null,stabilized:false,speedhealDates:[],injuries:[],armorLoss:{},ammoSpent:{},cyberInventory:[],cyberDamaged:[],reputation:0,obligations:[],contacts:[],enemies:[],goals:[],events:[],history:[]});
+export const createCampaign = () => ({sessionUnlocked:false,active:false,cashAdjustment:0,ip:0,roleRank:4,skillPointsAdded:0,humanityAdjustment:0,hp:null,stabilized:false,speedhealDates:[],injuries:[],armorLoss:{},ammoSpent:{},cyberInventory:[],cyberDamaged:[],reputation:0,obligations:[],contacts:[],enemies:[],goals:[],events:[],history:[]});
 const integer=(n,min,max)=>Number.isSafeInteger(n)&&n>=min&&n<=max;
 const text=(s,max=1000)=>typeof s==='string'&&s.length<=max;
 export function validateCampaign(input,rules) {
@@ -6,6 +6,8 @@ export function validateCampaign(input,rules) {
   const c=createCampaign();
   if(typeof input.active!=='boolean')throw Error('Ungültiger Kampagnenstatus.');
   c.active=input.active;
+  if(input.sessionUnlocked !== undefined && typeof input.sessionUnlocked !== "boolean")throw Error("Ungültiger Session-Zugang.");
+  c.sessionUnlocked=input.sessionUnlocked??false;
   for(const [key,min,max] of [['cashAdjustment',-100000000,100000000],['ip',0,1000000],['roleRank',4,10],['skillPointsAdded',0,5000],['humanityAdjustment',-100000,100000],['reputation',0,10]]){
     if(!integer(input[key],min,max))throw Error('Ungültiger Kampagnenwert: '+key);c[key]=input[key];
   }

@@ -1,11 +1,11 @@
-import { addToCyberwareDraft, draftCharacter } from './cyberware-draft.js?v=session6';
+import { addToCyberwareDraft, draftCharacter } from './cyberware-draft.js?v=budget2';
 
 const BASES = {eye:'cybereye',audio:'cyberaudio-suite',neural:'neural-link',arm:'cyberarm',leg:'cyberleg'};
-export function cyberwareQuickOffer(character,rules,additions,id){
-  const actual=quickAddCyberware(character,rules,additions,id);
+export function cyberwareQuickOffer(character,rules,additions,id,preferred=null){
+  const actual=quickAddCyberware(character,rules,additions,id,preferred);
   if(actual.ok)return actual;
   const previewRules={...rules,equipmentRules:{...rules.equipmentRules,startingCash:1000000000}};
-  const preview=quickAddCyberware(character,previewRules,additions,id);
+  const preview=quickAddCyberware(character,previewRules,additions,id,preferred);
   return preview.ok?{...preview,ok:false,error:actual.error}:actual;
 }
 // Build a complete candidate on copies. Failed bundles never leak a base into the draft.
@@ -13,7 +13,8 @@ export function quickAddCyberware(character,rules,additions,id,preferred=null) {
   const definitions=rules.cyberwareRules.items;
   const item=definitions.find(d=>d.id===id);
   if(!item)return {ok:false,error:'Unbekannte Cyberware.'};
-  const locations=[...(item.installationSlots.includes(preferred)?[preferred]:[]),...item.installationSlots.filter(l=>l!==preferred)];
+  if(preferred&&!item.installationSlots.includes(preferred))return {ok:false,error:'Dieser Einbauort ist nicht zulässig.'};
+  const locations=preferred?[preferred]:item.installationSlots;
   // Use an existing compatible base before purchasing another one.
   for(const location of locations){
     const result=addToCyberwareDraft(character,rules,additions,id,location);

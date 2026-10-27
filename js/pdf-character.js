@@ -1,6 +1,6 @@
-import { characterSheetData } from './pdf-character-data.js?v=session6';
-import { characterSheetFields, TEMPLATE_SHA256 } from './pdf-character-layout.js?v=session6';
-import { drawCheatsheet } from './pdf-cheatsheet.js?v=session6';
+import { characterSheetData } from './pdf-character-data.js?v=budget2';
+import { characterSheetFields, TEMPLATE_SHA256 } from './pdf-character-layout.js?v=budget2';
+import { drawCheatsheet } from './pdf-cheatsheet.js?v=budget2';
 
 export const TEMPLATE_URL = new URL('../data/Charakterblatt.pdf', import.meta.url);
 export const FONT_URL = new URL('../vendor/fonts/Ubuntu-R.ttf', import.meta.url);

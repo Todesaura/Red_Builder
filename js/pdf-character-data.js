@@ -1,12 +1,13 @@
-import {installedCyberWeapons} from './cyberware-weapons.js?v=session6';
-import {weaponConfiguration,attachmentList,secondaryWeapons} from './weapon-attachments.js?v=grenades1';
+import {livingCosts} from './lifepath.js';
+import {installedCyberWeapons} from './cyberware-weapons.js?v=budget2';
+import {weaponConfiguration,attachmentList,secondaryWeapons} from './weapon-attachments.js?v=budget2';
 import { netrunnerStats } from './netrunner.js';
 import { netIntegrityWeapons } from './netrunner-german.js';
-import { ownedWeaponOptions } from './weapon-options.js?v=session6';
-import { validateCharacter } from './model.js?v=session6';
-import { evaluateCharacter } from './rules.js?v=session6';
-import { ROLE_ABILITIES, roleAbilityExamples } from './role-abilities.js?v=session6';
-import { ROLE_POOLS, PHARMACEUTICALS } from './role-points.js?v=session6';
+import { ownedWeaponOptions } from './weapon-options.js?v=budget2';
+import { validateCharacter } from './model.js?v=budget2';
+import { evaluateCharacter } from './rules.js?v=budget2';
+import { ROLE_ABILITIES, roleAbilityExamples } from './role-abilities.js?v=budget2';
+import { ROLE_POOLS, PHARMACEUTICALS } from './role-points.js?v=budget2';
 
 export function characterSheetReadiness(character, rules, state = {}) {
   try {
@@ -43,7 +44,7 @@ export function characterSheetData(character, rules, state = {}) {
     campaign:c.campaign.active?c.campaign:null, health:v.health, name:c.name, roleId:c.role, role:rules.roles.find(role => role.id === c.role).name, ability:ability.name, rank:v.roleAbilities.rank, portrait:c.portrait,
     attributes:v.attributes, skills:v.skills.map(skill => ({...skill, specialty:c.skills.specialties.find(item => item.id === skill.id)?.skill ?? null, specialtyName:c.skills.specialties.find(item => item.id === skill.id)?.name ?? null})),
     derived:Object.fromEntries(v.derived.map(item => [item.id,item.value])), attackBonus:v.roleAbilities.bonuses.attack??0, humanity:v.cyberware, armor:v.armor, funds:v.funds,
-    hometown:c.skills.hometown, nativeLanguage:c.skills.nativeLanguage.name, lifepath:v.lifepath.entries, roleDetails,
+    livingCosts:livingCosts(c), clothing:inventory.filter(i=>i.definition.category==='clothing'), fashionware:v.cyberware.entries.filter(i=>i.definition.funding==='fashion'), hometown:c.skills.hometown, nativeLanguage:c.skills.nativeLanguage.name, lifepath:v.lifepath.entries, roleDetails,
     roleState:v.roleAbilities.state, roleBonuses:v.roleAbilities.bonuses,
     weapons:[...installedCyberWeapons(c,rules,v).map(e=>({quantity:e.quantity,definition:e.item})),...inventory.filter(item => ['weapon','grenade'].includes(item.definition.kind)),...secondaryWeapons(c,rules).map(e=>({quantity:e.quantity,definition:e.item}))],
     weaponAttachments:inventory.filter(e=>attachmentList(c,e.catalogId).length).map(e=>({weapon:e.definition,quantity:e.quantity,attachments:attachmentList(c,e.catalogId)})),

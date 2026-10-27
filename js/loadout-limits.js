@@ -1,6 +1,6 @@
-import {weaponConfiguration} from './weapon-attachments.js?v=grenades1';
+import {weaponConfiguration} from './weapon-attachments.js?v=budget2';
 
-export const LOADOUT_LIMITS=Object.freeze({grenades:3,oneHanded:2,twoHanded:1});
+export const LOADOUT_LIMITS=Object.freeze({grenades:3,oneHanded:3,twoHanded:1});
 export const isGrenade=item=>item?.kind==='grenade'||item?.id==='ammo-grenade';
 
 // Integrated barrels, NET programs, ammunition and installed cyberware are not extra carried weapons.
@@ -11,9 +11,10 @@ export function evaluateLoadout(character,rules) {
     if(isGrenade(item))counts.grenades+=entry.quantity*(item.units??1);
     else if(item?.kind==='weapon')counts[weaponConfiguration(character,item).hands===1?'oneHanded':'twoHanded']+=entry.quantity;
   }
+  const limits={...LOADOUT_LIMITS,oneHanded:counts.twoHanded?2:3};
   const labels={grenades:'Granaten',oneHanded:'Einhandwaffen',twoHanded:'Zweihandwaffen'};
-  const errors=Object.entries(LOADOUT_LIMITS).filter(([key,max])=>counts[key]>max).map(([key,max])=>`${labels[key]}: ${counts[key]} von höchstens ${max}. Entferne ${counts[key]-max} aus deinem Inventar.`);
-  return {counts,limits:LOADOUT_LIMITS,errors};
+  const errors=Object.entries(limits).filter(([key,max])=>counts[key]>max).map(([key,max])=>`${labels[key]}: ${counts[key]} von höchstens ${max}. Entferne ${counts[key]-max} aus deinem Inventar.`);
+  return {counts,limits,errors};
 }
 
 export function purchaseLoadoutError(character,rules,catalogId) {

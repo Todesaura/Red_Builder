@@ -1,7 +1,7 @@
 import { localizeAttributeText } from './attribute-labels.js';
 import {germanNetText} from './netrunner-german.js';
-import {quickReferenceColumns} from './pdf-cheatsheet-content.js?v=cemk1';
-import { WEAPON_PROFILES,weaponProfile } from './weapon-options.js?v=session6';
+import {quickReferenceColumns} from './pdf-cheatsheet-content.js?v=budget2';
+import { WEAPON_PROFILES,weaponProfile } from './weapon-options.js?v=budget2';
 
 // Cyberpunk RED core, p. 173: single-shot and Autofire are separate tables.
 export const RANGE_BANDS = ['0-6 m','7-12 m','13-25 m','26-50 m','51-100 m','101-200 m','201-400 m','401-800 m'];

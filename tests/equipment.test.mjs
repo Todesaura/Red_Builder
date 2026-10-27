@@ -16,13 +16,13 @@ test('Complete Package startet mit 2550 eb und getrennten 800 eb Fashion-Zuschus
  const funds=evaluateFunds(character(),rules);assert.equal(funds.remaining,2550);assert.equal(funds.fashionRemaining,800);assert.equal(funds.spent,0);
 });
 test('Ausrüstung und Cyberware teilen einen Pool; ausgebaute Cyberware bleibt bezahlt',()=>{
- const c=character();assert.ok(buyEquipment(c,rules,'agent').ok);assert.ok(install(c,'optishield','external').ok);
+ const c=character();c.campaign.sessionUnlocked=true;assert.ok(buyEquipment(c,rules,'agent').ok);assert.ok(install(c,'optishield','external').ok);
  assert.equal(evaluateFunds(c,rules).remaining,1950);assert.equal(evaluateFunds(c,rules).equipmentCost,100);
  removeEquipment(c,'agent');assert.equal(evaluateFunds(c,rules).remaining,2050);
  assert.ok(removeCyberware(c,rules,c.cyberware.items[0].id,stats,0).ok);assert.equal(evaluateFunds(c,rules).remaining,2050);
 });
 test('Fashionware nutzt den zweckgebundenen Zuschuss, der nicht als Bargeld zählt',()=>{
- const c=character();install(c,'kill-display','fashion');const f=evaluateFunds(c,rules);
+ const c=character();c.campaign.sessionUnlocked=true;install(c,'kill-display','fashion');const f=evaluateFunds(c,rules);
  assert.equal(f.remaining,2550);assert.equal(f.fashionRemaining,700);
  removeCyberware(c,rules,c.cyberware.items[0].id,stats,0);assert.equal(evaluateFunds(c,rules).remaining,2550);assert.equal(evaluateFunds(c,rules).fashionRemaining,700);
 });

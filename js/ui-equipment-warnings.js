@@ -1,5 +1,5 @@
 import {escapeHtml as e} from './html.js';
-import {equipmentWarnings} from './equipment-warnings.js?v=cemk1';
+import {equipmentWarnings} from './equipment-warnings.js?v=budget2';
 export function renderEquipmentWarnings(character,rules,evaluated){
   const warnings=equipmentWarnings(character,rules,evaluated);
   if(!warnings.length)return '';

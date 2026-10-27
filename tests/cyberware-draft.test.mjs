@@ -52,7 +52,7 @@ test('Manipulierte Doppel-IDs und entfernte Voraussetzungen verhindern den gesam
   assert.deepEqual(c,original);
 });
 test('Ausbau benötigt einen Kostenbetrag; Kaufpreis und Menschlichkeitsverlust bleiben bestehen', () => {
-  const c=character();assert.ok(commitCyberwareDraft(c,rules,add(c,[],'neural-link','neural')).ok);
+  const c=character();c.campaign.sessionUnlocked=true;assert.ok(commitCyberwareDraft(c,rules,add(c,[],'neural-link','neural')).ok);
   const before=evaluateCharacter(c,rules), original=structuredClone(c), id=c.cyberware.items[0].id;
   for(const fee of [undefined,NaN,-1,0.5,Infinity,1000001,999999]) { assert.equal(removeCyberware(c,rules,id,{},fee).ok,false);assert.deepEqual(c,original); }
   assert.ok(removeCyberware(c,rules,id,{},100).ok);
@@ -62,7 +62,7 @@ test('Ausbau benötigt einen Kostenbetrag; Kaufpreis und Menschlichkeitsverlust 
   assert.deepEqual(validateCharacter(JSON.parse(JSON.stringify(c)),rules),c);
 });
 test('Ausbau von Fashionware erstattet keinen Zuschuss; erneuter Einbau kostet erneut', () => {
-  const c=character();assert.ok(commitCyberwareDraft(c,rules,add(c,[],'biomonitor','fashion')).ok);
+  const c=character();c.campaign.sessionUnlocked=true;assert.ok(commitCyberwareDraft(c,rules,add(c,[],'biomonitor','fashion')).ok);
   assert.ok(removeCyberware(c,rules,c.cyberware.items[0].id,{},50).ok);
   assert.equal(evaluateFunds(c,rules).fashionRemaining,700);assert.equal(evaluateFunds(c,rules).remaining,2500);
   assert.ok(commitCyberwareDraft(c,rules,add(c,[],'biomonitor','fashion')).ok);

@@ -45,7 +45,7 @@ test('Kein Ziel, falsches Ziel und fehlende Basis blockieren Vorschau und Einbau
  assert.deepEqual(c,snapshot);assert.equal(installCyberware(c,rules,'chainripp','arm-left',null,stats).ok,false);
 });
 test('Bestätigter Einbau und Entfernen bewahren Geld- und Menschlichkeitsregeln',()=>{
- const c=character();installCyberware(c,rules,'holo-palm','arm-left',null,stats);
+ const c=character();c.campaign.sessionUnlocked=true;installCyberware(c,rules,'holo-palm','arm-left',null,stats);
  assert.ok(previewInstallation(c,rules,'holo-palm','arm-left').errors.length);assert.equal(previewInstallation(c,rules,'holo-palm','arm-right').after.funds.remaining,2350);
  assert.ok(removeCyberware(c,rules,c.cyberware.items[0].id,stats,0).ok);assert.equal(evaluateCharacter(c,rules).funds.remaining,2450);
 });
@@ -62,12 +62,12 @@ test('Ungeklärte Kategorie blockiert die Installation ausdrücklich',()=>{
 test('Basis und Erweiterung werden kategorienunabhängig hierarchisch dargestellt',()=>{
  const r=structuredClone(rules);const base=r.cyberwareRules.items.find(item=>item.id==='bug-eye');
  r.cyberwareRules.items.push({...base,id:'test-eye-option',name:'Synthetische Testoption',foundation:undefined,capacity:undefined,requirements:{parentType:'eye'},slots:1,cost:0,humanity:0,maxHumanityLoss:0});
- const c=character();installCyberware(c,r,'bug-eye','eye-left',null,stats);const parent=c.cyberware.items[0].id;
+ const c=character();c.campaign.sessionUnlocked=true;installCyberware(c,r,'bug-eye','eye-left',null,stats);const parent=c.cyberware.items[0].id;
  assert.ok(installCyberware(c,r,'test-eye-option','eye-left',parent,stats).ok);
  const html=renderInstalledCyberware(evaluateCharacter(c,r),r);assert.ok(html.includes('installed-child'));assert.ok(html.includes('Erweiterungen von Cyclops'));
  assert.equal(removeCyberware(c,r,parent,stats).ok,false);
 });
 test('Nur die ausgewählte Cyberware öffnet ihre Detailansicht',()=>{
  const c=character();const html=renderCyberware(c,rules,evaluateCharacter(c,rules),{...state,selectedCyberware:'kill-display',pendingLocation:'fashion',installationOpen:true});
- assert.equal((html.match(/class="implant-detail"/g)??[]).length,1);assert.ok(html.includes('Zum Entwurf hinzufügen'));assert.ok(html.includes('Gemeinsamer Installationsentwurf'));assert.ok(!html.includes('Installation bestätigen'));
+ assert.equal((html.match(/class="implant-detail"/g)??[]).length,1);assert.ok(html.includes('Kaufen & einbauen'));assert.ok(!html.includes('Gemeinsamer Installationsentwurf'));assert.ok(!html.includes('Installation bestätigen'));
 });

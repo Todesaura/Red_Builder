@@ -1,5 +1,5 @@
-import {attachmentLoadoutError} from './loadout-limits.js?v=grenades1';
-import {ATTACHMENTS,attachmentList,canAttach,weaponConfiguration,attachmentConflict,attachmentRuleText,COMMUNITY_SOURCE} from './weapon-attachments.js?v=grenades1';
+import {attachmentLoadoutError} from './loadout-limits.js?v=budget2';
+import {ATTACHMENTS,attachmentList,canAttach,weaponConfiguration,attachmentConflict,attachmentRuleText,COMMUNITY_SOURCE} from './weapon-attachments.js?v=budget2';
 import {escapeHtml as e} from './html.js';
 export function renderWeaponAttachments(character,item,rules,evaluated,state={}) {
   if(item.kind!=='weapon'||item.skill==='melee-weapon')return '';

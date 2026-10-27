@@ -1,5 +1,5 @@
-import {INJURY_STATUS} from './campaign-rules.js?v=session6';
-import {attachmentRuleText} from './weapon-attachments.js?v=grenades1';
+import {INJURY_STATUS} from './campaign-rules.js?v=budget2';
+import {attachmentRuleText} from './weapon-attachments.js?v=budget2';
 // Presentation only: use evaluated bases; never apply an effect to character state.
 import { NET_SUPPORT_SUMMARIES } from './netrunner-german.js';
 const roll = value => `**${value} + 1W10**`;
