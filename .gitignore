@@ -1,0 +1,6 @@
+.DS_Store
+Thumbs.db
+*.log
+test-results/
+tmp/
+output/

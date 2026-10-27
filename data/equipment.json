@@ -1,0 +1,1832 @@
+{
+  "startingCash": 2550,
+  "fashionAllowance": 800,
+  "budgetSource": "https://fantasygroundsunity.atlassian.net/wiki/spaces/FGCP/pages/2140340233/Cyberpunk%2BRED%2BCharacter%2BCreation",
+  "source": "https://rtalsoriangames.com/wp-content/uploads/2025/12/RTG-CPR-DLC-NightMarketIndexv1.23.pdf",
+  "items": [
+    {
+      "id": "agent",
+      "name": "Agent",
+      "cost": 100,
+      "description": "Dein persönlicher digitaler Assistent für Kommunikation und Alltag.",
+      "reference": "Grundregelwerk S. 352",
+      "category": "misc"
+    },
+    {
+      "id": "carryall",
+      "name": "Tragetasche",
+      "cost": 20,
+      "description": "Platz für die Dinge, die du unterwegs brauchst.",
+      "reference": "Grundregelwerk S. 352",
+      "category": "misc"
+    },
+    {
+      "id": "mask",
+      "name": "Anti-Smog-Atemmaske",
+      "cost": 20,
+      "description": "Atemschutz für die schlechte Stadtluft.",
+      "reference": "Grundregelwerk S. 352",
+      "category": "misc"
+    },
+    {
+      "id": "binoculars",
+      "name": "Fernglas",
+      "cost": 50,
+      "description": "Beobachte deine Umgebung aus der Entfernung.",
+      "reference": "Grundregelwerk S. 352",
+      "category": "misc"
+    },
+    {
+      "id": "computer",
+      "name": "Computer",
+      "cost": 50,
+      "description": "Ein gewöhnlicher Computer für Arbeit und Daten.",
+      "reference": "Grundregelwerk S. 352",
+      "category": "misc"
+    },
+    {
+      "id": "flashlight",
+      "name": "Taschenlampe",
+      "cost": 20,
+      "description": "Licht für dunkle Gassen und Gebäude.",
+      "reference": "Grundregelwerk S. 353",
+      "category": "misc"
+    },
+    {
+      "id": "medtech-bag",
+      "name": "Medtech-Tasche",
+      "cost": 100,
+      "description": "Medizinische Ausrüstung für die Versorgung von Verletzten.",
+      "reference": "Grundregelwerk S. 354",
+      "category": "misc"
+    },
+    {
+      "id": "rope",
+      "name": "Seil (60 m)",
+      "cost": 20,
+      "description": "Ein Seil für Klettertouren und andere Aufgaben.",
+      "reference": "Grundregelwerk S. 354",
+      "category": "misc"
+    },
+    {
+      "id": "radio",
+      "name": "Funkgerät",
+      "cost": 100,
+      "description": "Bleibe mit deinem Team in Verbindung.",
+      "reference": "Grundregelwerk S. 354",
+      "category": "misc"
+    },
+    {
+      "id": "tech-bag",
+      "name": "Technik-Tasche",
+      "cost": 500,
+      "description": "Werkzeugausrüstung für technische Arbeiten.",
+      "reference": "Grundregelwerk S. 354",
+      "category": "misc"
+    },
+    {
+      "id": "techtool",
+      "name": "Techtool",
+      "cost": 100,
+      "description": "Ein handliches Werkzeug für den technischen Alltag.",
+      "reference": "Grundregelwerk S. 355",
+      "category": "misc"
+    },
+    {
+      "id": "armor-leathers-head",
+      "name": "Lederkleidung · Kopf",
+      "armorType": "leathers",
+      "armorName": "Lederkleidung",
+      "category": "armor",
+      "slot": "head",
+      "sp": 4,
+      "penalty": 0,
+      "cost": 20,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-leathers-body",
+      "name": "Lederkleidung · Körper",
+      "armorType": "leathers",
+      "armorName": "Lederkleidung",
+      "category": "armor",
+      "slot": "body",
+      "sp": 4,
+      "penalty": 0,
+      "cost": 20,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-kevlar-head",
+      "name": "Kevlar · Kopf",
+      "armorType": "kevlar",
+      "armorName": "Kevlar",
+      "category": "armor",
+      "slot": "head",
+      "sp": 7,
+      "penalty": 0,
+      "cost": 50,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-kevlar-body",
+      "name": "Kevlar · Körper",
+      "armorType": "kevlar",
+      "armorName": "Kevlar",
+      "category": "armor",
+      "slot": "body",
+      "sp": 7,
+      "penalty": 0,
+      "cost": 50,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-light-jack-head",
+      "name": "Leichte Panzerjacke · Kopf",
+      "armorType": "light-jack",
+      "armorName": "Leichte Panzerjacke",
+      "category": "armor",
+      "slot": "head",
+      "sp": 11,
+      "penalty": 0,
+      "cost": 100,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-light-jack-body",
+      "name": "Leichte Panzerjacke · Körper",
+      "armorType": "light-jack",
+      "armorName": "Leichte Panzerjacke",
+      "category": "armor",
+      "slot": "body",
+      "sp": 11,
+      "penalty": 0,
+      "cost": 100,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-bodyweight-head",
+      "name": "Bodyweight Suit · Kopf",
+      "armorType": "bodyweight",
+      "armorName": "Bodyweight Suit",
+      "category": "armor",
+      "slot": "head",
+      "sp": 11,
+      "penalty": 0,
+      "cost": 1000,
+      "description": "Eng anliegende Rüstung mit Halterung für ein Cyberdeck.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-bodyweight-body",
+      "name": "Bodyweight Suit · Körper",
+      "armorType": "bodyweight",
+      "armorName": "Bodyweight Suit",
+      "category": "armor",
+      "slot": "body",
+      "sp": 11,
+      "penalty": 0,
+      "cost": 1000,
+      "description": "Eng anliegende Rüstung mit Halterung für ein Cyberdeck.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-medium-jack-head",
+      "name": "Mittlere Panzerjacke · Kopf",
+      "armorType": "medium-jack",
+      "armorName": "Mittlere Panzerjacke",
+      "category": "armor",
+      "slot": "head",
+      "sp": 12,
+      "penalty": 2,
+      "cost": 100,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-medium-jack-body",
+      "name": "Mittlere Panzerjacke · Körper",
+      "armorType": "medium-jack",
+      "armorName": "Mittlere Panzerjacke",
+      "category": "armor",
+      "slot": "body",
+      "sp": 12,
+      "penalty": 2,
+      "cost": 100,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-heavy-jack-head",
+      "name": "Schwere Panzerjacke · Kopf",
+      "armorType": "heavy-jack",
+      "armorName": "Schwere Panzerjacke",
+      "category": "armor",
+      "slot": "head",
+      "sp": 13,
+      "penalty": 2,
+      "cost": 500,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-heavy-jack-body",
+      "name": "Schwere Panzerjacke · Körper",
+      "armorType": "heavy-jack",
+      "armorName": "Schwere Panzerjacke",
+      "category": "armor",
+      "slot": "body",
+      "sp": 13,
+      "penalty": 2,
+      "cost": 500,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-flak-head",
+      "name": "Flak-Rüstung · Kopf",
+      "armorType": "flak",
+      "armorName": "Flak-Rüstung",
+      "category": "armor",
+      "slot": "head",
+      "sp": 15,
+      "penalty": 4,
+      "cost": 500,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-flak-body",
+      "name": "Flak-Rüstung · Körper",
+      "armorType": "flak",
+      "armorName": "Flak-Rüstung",
+      "category": "armor",
+      "slot": "body",
+      "sp": 15,
+      "penalty": 4,
+      "cost": 500,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-metalgear-head",
+      "name": "Metalgear · Kopf",
+      "armorType": "metalgear",
+      "armorName": "Metalgear",
+      "category": "armor",
+      "slot": "head",
+      "sp": 18,
+      "penalty": 4,
+      "cost": 5000,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "armor-metalgear-body",
+      "name": "Metalgear · Körper",
+      "armorType": "metalgear",
+      "armorName": "Metalgear",
+      "category": "armor",
+      "slot": "body",
+      "sp": 18,
+      "penalty": 4,
+      "cost": 5000,
+      "description": "Schützt den ausgewählten Körperbereich.",
+      "reference": "Grundregelwerk S. 96–97, 350"
+    },
+    {
+      "id": "light-melee",
+      "name": "Kampfmesser",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "1W6",
+      "rof": 2,
+      "cost": 50,
+      "skill": "melee-weapon",
+      "hands": 1,
+      "concealable": true,
+      "magazine": null,
+      "description": "Nahkampfangriff; gegnerische Rüstung wird für den Treffer halbiert (aufgerundet).",
+      "reference": "Grundregelwerk S. 92–95",
+      "classification": "Leichte Nahkampfwaffe",
+      "houseRule": false
+    },
+    {
+      "id": "medium-melee",
+      "name": "Brecheisen",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "2W6",
+      "rof": 2,
+      "cost": 50,
+      "skill": "melee-weapon",
+      "hands": 2,
+      "concealable": false,
+      "magazine": null,
+      "description": "Nahkampfangriff; gegnerische Rüstung wird für den Treffer halbiert (aufgerundet).",
+      "reference": "Grundregelwerk S. 92–95",
+      "classification": "Mittlere Nahkampfwaffe",
+      "houseRule": true
+    },
+    {
+      "id": "heavy-melee",
+      "name": "Bleirohr",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "3W6",
+      "rof": 2,
+      "cost": 100,
+      "skill": "melee-weapon",
+      "hands": 2,
+      "concealable": false,
+      "magazine": null,
+      "description": "Nahkampfangriff; gegnerische Rüstung wird für den Treffer halbiert (aufgerundet).",
+      "reference": "Grundregelwerk S. 92–95",
+      "classification": "Schwere Nahkampfwaffe",
+      "houseRule": true
+    },
+    {
+      "id": "very-heavy-melee",
+      "name": "Vorschlaghammer",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "4W6",
+      "rof": 1,
+      "cost": 500,
+      "skill": "melee-weapon",
+      "hands": 2,
+      "concealable": false,
+      "magazine": null,
+      "description": "Nahkampfangriff; gegnerische Rüstung wird für den Treffer halbiert (aufgerundet).",
+      "reference": "Grundregelwerk S. 92–95",
+      "classification": "Sehr schwere Nahkampfwaffe",
+      "houseRule": true
+    },
+    {
+      "id": "medium-pistol",
+      "name": "Mittlere Pistole – Federated Arms X-9mm",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "2W6",
+      "rof": 2,
+      "cost": 50,
+      "skill": "handgun",
+      "hands": 1,
+      "concealable": true,
+      "magazine": 12,
+      "description": "Standardkonfiguration des Generators; Modellname ohne zusätzliche Sonderregeln.",
+      "reference": "Grundregelwerk S. 92–95",
+      "ammoIds": [
+        "ammo-medium-pistol",
+        "ammo-medium-pistol-ap",
+        "ammo-medium-pistol-incendiary",
+        "ammo-medium-pistol-rubber"
+      ],
+      "shortName": "Mittlere Pistole",
+      "modelName": "Federated Arms X-9mm"
+    },
+    {
+      "id": "heavy-pistol",
+      "name": "Schwere Pistole – Mustang Arms Mark III",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "3W6",
+      "rof": 2,
+      "cost": 100,
+      "skill": "handgun",
+      "hands": 1,
+      "concealable": true,
+      "magazine": 8,
+      "description": "Standardkonfiguration des Generators; Modellname ohne zusätzliche Sonderregeln.",
+      "reference": "Grundregelwerk S. 92–95",
+      "ammoIds": [
+        "ammo-heavy-pistol",
+        "ammo-heavy-pistol-ap",
+        "ammo-heavy-pistol-incendiary",
+        "ammo-heavy-pistol-rubber"
+      ],
+      "shortName": "Schwere Pistole",
+      "modelName": "Mustang Arms Mark III"
+    },
+    {
+      "id": "very-heavy-pistol",
+      "name": "Sehr schwere Pistole – Sternmeyer P-35",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "4W6",
+      "rof": 1,
+      "cost": 100,
+      "skill": "handgun",
+      "hands": 1,
+      "concealable": false,
+      "magazine": 8,
+      "description": "Standardkonfiguration des Generators; Modellname ohne zusätzliche Sonderregeln.",
+      "reference": "Grundregelwerk S. 92–95",
+      "ammoIds": [
+        "ammo-very-heavy-pistol",
+        "ammo-very-heavy-pistol-ap",
+        "ammo-very-heavy-pistol-incendiary",
+        "ammo-very-heavy-pistol-rubber"
+      ],
+      "shortName": "Sehr schwere Pistole",
+      "modelName": "Sternmeyer P-35"
+    },
+    {
+      "id": "smg",
+      "name": "Maschinenpistole – Militech Mini-Gat",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "2W6",
+      "rof": 1,
+      "cost": 100,
+      "skill": "handgun",
+      "hands": 1,
+      "concealable": true,
+      "magazine": 30,
+      "description": "Standardkonfiguration des Generators; Modellname ohne zusätzliche Sonderregeln.",
+      "reference": "Grundregelwerk S. 92–95",
+      "ammoIds": [
+        "ammo-medium-pistol",
+        "ammo-medium-pistol-ap",
+        "ammo-medium-pistol-incendiary",
+        "ammo-medium-pistol-rubber"
+      ],
+      "shortName": "Maschinenpistole",
+      "modelName": "Militech Mini-Gat"
+    },
+    {
+      "id": "heavy-smg",
+      "name": "Schwere Maschinenpistole – Sternmeyer SMG-21",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "3W6",
+      "rof": 1,
+      "cost": 100,
+      "skill": "handgun",
+      "hands": 1,
+      "concealable": false,
+      "magazine": 40,
+      "description": "Standardkonfiguration des Generators; Modellname ohne zusätzliche Sonderregeln.",
+      "reference": "Grundregelwerk S. 92–95",
+      "ammoIds": [
+        "ammo-heavy-pistol",
+        "ammo-heavy-pistol-ap",
+        "ammo-heavy-pistol-incendiary",
+        "ammo-heavy-pistol-rubber"
+      ],
+      "shortName": "Schwere Maschinenpistole",
+      "modelName": "Sternmeyer SMG-21"
+    },
+    {
+      "id": "shotgun",
+      "name": "Schrotflinte – Arasaka Rapid Assault",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "5W6",
+      "rof": 1,
+      "cost": 500,
+      "skill": "shoulder-arms",
+      "hands": 2,
+      "concealable": false,
+      "magazine": 4,
+      "description": "Standardkonfiguration des Generators; Modellname ohne zusätzliche Sonderregeln.",
+      "reference": "Grundregelwerk S. 92–95",
+      "ammoIds": [
+        "ammo-slug",
+        "ammo-shell",
+        "ammo-slug-ap",
+        "ammo-slug-incendiary",
+        "ammo-slug-rubber"
+      ],
+      "shortName": "Schrotflinte",
+      "modelName": "Arasaka Rapid Assault"
+    },
+    {
+      "id": "assault-rifle",
+      "name": "Sturmgewehr – Militech Ronin",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "5W6",
+      "rof": 1,
+      "cost": 500,
+      "skill": "shoulder-arms",
+      "hands": 2,
+      "concealable": false,
+      "magazine": 25,
+      "description": "Standardkonfiguration des Generators; Modellname ohne zusätzliche Sonderregeln.",
+      "reference": "Grundregelwerk S. 92–95",
+      "ammoIds": [
+        "ammo-rifle",
+        "ammo-rifle-ap",
+        "ammo-rifle-incendiary",
+        "ammo-rifle-rubber"
+      ],
+      "shortName": "Sturmgewehr",
+      "modelName": "Militech Ronin"
+    },
+    {
+      "id": "sniper-rifle",
+      "name": "Scharfschützengewehr – Nomad Long Rifle",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "5W6",
+      "rof": 1,
+      "cost": 500,
+      "skill": "shoulder-arms",
+      "hands": 2,
+      "concealable": false,
+      "magazine": 4,
+      "description": "Standardkonfiguration des Generators; Modellname ohne zusätzliche Sonderregeln.",
+      "reference": "Grundregelwerk S. 92–95",
+      "ammoIds": [
+        "ammo-rifle",
+        "ammo-rifle-ap",
+        "ammo-rifle-incendiary",
+        "ammo-rifle-rubber"
+      ],
+      "shortName": "Scharfschützengewehr",
+      "modelName": "Nomad Long Rifle"
+    },
+    {
+      "id": "bow",
+      "name": "Bogen / Armbrust – Eagletech Tomcat",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "4W6",
+      "rof": 1,
+      "cost": 100,
+      "skill": "archery",
+      "hands": 2,
+      "concealable": false,
+      "magazine": null,
+      "description": "Standardkonfiguration des Generators; Modellname ohne zusätzliche Sonderregeln.",
+      "reference": "Grundregelwerk S. 92–95",
+      "ammoIds": [
+        "ammo-arrow"
+      ],
+      "shortName": "Bogen / Armbrust",
+      "modelName": "Eagletech Tomcat"
+    },
+    {
+      "id": "grenade-launcher",
+      "name": "Granatwerfer – Militech Mini-Grenade",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "6W6",
+      "rof": 1,
+      "cost": 500,
+      "skill": "heavy-weapons",
+      "hands": 2,
+      "concealable": false,
+      "magazine": 2,
+      "description": "Standardkonfiguration des Generators; Modellname ohne zusätzliche Sonderregeln.",
+      "reference": "Grundregelwerk S. 92–95",
+      "ammoIds": [
+        "ammo-grenade"
+      ],
+      "shortName": "Granatwerfer",
+      "modelName": "Militech Mini-Grenade"
+    },
+    {
+      "id": "rocket-launcher",
+      "name": "Raketenwerfer – Militech Urban",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "8W6",
+      "rof": 1,
+      "cost": 500,
+      "skill": "heavy-weapons",
+      "hands": 2,
+      "concealable": false,
+      "magazine": 1,
+      "description": "Standardkonfiguration des Generators; Modellname ohne zusätzliche Sonderregeln.",
+      "reference": "Grundregelwerk S. 92–95",
+      "ammoIds": [
+        "ammo-rocket"
+      ],
+      "shortName": "Raketenwerfer",
+      "modelName": "Militech Urban"
+    },
+    {
+      "id": "ammo-medium-pistol",
+      "name": "Mittlere Pistolenmunition",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 344–345"
+    },
+    {
+      "id": "ammo-heavy-pistol",
+      "name": "Schwere Pistolenmunition",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 344–345"
+    },
+    {
+      "id": "ammo-very-heavy-pistol",
+      "name": "Sehr schwere Pistolenmunition",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 344–345"
+    },
+    {
+      "id": "ammo-rifle",
+      "name": "Gewehrmunition",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 344–345"
+    },
+    {
+      "id": "ammo-slug",
+      "name": "Flinten-Slugs",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 344–345"
+    },
+    {
+      "id": "ammo-shell",
+      "name": "Schrotpatronen",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 344–345"
+    },
+    {
+      "id": "ammo-arrow",
+      "name": "Pfeile / Bolzen",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 344–345"
+    },
+    {
+      "id": "medium-melee-one-handed",
+      "name": "Baseballschläger",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "2W6",
+      "rof": 2,
+      "cost": 75,
+      "skill": "melee-weapon",
+      "hands": 1,
+      "concealable": false,
+      "magazine": null,
+      "description": "Nahkampfangriff; gegnerische Rüstung wird für den Treffer halbiert (aufgerundet).",
+      "reference": "Grundregelwerk S. 92–95",
+      "classification": "Mittlere Nahkampfwaffe",
+      "houseRule": true,
+      "variantOf": "medium-melee"
+    },
+    {
+      "id": "heavy-melee-one-handed",
+      "name": "Schwert",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "3W6",
+      "rof": 2,
+      "cost": 150,
+      "skill": "melee-weapon",
+      "hands": 1,
+      "concealable": false,
+      "magazine": null,
+      "description": "Nahkampfangriff; gegnerische Rüstung wird für den Treffer halbiert (aufgerundet).",
+      "reference": "Grundregelwerk S. 92–95",
+      "classification": "Schwere Nahkampfwaffe",
+      "houseRule": true,
+      "variantOf": "heavy-melee"
+    },
+    {
+      "id": "very-heavy-melee-one-handed",
+      "name": "Naginata",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "4W6",
+      "rof": 1,
+      "cost": 750,
+      "skill": "melee-weapon",
+      "hands": 1,
+      "concealable": false,
+      "magazine": null,
+      "description": "Nahkampfangriff; gegnerische Rüstung wird für den Treffer halbiert (aufgerundet).",
+      "reference": "Grundregelwerk S. 92–95",
+      "classification": "Sehr schwere Nahkampfwaffe",
+      "houseRule": true,
+      "variantOf": "very-heavy-melee"
+    },
+    {
+      "id": "tomahawk",
+      "name": "Tomahawk",
+      "category": "weapons",
+      "kind": "weapon",
+      "damage": "1W6",
+      "rof": 2,
+      "cost": 50,
+      "skill": "melee-weapon",
+      "hands": 1,
+      "concealable": true,
+      "magazine": null,
+      "description": "Nahkampfangriff; gegnerische Rüstung wird für den Treffer halbiert (aufgerundet).",
+      "reference": "Grundregelwerk S. 92–95",
+      "classification": "Leichte Nahkampfwaffe",
+      "houseRule": false
+    },
+    {
+      "id": "ammo-grenade",
+      "name": "Militärische Splittergranate (Werfermunition)",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 500,
+      "units": 1,
+      "reference": "Generatorpreis: 500 eb · Wirkung: Grundregelwerk S. 345–346"
+    },
+    {
+      "id": "ammo-rocket",
+      "name": "Panzerbrechende Rakete",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 100,
+      "units": 1,
+      "reference": "Grundregelwerk S. 344–345"
+    },
+    {
+      "id": "duct-tape",
+      "name": "Klebeband",
+      "cost": 20,
+      "description": "Für Befestigungen und provisorische Reparaturen.",
+      "category": "misc",
+      "reference": "Grundregelwerk S. 353"
+    },
+    {
+      "id": "disposable-phone",
+      "name": "Wegwerftelefon",
+      "cost": 50,
+      "description": "Ein einfaches Telefon für kurzfristige Kontakte.",
+      "category": "misc",
+      "reference": "Grundregelwerk S. 353"
+    },
+    {
+      "id": "lock-picks",
+      "name": "Dietrich-Set",
+      "cost": 20,
+      "description": "Werkzeug für mechanische Schlösser.",
+      "category": "misc",
+      "reference": "Grundregelwerk S. 354"
+    },
+    {
+      "id": "grapple-gun",
+      "name": "Enterhakenpistole",
+      "cost": 100,
+      "description": "Hilfsmittel zum Überwinden von Höhen.",
+      "category": "misc",
+      "reference": "Grundregelwerk S. 353"
+    },
+    {
+      "id": "handcuffs",
+      "name": "Handschellen",
+      "cost": 50,
+      "description": "Zum Fesseln einer Person.",
+      "category": "misc",
+      "reference": "Grundregelwerk S. 353"
+    },
+    {
+      "id": "sleeping-bag",
+      "name": "Luftbett & Schlafsack",
+      "cost": 20,
+      "description": "Ein Schlafplatz für unterwegs.",
+      "category": "misc",
+      "reference": "Grundregelwerk S. 354"
+    },
+    {
+      "id": "memory-chip",
+      "name": "Speicherchip",
+      "cost": 10,
+      "description": "Datenträger für kompatible Geräte.",
+      "category": "misc",
+      "reference": "Grundregelwerk S. 354"
+    },
+    {
+      "id": "tent",
+      "name": "Zelt & Campingausrüstung",
+      "cost": 50,
+      "description": "Unterkunft für Reisen außerhalb der Stadt.",
+      "category": "misc",
+      "reference": "Grundregelwerk S. 355"
+    },
+    {
+      "id": "camera",
+      "name": "Videokamera",
+      "cost": 100,
+      "description": "Für Bild- und Tonaufnahmen.",
+      "category": "misc",
+      "reference": "Grundregelwerk S. 355"
+    },
+    {
+      "id": "virtuality-goggles",
+      "name": "Netzsicht-Brille",
+      "cost": 100,
+      "description": "NET-Ansicht über dem Sichtfeld der realen Welt. Ohne Brille oder entsprechende Cyberoptik bist du während des Netzeinsatzs für die Außenwelt effektiv bewusstlos.",
+      "category": "netrunner",
+      "reference": "Grundregelwerk S. 355",
+      "netrunner": {
+        "group": "decks"
+      },
+      "originalName": "Virtuality-Brille"
+    },
+    {
+      "id": "instrument",
+      "name": "Elektrisches Instrument",
+      "cost": 500,
+      "description": "Für Auftritte und Musikproduktion.",
+      "category": "misc",
+      "reference": "Grundregelwerk S. 353"
+    },
+    {
+      "id": "cyberdeck-standard",
+      "name": "Cyberdeck (Standardqualität)",
+      "category": "netrunner",
+      "cost": 500,
+      "description": "Cyberdeck mit 7 gemeinsamen Optionsplätzen für Programme und Hardware.",
+      "reference": "Grundregelwerk S. 353",
+      "netrunner": {
+        "group": "decks",
+        "capacity": 7
+      }
+    },
+    {
+      "id": "cyberdeck-poor",
+      "name": "Cyberdeck (schlechte Qualität)",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Cyberdeck mit 5 gemeinsamen Optionsplätzen für Programme und Hardware.",
+      "netrunner": {
+        "group": "decks",
+        "capacity": 5
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371"
+    },
+    {
+      "id": "cyberdeck-excellent",
+      "name": "Cyberdeck (ausgezeichnete Qualität)",
+      "cost": 1000,
+      "category": "netrunner",
+      "description": "Cyberdeck mit 9 gemeinsamen Optionsplätzen für Programme und Hardware.",
+      "netrunner": {
+        "group": "decks",
+        "capacity": 9
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371"
+    },
+    {
+      "id": "net-program-eraser",
+      "name": "Radierer",
+      "cost": 20,
+      "category": "netrunner",
+      "description": "Verschleiern-Proben erhalten +2, solange das Programm aktiv ist.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Booster",
+        "slots": 1,
+        "atk": 0,
+        "defense": 0,
+        "rez": 7
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Eraser"
+    },
+    {
+      "id": "net-program-see-ya",
+      "name": "Späher",
+      "cost": 20,
+      "category": "netrunner",
+      "description": "Wegfinder-Proben erhalten +2, solange das Programm aktiv ist.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Booster",
+        "slots": 1,
+        "atk": 0,
+        "defense": 0,
+        "rez": 7
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "See Ya"
+    },
+    {
+      "id": "net-program-speedy-gonzalvez",
+      "name": "Flitzer",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Geschwindigkeit beim ersten Kontakt mit wartendem Schwarzes ICE steigt um 2; kein Bonus auf normale Initiative oder BEW.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Booster",
+        "slots": 1,
+        "atk": 0,
+        "defense": 0,
+        "rez": 7
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Speedy Gonzalvez"
+    },
+    {
+      "id": "net-program-worm",
+      "name": "Wurm",
+      "cost": 50,
+      "category": "netrunner",
+      "description": "Hintertür-Proben erhalten +2, solange das Programm aktiv ist.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Booster",
+        "slots": 1,
+        "atk": 0,
+        "defense": 0,
+        "rez": 7
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Worm"
+    },
+    {
+      "id": "net-program-armor",
+      "name": "Panzerung",
+      "cost": 50,
+      "category": "netrunner",
+      "description": "Aktiv: 4 weniger Hirnschaden. Nur eine Kopie gleichzeitig; jede Kopie einmal pro Netzeinsatz.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Defender",
+        "slots": 1,
+        "atk": 0,
+        "defense": 0,
+        "rez": 7
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Armor"
+    },
+    {
+      "id": "net-program-flak",
+      "name": "Flak",
+      "cost": 50,
+      "category": "netrunner",
+      "description": "Aktiv: Angriff gegnerischer gewöhnliche Angriffsprogramme gegen dich wird 0. Nur eine Kopie gleichzeitig; jede einmal pro Netzeinsatz.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Defender",
+        "slots": 1,
+        "atk": 0,
+        "defense": 0,
+        "rez": 7
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Flak"
+    },
+    {
+      "id": "net-program-shield",
+      "name": "Schild",
+      "cost": 20,
+      "category": "netrunner",
+      "description": "Verhindert den Hirnschaden des ersten erfolgreichen gewöhnliche Programmeffekts und fällt dann auf 0 Integrität. Nur eine Kopie gleichzeitig; jede einmal pro Netzeinsatz.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Defender",
+        "slots": 1,
+        "atk": 0,
+        "defense": 0,
+        "rez": 7
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Shield"
+    },
+    {
+      "id": "net-program-banhammer",
+      "name": "Bannhammer",
+      "cost": 50,
+      "category": "netrunner",
+      "description": "Bei Treffer 3W6 Integritätsschaden gegen gewöhnliche Programme oder 2W6 gegen Schwarzes ICE.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Anti-Programm",
+        "slots": 1,
+        "atk": 1,
+        "defense": 0,
+        "rez": 0,
+        "integrityDamage": {
+          "ordinary": "3W6",
+          "blackIce": "2W6"
+        }
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Banhammer"
+    },
+    {
+      "id": "net-program-sword",
+      "name": "Schwert",
+      "cost": 50,
+      "category": "netrunner",
+      "description": "Bei Treffer 3W6 Integritätsschaden gegen Schwarzes ICE oder 2W6 gegen gewöhnliche Programme.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Anti-Programm",
+        "slots": 1,
+        "atk": 1,
+        "defense": 0,
+        "rez": 0,
+        "integrityDamage": {
+          "ordinary": "2W6",
+          "blackIce": "3W6"
+        }
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Sword"
+    },
+    {
+      "id": "net-program-deckkrash",
+      "name": "Deckabsturz",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Bei Treffer wird der gegnerische Netrunner unsicher ausgeloggt und erleidet dabei die Effekte seiner noch aktiven, bereits angetroffenen feindlichen Schwarzes ICE.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Anti-Person",
+        "slots": 1,
+        "atk": 0,
+        "defense": 0,
+        "rez": 0
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "DeckKRASH"
+    },
+    {
+      "id": "net-program-hellbolt",
+      "name": "Höllenblitz",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Bei Treffer 2W6 Hirnschaden. Ohne Isolierte Leitungen brennen Deck und Kleidung: am Zugende je 2 TP, bis eine körperliche Aktion das Feuer löscht; dieser Brand stapelt nicht.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Anti-Person",
+        "slots": 1,
+        "atk": 2,
+        "defense": 0,
+        "rez": 0
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Hellbolt"
+    },
+    {
+      "id": "net-program-nervescrub",
+      "name": "Nervenlöscher",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Bei Treffer sinken INT, REF und GES des Ziels für eine Stunde um je 1W6, mindestens auf 1.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Anti-Person",
+        "slots": 1,
+        "atk": 0,
+        "defense": 0,
+        "rez": 0
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Nervescrub"
+    },
+    {
+      "id": "net-program-poison-flatline",
+      "name": "Programmvergifter",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Bei Treffer wird ein zufälliges installiertes gewöhnliche Programm des gegnerischen Cyberdecks zerstört.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Anti-Person",
+        "slots": 1,
+        "atk": 0,
+        "defense": 0,
+        "rez": 0
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Poison Flatline"
+    },
+    {
+      "id": "net-program-superglue",
+      "name": "Sekundenkleber",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Bei Treffer kann das Ziel 1W6 Runden weder tiefer in die Architektur noch sicher ausloggen. Unsicheres Ausloggen bleibt möglich. Jede Kopie einmal pro Netzeinsatz.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Anti-Person",
+        "slots": 1,
+        "atk": 2,
+        "defense": 0,
+        "rez": 0
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Superglue"
+    },
+    {
+      "id": "net-program-vrizzbolt",
+      "name": "Nervenblitz",
+      "cost": 50,
+      "category": "netrunner",
+      "description": "Bei Treffer 1W6 Hirnschaden; im nächsten Zug eine Netz-Aktion weniger, mindestens zwei.",
+      "netrunner": {
+        "group": "programs",
+        "className": "Anti-Person",
+        "slots": 1,
+        "atk": 1,
+        "defense": 0,
+        "rez": 0
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Vrizzbolt"
+    },
+    {
+      "id": "net-hardware-backup-drive",
+      "name": "Sicherungslaufwerk",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Rettet zerstörte gewöhnliche Programme. Eine körperliche Aktion stellt gesicherte Programme bei genügend freien Plätzen wieder her; Einmal-pro-Netzeinsatz-Zustände bleiben bestehen. Ausbau löscht die Sicherung.",
+      "netrunner": {
+        "group": "hardware",
+        "slots": 2
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Backup Drive"
+    },
+    {
+      "id": "net-hardware-dna-lock",
+      "name": "DNS-Sperre",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Biometrische Decksperre. Öffnen ohne passenden Schlüssel erfordert Elektronik/Sicherheitstechnik gegen DV 17.",
+      "netrunner": {
+        "group": "hardware",
+        "slots": 2
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "DNA Lock"
+    },
+    {
+      "id": "net-hardware-hardened-circuitry",
+      "name": "Gehärtete Schaltkreise",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Schützt das Deck vor Ausfall oder Zerstörung durch EMP und gewöhnliche Programmeffekte.",
+      "netrunner": {
+        "group": "hardware",
+        "slots": 1
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Hardened Circuitry"
+    },
+    {
+      "id": "net-hardware-insulated-wiring",
+      "name": "Isolierte Leitungen",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Programmeffekte können weder das Deck noch deine Kleidung entzünden.",
+      "netrunner": {
+        "group": "hardware",
+        "slots": 1
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Insulated Wiring"
+    },
+    {
+      "id": "net-hardware-krash-barrier",
+      "name": "Absturzsperre",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Verhindert durch Programmeffekte erzwungenes sicheres oder unsicheres Ausloggen.",
+      "netrunner": {
+        "group": "hardware",
+        "slots": 2
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "KRASH Barrier"
+    },
+    {
+      "id": "net-hardware-range-upgrade",
+      "name": "Reichweitenverstärker",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Erhöht die Verbindung zum Zugangspunkt von 6 auf 8 Meter; Wände blockieren weiterhin.",
+      "netrunner": {
+        "group": "hardware",
+        "slots": 1
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Range Upgrade"
+    },
+    {
+      "id": "net-ice-asp",
+      "name": "Kobra",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "Zerstört bei Treffer ein zufällig ausgewähltes installiertes Programm auf dem gegnerischen Deck.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Person",
+        "slots": 2,
+        "per": 4,
+        "speed": 6,
+        "atk": 2,
+        "defense": 2,
+        "rez": 15
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Asp"
+    },
+    {
+      "id": "net-ice-giant",
+      "name": "Riese",
+      "cost": 1000,
+      "category": "netrunner",
+      "description": "3W6 Hirnschaden und unsicheres Ausloggen. Andere noch aktive, bereits angetroffene feindliche Schwarzes ICE wirken dabei ebenfalls; Giant nicht noch einmal.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Person",
+        "slots": 2,
+        "per": 2,
+        "speed": 2,
+        "atk": 8,
+        "defense": 4,
+        "rez": 25
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Giant"
+    },
+    {
+      "id": "net-ice-hellhound",
+      "name": "Höllenhund",
+      "cost": 500,
+      "category": "netrunner",
+      "description": "2W6 Hirnschaden. Ohne Isolierung brennen Deck und Kleidung: 2 TP am Zugende bis zum Löschen mit einer körperlichen Aktion; der Brand stapelt nicht.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Person",
+        "slots": 2,
+        "per": 6,
+        "speed": 6,
+        "atk": 6,
+        "defense": 2,
+        "rez": 20
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Hellhound"
+    },
+    {
+      "id": "net-ice-kraken",
+      "name": "Krake",
+      "cost": 1000,
+      "category": "netrunner",
+      "description": "3W6 Hirnschaden. Bis zum Ende des nächsten eigenen Zugs kann das Ziel weder tiefer in die Architektur noch sicher ausloggen.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Person",
+        "slots": 2,
+        "per": 6,
+        "speed": 2,
+        "atk": 8,
+        "defense": 4,
+        "rez": 30
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Kraken"
+    },
+    {
+      "id": "net-ice-liche",
+      "name": "Leichnam",
+      "cost": 500,
+      "category": "netrunner",
+      "description": "INT, REF und GES des Ziels sinken für eine Stunde um je 1W6, mindestens auf 1.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Person",
+        "slots": 2,
+        "per": 8,
+        "speed": 2,
+        "atk": 6,
+        "defense": 2,
+        "rez": 25
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Liche"
+    },
+    {
+      "id": "net-ice-raven",
+      "name": "Rabe",
+      "cost": 50,
+      "category": "netrunner",
+      "description": "Setzt ein zufälliges aktives Verteidiger-Programm auf 0 Integrität und verursacht danach 1W6 Hirnschaden.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Person",
+        "slots": 2,
+        "per": 6,
+        "speed": 4,
+        "atk": 4,
+        "defense": 2,
+        "rez": 15
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Raven"
+    },
+    {
+      "id": "net-ice-scorpion",
+      "name": "Skorpion",
+      "cost": 100,
+      "category": "netrunner",
+      "description": "BEW des Ziels sinkt für eine Stunde um 1W6, mindestens auf 1.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Person",
+        "slots": 2,
+        "per": 2,
+        "speed": 6,
+        "atk": 2,
+        "defense": 2,
+        "rez": 15
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Scorpion"
+    },
+    {
+      "id": "net-ice-skunk",
+      "name": "Stinktier",
+      "cost": 500,
+      "category": "netrunner",
+      "description": "Das getroffene Ziel erhält -2 auf Entkommen, solange dieser Skunk aktiv bleibt. Ein Skunk bindet ein Ziel; mehrere Skunks können sich addieren.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Person",
+        "slots": 2,
+        "per": 2,
+        "speed": 4,
+        "atk": 4,
+        "defense": 2,
+        "rez": 10
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Skunk"
+    },
+    {
+      "id": "net-ice-wisp",
+      "name": "Irrlicht",
+      "cost": 50,
+      "category": "netrunner",
+      "description": "1W6 Hirnschaden; im nächsten Zug eine Netz-Aktion weniger, mindestens zwei.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Person",
+        "slots": 2,
+        "per": 4,
+        "speed": 4,
+        "atk": 4,
+        "defense": 2,
+        "rez": 15
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Wisp"
+    },
+    {
+      "id": "net-ice-dragon",
+      "name": "Drache",
+      "cost": 1000,
+      "category": "netrunner",
+      "description": "6W6 Integritätsschaden. Ein dadurch auf 0 Integrität gebrachtes Programm wird stattdessen vollständig zerstört.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Programm",
+        "slots": 2,
+        "per": 6,
+        "speed": 4,
+        "atk": 6,
+        "defense": 6,
+        "rez": 30,
+        "integrityDamage": {
+          "ordinary": "6W6",
+          "blackIce": "6W6"
+        }
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Dragon"
+    },
+    {
+      "id": "net-ice-killer",
+      "name": "Mörder",
+      "cost": 500,
+      "category": "netrunner",
+      "description": "4W6 Integritätsschaden. Ein dadurch auf 0 Integrität gebrachtes Programm wird stattdessen vollständig zerstört.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Programm",
+        "slots": 2,
+        "per": 4,
+        "speed": 8,
+        "atk": 6,
+        "defense": 2,
+        "rez": 20,
+        "integrityDamage": {
+          "ordinary": "4W6",
+          "blackIce": "4W6"
+        }
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Killer"
+    },
+    {
+      "id": "net-ice-sabertooth",
+      "name": "Säbelzahn",
+      "cost": 1000,
+      "category": "netrunner",
+      "description": "6W6 Integritätsschaden. Ein dadurch auf 0 Integrität gebrachtes Programm wird stattdessen vollständig zerstört.",
+      "netrunner": {
+        "group": "ice",
+        "className": "Anti-Programm",
+        "slots": 2,
+        "per": 8,
+        "speed": 6,
+        "atk": 6,
+        "defense": 2,
+        "rez": 25,
+        "integrityDamage": {
+          "ordinary": "6W6",
+          "blackIce": "6W6"
+        }
+      },
+      "reference": "Grundregelwerk S. 196–208, 368–371",
+      "originalName": "Sabertooth"
+    },
+    {
+      "id": "ammo-medium-pistol-ap",
+      "name": "Mittlere Pistolenmunition · Panzerbrechend",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 100,
+      "units": 10,
+      "reference": "Grundregelwerk S. 345",
+      "description": "Bei Durchdringung verliert die getroffene Rüstung 2 statt 1 SP.",
+      "ammoType": "ap"
+    },
+    {
+      "id": "ammo-medium-pistol-incendiary",
+      "name": "Mittlere Pistolenmunition · Brand",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 100,
+      "units": 10,
+      "reference": "Grundregelwerk S. 346",
+      "description": "Bei Durchdringung brennt das Ziel: 2 direkte TP am Ende jedes eigenen Zugs, bis es eine Aktion zum Löschen nutzt. Nicht stapelbar.",
+      "ammoType": "incendiary"
+    },
+    {
+      "id": "ammo-medium-pistol-rubber",
+      "name": "Mittlere Pistolenmunition · Gummi",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 346",
+      "description": "Nicht tödlich: Schaden nach Rüstung halbieren (aufrunden); keine kritischen Verletzungen, bei weniger als 1 TP bewusstlos und stabil bei 1 TP. Nicht mit Dauerfeuer verwendbar.",
+      "ammoType": "rubber"
+    },
+    {
+      "id": "ammo-heavy-pistol-ap",
+      "name": "Schwere Pistolenmunition · Panzerbrechend",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 100,
+      "units": 10,
+      "reference": "Grundregelwerk S. 345",
+      "description": "Bei Durchdringung verliert die getroffene Rüstung 2 statt 1 SP.",
+      "ammoType": "ap"
+    },
+    {
+      "id": "ammo-heavy-pistol-incendiary",
+      "name": "Schwere Pistolenmunition · Brand",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 100,
+      "units": 10,
+      "reference": "Grundregelwerk S. 346",
+      "description": "Bei Durchdringung brennt das Ziel: 2 direkte TP am Ende jedes eigenen Zugs, bis es eine Aktion zum Löschen nutzt. Nicht stapelbar.",
+      "ammoType": "incendiary"
+    },
+    {
+      "id": "ammo-heavy-pistol-rubber",
+      "name": "Schwere Pistolenmunition · Gummi",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 346",
+      "description": "Nicht tödlich: Schaden nach Rüstung halbieren (aufrunden); keine kritischen Verletzungen, bei weniger als 1 TP bewusstlos und stabil bei 1 TP. Nicht mit Dauerfeuer verwendbar.",
+      "ammoType": "rubber"
+    },
+    {
+      "id": "ammo-very-heavy-pistol-ap",
+      "name": "Sehr schwere Pistolenmunition · Panzerbrechend",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 100,
+      "units": 10,
+      "reference": "Grundregelwerk S. 345",
+      "description": "Bei Durchdringung verliert die getroffene Rüstung 2 statt 1 SP.",
+      "ammoType": "ap"
+    },
+    {
+      "id": "ammo-very-heavy-pistol-incendiary",
+      "name": "Sehr schwere Pistolenmunition · Brand",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 100,
+      "units": 10,
+      "reference": "Grundregelwerk S. 346",
+      "description": "Bei Durchdringung brennt das Ziel: 2 direkte TP am Ende jedes eigenen Zugs, bis es eine Aktion zum Löschen nutzt. Nicht stapelbar.",
+      "ammoType": "incendiary"
+    },
+    {
+      "id": "ammo-very-heavy-pistol-rubber",
+      "name": "Sehr schwere Pistolenmunition · Gummi",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 346",
+      "description": "Nicht tödlich: Schaden nach Rüstung halbieren (aufrunden); keine kritischen Verletzungen, bei weniger als 1 TP bewusstlos und stabil bei 1 TP. Nicht mit Dauerfeuer verwendbar.",
+      "ammoType": "rubber"
+    },
+    {
+      "id": "ammo-rifle-ap",
+      "name": "Gewehrmunition · Panzerbrechend",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 100,
+      "units": 10,
+      "reference": "Grundregelwerk S. 345",
+      "description": "Bei Durchdringung verliert die getroffene Rüstung 2 statt 1 SP.",
+      "ammoType": "ap"
+    },
+    {
+      "id": "ammo-rifle-incendiary",
+      "name": "Gewehrmunition · Brand",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 100,
+      "units": 10,
+      "reference": "Grundregelwerk S. 346",
+      "description": "Bei Durchdringung brennt das Ziel: 2 direkte TP am Ende jedes eigenen Zugs, bis es eine Aktion zum Löschen nutzt. Nicht stapelbar.",
+      "ammoType": "incendiary"
+    },
+    {
+      "id": "ammo-rifle-rubber",
+      "name": "Gewehrmunition · Gummi",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 346",
+      "description": "Nicht tödlich: Schaden nach Rüstung halbieren (aufrunden); keine kritischen Verletzungen, bei weniger als 1 TP bewusstlos und stabil bei 1 TP. Nicht mit Dauerfeuer verwendbar.",
+      "ammoType": "rubber"
+    },
+    {
+      "id": "ammo-slug-ap",
+      "name": "Flinten-Slugs · Panzerbrechend",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 100,
+      "units": 10,
+      "reference": "Grundregelwerk S. 345",
+      "description": "Bei Durchdringung verliert die getroffene Rüstung 2 statt 1 SP.",
+      "ammoType": "ap"
+    },
+    {
+      "id": "ammo-slug-incendiary",
+      "name": "Flinten-Slugs · Brand",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 100,
+      "units": 10,
+      "reference": "Grundregelwerk S. 346",
+      "description": "Bei Durchdringung brennt das Ziel: 2 direkte TP am Ende jedes eigenen Zugs, bis es eine Aktion zum Löschen nutzt. Nicht stapelbar.",
+      "ammoType": "incendiary"
+    },
+    {
+      "id": "ammo-slug-rubber",
+      "name": "Flinten-Slugs · Gummi",
+      "category": "weapons",
+      "kind": "ammo",
+      "cost": 10,
+      "units": 10,
+      "reference": "Grundregelwerk S. 346",
+      "description": "Nicht tödlich: Schaden nach Rüstung halbieren (aufrunden); keine kritischen Verletzungen, bei weniger als 1 TP bewusstlos und stabil bei 1 TP. Nicht mit Dauerfeuer verwendbar.",
+      "ammoType": "rubber"
+    },
+    {
+      "id": "hand-grenade-frag",
+      "name": "Militärische Splittergranate",
+      "category": "weapons",
+      "kind": "grenade",
+      "cost": 500,
+      "units": 1,
+      "damage": "6W6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "skill": "athletics",
+      "description": "Panzerbrechend: bei Durchdringung Rüstung −2 SP.",
+      "reference": "Generatorpreis: 500 eb · Wirkung: Grundregelwerk S. 345–346",
+      "shortName": "Mil. Splittergranate",
+      "grenadeEffect": {
+        "military": true,
+        "armorLoss": 2,
+        "burnDamage": 0
+      }
+    },
+    {
+      "id": "hand-grenade-incendiary",
+      "name": "Militärische Brandgranate",
+      "category": "weapons",
+      "kind": "grenade",
+      "cost": 500,
+      "units": 1,
+      "damage": "6W6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "skill": "athletics",
+      "description": "Bei Durchdringung: Rüstung −1 SP. Das Ziel brennt: 2 direkte TP pro Runde am Ende seines eigenen Zugs; eine Aktion zum Löschen. Nicht stapelbar.",
+      "reference": "Generatorpreis: 500 eb · Wirkung: Grundregelwerk S. 345–346",
+      "shortName": "Mil. Brandgranate",
+      "grenadeEffect": {
+        "military": true,
+        "armorLoss": 1,
+        "burnDamage": 2
+      }
+    },
+    {
+      "id": "hand-grenade-smoke",
+      "name": "Rauchgranate",
+      "category": "weapons",
+      "kind": "grenade",
+      "cost": 50,
+      "units": 1,
+      "damage": "—",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "skill": "athletics",
+      "description": "Rauch für 1 Minute: −4 auf sichtabhängige Proben durch die Wolke; geeignete Optik kann helfen.",
+      "reference": "Grundregelwerk S. 177, 345–347"
+    },
+    {
+      "id": "hand-grenade-flash",
+      "name": "Blendgranate",
+      "category": "weapons",
+      "kind": "grenade",
+      "cost": 100,
+      "units": 1,
+      "damage": "—",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "skill": "athletics",
+      "description": "Folter/Drogen widerstehen gegen 15; bei Fehlschlag Beschädigtes Auge und Beschädigtes Ohr für 1 Minute, ohne kritischen Zusatzschaden. Schutzoptik/Gehörschutz berücksichtigen.",
+      "reference": "Grundregelwerk S. 177, 345–347"
+    },
+    {
+      "id": "hand-grenade-emp",
+      "name": "EMP-Granate",
+      "category": "weapons",
+      "kind": "grenade",
+      "cost": 500,
+      "units": 1,
+      "damage": "—",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "skill": "athletics",
+      "description": "Cybertechnik gegen 15; bei Fehlschlag bestimmt die Spielleitung zwei geeignete Cyberware-/Elektronikteile, die 1 Minute ausfallen; Abschirmung schützt.",
+      "reference": "Grundregelwerk S. 177, 345–347"
+    },
+    {
+      "id": "hand-grenade-tear",
+      "name": "Tränengasgranate",
+      "category": "weapons",
+      "kind": "grenade",
+      "cost": 50,
+      "units": 1,
+      "damage": "—",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "skill": "athletics",
+      "description": "Folter/Drogen widerstehen gegen 13; bei Fehlschlag Beschädigtes Auge für 1 Minute, ohne kritischen Zusatzschaden. Nasenfilter oder Atemschutz schützen.",
+      "reference": "Grundregelwerk S. 177, 345–347"
+    },
+    {
+      "id": "hand-grenade-poison",
+      "name": "Giftgranate",
+      "category": "weapons",
+      "kind": "grenade",
+      "cost": 100,
+      "units": 1,
+      "damage": "2W6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "skill": "athletics",
+      "description": "Folter/Drogen widerstehen gegen 13: bei Fehlschlag 2W6 direkte TP, keine Rüstung und keine kritischen Verletzungen. Atemschutz/Nasenfilter schützen.",
+      "reference": "Grundregelwerk S. 177, 345–347"
+    },
+    {
+      "id": "hand-grenade-biotoxin",
+      "name": "Biotoxingranate",
+      "category": "weapons",
+      "kind": "grenade",
+      "cost": 500,
+      "units": 1,
+      "damage": "3W6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "skill": "athletics",
+      "description": "Folter/Drogen widerstehen gegen 15: bei Fehlschlag 3W6 direkte TP, keine Rüstung und keine kritischen Verletzungen. Atemschutz/Nasenfilter schützen.",
+      "reference": "Grundregelwerk S. 177, 345–347"
+    },
+    {
+      "id": "hand-grenade-sleep",
+      "name": "Schlafgasgranate",
+      "category": "weapons",
+      "kind": "grenade",
+      "cost": 500,
+      "units": 1,
+      "damage": "—",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "skill": "athletics",
+      "description": "Folter/Drogen widerstehen gegen 13: bei Fehlschlag 1 Minute bewusstlos oder bis Schaden/Weckaktion. Atemschutz/Nasenfilter schützen.",
+      "reference": "Grundregelwerk S. 177, 345–347"
+    },
+    {
+      "id": "hand-grenade-normal-frag",
+      "name": "Normale Splittergranate",
+      "category": "weapons",
+      "kind": "grenade",
+      "cost": 200,
+      "units": 1,
+      "damage": "4W6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "skill": "athletics",
+      "description": "4W6 Flächenschaden gegen Körperrüstung. Bei Durchdringung verliert die getroffene Rüstung 1 SP.",
+      "reference": "Generatorvariante · 200 eb",
+      "shortName": "Splittergranate",
+      "grenadeEffect": {
+        "military": false,
+        "armorLoss": 1,
+        "burnDamage": 0
+      }
+    },
+    {
+      "id": "hand-grenade-normal-incendiary",
+      "name": "Normale Brandgranate",
+      "category": "weapons",
+      "kind": "grenade",
+      "cost": 200,
+      "units": 1,
+      "damage": "3W6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "skill": "athletics",
+      "description": "Bei Durchdringung: Rüstung −1 SP. Das Ziel brennt: 2 direkte TP pro Runde am Ende seines eigenen Zugs; eine Aktion zum Löschen. Nicht stapelbar.",
+      "reference": "Generatorvariante · 200 eb",
+      "shortName": "Brandgranate",
+      "grenadeEffect": {
+        "military": false,
+        "armorLoss": 1,
+        "burnDamage": 2
+      }
+    }
+  ]
+}

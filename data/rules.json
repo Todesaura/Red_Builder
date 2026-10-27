@@ -1,0 +1,305 @@
+{
+  "id": "red-phase-1",
+  "pointBuy": {
+    "budget": 62,
+    "min": 2,
+    "max": 8,
+    "source": "Complete Package · Vorgabe des Projektauftrags; Regelabgleich im Grundregelwerk S. 78 noch ausstehend"
+  },
+  "tableMethods": [
+    {
+      "id": "streetrat",
+      "name": "Streetrat",
+      "available": false
+    },
+    {
+      "id": "edgerunner",
+      "name": "Edgerunner",
+      "available": false
+    }
+  ],
+  "attributes": [
+    {
+      "id": "INT",
+      "name": "Intelligenz",
+      "hint": "Denken, Erinnern und Zusammenhänge erkennen."
+    },
+    {
+      "id": "REF",
+      "name": "Reflexe",
+      "hint": "Schnell reagieren und präzise zielen."
+    },
+    {
+      "id": "DEX",
+      "name": "Geschicklichkeit",
+      "hint": "Koordination und kontrollierte Bewegungen."
+    },
+    {
+      "id": "TECH",
+      "name": "Technik",
+      "hint": "Mit Werkzeug und technischen Systemen umgehen."
+    },
+    {
+      "id": "COOL",
+      "name": "Coolness",
+      "hint": "Auftreten und unter Druck souverän bleiben."
+    },
+    {
+      "id": "WILL",
+      "name": "Willenskraft",
+      "hint": "Durchhalten und mental widerstehen."
+    },
+    {
+      "id": "LUCK",
+      "name": "Glück",
+      "hint": "Das persönliche Quäntchen Glück."
+    },
+    {
+      "id": "MOVE",
+      "name": "Bewegung",
+      "hint": "Wie schnell du dich fortbewegst."
+    },
+    {
+      "id": "BODY",
+      "name": "Körper",
+      "hint": "Körperliche Kraft und Widerstandsfähigkeit."
+    },
+    {
+      "id": "EMP",
+      "name": "Empathie",
+      "hint": "Menschen verstehen und Beziehungen aufbauen."
+    }
+  ],
+  "roles": [
+    {
+      "id": "rockerboy",
+      "name": "Rockerboy",
+      "description": "Eine Stimme, die Menschen bewegt.",
+      "recommendation": {
+        "homebrew": true,
+        "source": "Eigener Startvorschlag für Rockerboy · Homebrew, keine offizielle Tabelle",
+        "stats": {
+          "INT": 6,
+          "REF": 6,
+          "DEX": 5,
+          "TECH": 4,
+          "COOL": 8,
+          "WILL": 7,
+          "LUCK": 5,
+          "MOVE": 6,
+          "BODY": 7,
+          "EMP": 8
+        }
+      },
+      "portraits": []
+    },
+    {
+      "id": "solo",
+      "name": "Solo",
+      "description": "Kampferfahrung, wenn es auf der Straße ernst wird.",
+      "recommendation": {
+        "homebrew": true,
+        "source": "Eigener Startvorschlag für Solo · Homebrew, keine offizielle Tabelle",
+        "stats": {
+          "INT": 6,
+          "REF": 8,
+          "DEX": 8,
+          "TECH": 5,
+          "COOL": 6,
+          "WILL": 7,
+          "LUCK": 5,
+          "MOVE": 6,
+          "BODY": 7,
+          "EMP": 4
+        }
+      },
+      "portraits": []
+    },
+    {
+      "id": "netrunner",
+      "name": "Netrunner",
+      "description": "Zuhause zwischen Code und fremden Systemen.",
+      "recommendation": {
+        "homebrew": true,
+        "source": "Eigener Startvorschlag für Netrunner · Homebrew, keine offizielle Tabelle",
+        "stats": {
+          "INT": 8,
+          "REF": 7,
+          "DEX": 6,
+          "TECH": 8,
+          "COOL": 5,
+          "WILL": 7,
+          "LUCK": 6,
+          "MOVE": 5,
+          "BODY": 4,
+          "EMP": 6
+        }
+      },
+      "portraits": []
+    },
+    {
+      "id": "tech",
+      "name": "Tech",
+      "description": "Reparieren, tüfteln und neue Lösungen finden.",
+      "recommendation": {
+        "homebrew": true,
+        "source": "Eigener Startvorschlag für Tech · Homebrew, keine offizielle Tabelle",
+        "stats": {
+          "INT": 8,
+          "REF": 6,
+          "DEX": 7,
+          "TECH": 8,
+          "COOL": 5,
+          "WILL": 6,
+          "LUCK": 5,
+          "MOVE": 6,
+          "BODY": 7,
+          "EMP": 4
+        }
+      },
+      "portraits": []
+    },
+    {
+      "id": "medtech",
+      "name": "Medtech",
+      "description": "Medizinisches Können in einer gefährlichen Welt.",
+      "recommendation": {
+        "homebrew": true,
+        "source": "Eigener Startvorschlag für Medtech · Homebrew, keine offizielle Tabelle",
+        "stats": {
+          "INT": 8,
+          "REF": 6,
+          "DEX": 7,
+          "TECH": 8,
+          "COOL": 5,
+          "WILL": 7,
+          "LUCK": 5,
+          "MOVE": 4,
+          "BODY": 6,
+          "EMP": 6
+        }
+      },
+      "portraits": []
+    },
+    {
+      "id": "media",
+      "name": "Media",
+      "description": "Informationen aufdecken und Geschichten erzählen.",
+      "recommendation": {
+        "homebrew": true,
+        "source": "Eigener Startvorschlag für Media · Homebrew, keine offizielle Tabelle",
+        "stats": {
+          "INT": 8,
+          "REF": 6,
+          "DEX": 5,
+          "TECH": 6,
+          "COOL": 8,
+          "WILL": 7,
+          "LUCK": 5,
+          "MOVE": 4,
+          "BODY": 6,
+          "EMP": 7
+        }
+      },
+      "portraits": []
+    },
+    {
+      "id": "exec",
+      "name": "Exec",
+      "description": "Einfluss und Verbindungen in der Konzernwelt.",
+      "recommendation": {
+        "homebrew": true,
+        "source": "Eigener Startvorschlag für Exec · Homebrew, keine offizielle Tabelle",
+        "stats": {
+          "INT": 7,
+          "REF": 6,
+          "DEX": 5,
+          "TECH": 4,
+          "COOL": 8,
+          "WILL": 7,
+          "LUCK": 6,
+          "MOVE": 5,
+          "BODY": 6,
+          "EMP": 8
+        }
+      },
+      "portraits": []
+    },
+    {
+      "id": "lawman",
+      "name": "Lawman",
+      "description": "Das Gesetz auf einer unruhigen Straße vertreten.",
+      "recommendation": {
+        "homebrew": true,
+        "source": "Eigener Startvorschlag für Lawman · Homebrew, keine offizielle Tabelle",
+        "stats": {
+          "INT": 6,
+          "REF": 8,
+          "DEX": 7,
+          "TECH": 4,
+          "COOL": 7,
+          "WILL": 8,
+          "LUCK": 5,
+          "MOVE": 6,
+          "BODY": 6,
+          "EMP": 5
+        }
+      },
+      "portraits": []
+    },
+    {
+      "id": "fixer",
+      "name": "Fixer",
+      "description": "Menschen, Waren und Gelegenheiten zusammenbringen.",
+      "recommendation": {
+        "homebrew": true,
+        "source": "Eigener Startvorschlag für Fixer · Homebrew, keine offizielle Tabelle",
+        "stats": {
+          "INT": 7,
+          "REF": 6,
+          "DEX": 5,
+          "TECH": 5,
+          "COOL": 8,
+          "WILL": 6,
+          "LUCK": 7,
+          "MOVE": 4,
+          "BODY": 6,
+          "EMP": 8
+        }
+      },
+      "portraits": []
+    },
+    {
+      "id": "nomad",
+      "name": "Nomad",
+      "description": "Unterwegs mit Fahrzeugen und einer eigenen Familie.",
+      "recommendation": {
+        "homebrew": true,
+        "source": "Eigener Startvorschlag für Nomad · Homebrew, keine offizielle Tabelle",
+        "stats": {
+          "INT": 6,
+          "REF": 8,
+          "DEX": 7,
+          "TECH": 7,
+          "COOL": 5,
+          "WILL": 6,
+          "LUCK": 4,
+          "MOVE": 8,
+          "BODY": 6,
+          "EMP": 5
+        }
+      },
+      "portraits": []
+    }
+  ],
+  "references": [
+    {
+      "title": "Offizielle Rollen und Erstellungsmethoden",
+      "url": "https://rtalsoriangames.com/2020/10/09/cyberpunk-red-alert/"
+    },
+    {
+      "title": "RTG Homebrew Content Policy",
+      "url": "https://rtalsoriangames.com/homebrew-content-policy/"
+    }
+  ]
+}

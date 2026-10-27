@@ -1,0 +1,1373 @@
+{
+  "version": 2,
+  "sources": {
+    "deals": {
+      "title": "RTG: Must Have Cyberware Deals (2022)",
+      "url": "https://rtalsoriangames.com/wp-content/uploads/2022/06/RTG-CPR-DLC-MustHaveCyberwareDeals.pdf"
+    },
+    "cybermas": {
+      "title": "RTG: The 12 Days of Cybermas v1.02 (2022)",
+      "url": "https://rtalsoriangames.com/wp-content/uploads/2022/12/RTG-CPR-DLC-12DaysofCybermas.pdf"
+    },
+    "humanity": {
+      "title": "RTG: From the Mayor’s Desk – Menschlichkeit",
+      "url": "https://rtalsoriangames.com/2021/02/05/cyberpunk-from-the-mayors-desk-2-5-21/"
+    },
+    "faq": {
+      "title": "RTG: Core Book FAQ v1.3 – Kapazitäten",
+      "url": "https://rtalsoriangames.com/wp-content/uploads/2021/07/RTG-CPR-CoreBookFAQv1.3.pdf"
+    },
+    "core": {
+      "title": "Cyberpunk RED Grundregelwerk, S. 111–116 / 358–367",
+      "url": "https://rtalsoriangames.com/cyberpunk/"
+    },
+    "cemk": {
+      "title": "Cyberpunk: Edgerunners Mission Kit, S. 35 (Preisindex von RTG)",
+      "url": "https://rtalsoriangames.com/wp-content/uploads/2026/01/RTG-CPR-DLC-NightMarketIndexv1.24.pdf"
+    }
+  },
+  "locations": [
+    {
+      "id": "fashion",
+      "name": "Fashionware",
+      "capacity": 7
+    },
+    {
+      "id": "internal",
+      "name": "Innerer Körper",
+      "capacity": 7
+    },
+    {
+      "id": "external",
+      "name": "Äußerer Körper",
+      "capacity": 7
+    },
+    {
+      "id": "arm-left",
+      "name": "Linker Arm",
+      "capacity": 1
+    },
+    {
+      "id": "arm-right",
+      "name": "Rechter Arm",
+      "capacity": 1
+    },
+    {
+      "id": "leg-left",
+      "name": "Linkes Bein",
+      "capacity": 1
+    },
+    {
+      "id": "leg-right",
+      "name": "Rechtes Bein",
+      "capacity": 1
+    },
+    {
+      "id": "eye-left",
+      "name": "Linkes Auge",
+      "capacity": 1
+    },
+    {
+      "id": "eye-right",
+      "name": "Rechtes Auge",
+      "capacity": 1
+    },
+    {
+      "id": "neural",
+      "name": "Neuralsystem",
+      "capacity": 1
+    },
+    {
+      "id": "audio",
+      "name": "Gehörsystem",
+      "capacity": 1
+    }
+  ],
+  "items": [
+    {
+      "id": "holo-palm",
+      "name": "Holo Projector Palm",
+      "category": "limbs",
+      "cost": 100,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "deals",
+      "source": "Must Have Cyberware Deals, S. 3",
+      "description": "Handprojektor; benötigt zur Projektion einen Agent. Kann einzeln in einen natürlichen Arm eingebaut werden.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "naturalLimbOnly": true
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "perfect-fit",
+      "name": "PerfectFit Cyberfoot",
+      "category": "limbs",
+      "cost": 100,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "deals",
+      "source": "Must Have Cyberware Deals, S. 4",
+      "description": "Verstellbarer Fuß; kann einzeln in ein natürliches Bein eingebaut werden. Paarweise entfällt der situative Abzug durch ungeeignetes Schuhwerk.",
+      "installationSlots": [
+        "leg-left",
+        "leg-right"
+      ],
+      "requirements": {
+        "naturalLimbOnly": true
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "neutongue",
+      "name": "NeuTongue",
+      "category": "internal",
+      "cost": 100,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "deals",
+      "source": "Must Have Cyberware Deals, S. 3–4",
+      "description": "Veränderbarer Geschmackssinn mit Agent-Verbindung.",
+      "installationSlots": [
+        "internal"
+      ],
+      "requirements": {
+        "exclusive": "tongue"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "kill-display",
+      "name": "Kill Display",
+      "category": "accessories",
+      "lightTattoo": true,
+      "cost": 100,
+      "humanity": 0,
+      "maxHumanityLoss": 0,
+      "install": "Mall",
+      "sourceId": "deals",
+      "source": "Must Have Cyberware Deals, S. 3",
+      "description": "Leuchtender Zähler; zählt als Light Tattoo. Drei entsprechende Installationen geben zusammen +2 auf Garderobe & Stil.",
+      "installationSlots": [
+        "fashion"
+      ],
+      "requirements": {},
+      "funding": "fashion",
+      "humanityRoll": {
+        "dice": 0,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "show-off-nails",
+      "name": "Turn-On-Show-Off Nails",
+      "category": "accessories",
+      "lightTattoo": true,
+      "cost": 100,
+      "humanity": 0,
+      "maxHumanityLoss": 0,
+      "install": "Mall",
+      "sourceId": "deals",
+      "source": "Must Have Cyberware Deals, S. 3",
+      "description": "Programmierbare Leuchtnägel; zählen als eine Light-Tattoo-Installation.",
+      "installationSlots": [
+        "fashion"
+      ],
+      "requirements": {},
+      "funding": "fashion",
+      "humanityRoll": {
+        "dice": 0,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "optishield",
+      "name": "Kiroshi OptiShield",
+      "category": "external",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "cybermas",
+      "source": "The 12 Days of Cybermas v1.02, S. 4",
+      "description": "Ausfahrbarer Blendschutz; schützt im ausgefahrenen Zustand vor gefährlichen Lichtblitzen.",
+      "effects": [
+        {
+          "type": "situational",
+          "target": "flash-protection",
+          "value": 0,
+          "description": "Schutz vor Blendung durch Lichtblitze bei ausgefahrenem OptiShield; kein Attributbonus."
+        }
+      ],
+      "installationSlots": [
+        "external"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "bug-eye",
+      "name": "Cyclops International Bug Eye",
+      "category": "borg",
+      "foundation": "eye",
+      "capacity": 5,
+      "cost": 500,
+      "humanity": 14,
+      "maxHumanityLoss": 4,
+      "install": "Krankenhaus",
+      "sourceId": "cybermas",
+      "source": "The 12 Days of Cybermas v1.02, S. 3",
+      "description": "Vergrößertes Cyberauge mit fünf Optionsplätzen.",
+      "installationSlots": [
+        "eye-left",
+        "eye-right"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 4,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "cyberpillow",
+      "name": "Cyberpillow",
+      "category": "limbs",
+      "cost": 100,
+      "humanity": 0,
+      "maxHumanityLoss": 0,
+      "install": "Klinik",
+      "sourceId": "deals",
+      "source": "Must Have Cyberware Deals, S. 2",
+      "description": "Ausklappbares Kissen im Cyberarm.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 0,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "chainripp",
+      "name": "ChainRipp",
+      "category": "limbs",
+      "slots": 4,
+      "cost": 500,
+      "humanity": 14,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "cybermas",
+      "source": "The 12 Days of Cybermas v1.02, S. 3",
+      "description": "Kettensägenoption; belegt vier Cyberarm-Plätze. Kampfdetails stehen in der Quelle.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 4,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "biomonitor",
+      "name": "Biomonitor",
+      "category": "accessories",
+      "cost": 100,
+      "humanity": 0,
+      "maxHumanityLoss": 0,
+      "install": "Mall",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Zeigt deine Vitalwerte.",
+      "installationSlots": [
+        "fashion"
+      ],
+      "requirements": {},
+      "funding": "fashion",
+      "humanityRoll": {
+        "dice": 0,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "chemskin",
+      "name": "Chemskin",
+      "category": "accessories",
+      "cost": 100,
+      "humanity": 0,
+      "maxHumanityLoss": 0,
+      "install": "Mall",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Verändert deine Hautfarbe. Mit Techhair: +2 Körperpflege.",
+      "installationSlots": [
+        "fashion"
+      ],
+      "requirements": {},
+      "funding": "fashion",
+      "humanityRoll": {
+        "dice": 0,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "emp-threading",
+      "name": "EMP Threading",
+      "category": "accessories",
+      "cost": 10,
+      "humanity": 0,
+      "maxHumanityLoss": 0,
+      "install": "Mall",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Dekorative Leiterbahnmuster unter der Haut; kein EMP-Schutz.",
+      "installationSlots": [
+        "fashion"
+      ],
+      "requirements": {},
+      "funding": "fashion",
+      "humanityRoll": {
+        "dice": 0,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "light-tattoo",
+      "name": "Light Tattoo",
+      "category": "accessories",
+      "cost": 100,
+      "humanity": 0,
+      "maxHumanityLoss": 0,
+      "install": "Mall",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Leuchttätowierung; drei Installationen geben einmal +2 Garderobe/Stil.",
+      "installationSlots": [
+        "fashion"
+      ],
+      "requirements": {},
+      "funding": "fashion",
+      "lightTattoo": true,
+      "humanityRoll": {
+        "dice": 0,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "shift-tacts",
+      "name": "Shift Tacts",
+      "category": "accessories",
+      "cost": 100,
+      "humanity": 0,
+      "maxHumanityLoss": 0,
+      "install": "Mall",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Verändert die Augenfarbe.",
+      "installationSlots": [
+        "fashion"
+      ],
+      "requirements": {},
+      "funding": "fashion",
+      "humanityRoll": {
+        "dice": 0,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "skinwatch",
+      "name": "Skinwatch",
+      "category": "accessories",
+      "cost": 100,
+      "humanity": 0,
+      "maxHumanityLoss": 0,
+      "install": "Mall",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Uhranzeige unter der Haut.",
+      "installationSlots": [
+        "fashion"
+      ],
+      "requirements": {},
+      "funding": "fashion",
+      "humanityRoll": {
+        "dice": 0,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "techhair",
+      "name": "Techhair",
+      "category": "accessories",
+      "cost": 100,
+      "humanity": 0,
+      "maxHumanityLoss": 0,
+      "install": "Mall",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Leuchtendes Kunsthaar. Mit Chemskin: +2 Körperpflege.",
+      "installationSlots": [
+        "fashion"
+      ],
+      "requirements": {},
+      "funding": "fashion",
+      "humanityRoll": {
+        "dice": 0,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "neural-link",
+      "name": "Neural Link",
+      "category": "neural",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Basisimplantat für passende Erweiterungen.",
+      "installationSlots": [
+        "neural"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "foundation": "neural",
+      "capacity": 5,
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "cybereye",
+      "name": "Cyberauge",
+      "category": "optics",
+      "cost": 100,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Basisimplantat für passende Erweiterungen.",
+      "installationSlots": [
+        "eye-left",
+        "eye-right"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "foundation": "eye",
+      "capacity": 3,
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "cyberaudio-suite",
+      "name": "Cyberaudio Suite",
+      "category": "audio",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Basisimplantat für passende Erweiterungen.",
+      "installationSlots": [
+        "audio"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "foundation": "audio",
+      "capacity": 3,
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "cyberarm",
+      "name": "Cyberarm",
+      "category": "limbs",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Basisimplantat mit Standardhand; vier Optionsplätze.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "foundation": "arm",
+      "capacity": 4,
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "cyberleg",
+      "name": "Cyberbein",
+      "category": "limbs",
+      "cost": 100,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Basisimplantat mit Standardfuß; drei Optionsplätze.",
+      "installationSlots": [
+        "leg-left",
+        "leg-right"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "foundation": "leg",
+      "capacity": 3,
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "interface-plugs",
+      "name": "Interface Plugs",
+      "category": "neural",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Verbindet dich mit Maschinen und Cyberdecks.",
+      "installationSlots": [
+        "neural"
+      ],
+      "requirements": {
+        "parentType": "neural"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "chipware-socket",
+      "name": "Chipware Socket",
+      "category": "neural",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Steckplatz für separat erhältliche Chipware.",
+      "installationSlots": [
+        "neural"
+      ],
+      "requirements": {
+        "parentType": "neural"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "braindance-recorder",
+      "name": "Braindance Recorder",
+      "category": "neural",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Zeichnet Sinneseindrücke auf.",
+      "installationSlots": [
+        "neural"
+      ],
+      "requirements": {
+        "parentType": "neural"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "kerenzikov",
+      "name": "Kerenzikov",
+      "category": "neural",
+      "cost": 500,
+      "humanity": 14,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Dauerhaft +2 auf Initiativewürfe.",
+      "installationSlots": [
+        "neural"
+      ],
+      "requirements": {
+        "parentType": "neural",
+        "exclusive": "speedware"
+      },
+      "funding": "cash",
+      "effects": [
+        {
+          "type": "derived",
+          "target": "initiative",
+          "value": 2,
+          "description": "+2 Initiative; REF bleibt unverändert."
+        }
+      ],
+      "humanityRoll": {
+        "dice": 4,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "sandevistan",
+      "name": "Sandevistan",
+      "category": "neural",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Aktiviert: +3 Initiative für eine Minute; eine Stunde Abklingzeit.",
+      "installationSlots": [
+        "neural"
+      ],
+      "requirements": {
+        "parentType": "neural",
+        "exclusive": "speedware"
+      },
+      "funding": "cash",
+      "effects": [
+        {
+          "type": "situational",
+          "target": "initiative",
+          "value": 3,
+          "description": "Erfordert Aktivierung im Spiel; nicht automatisch eingerechnet."
+        }
+      ],
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "chyron",
+      "name": "Chyron",
+      "category": "optics",
+      "cost": 100,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Mall",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Blendet Daten ins Sichtfeld ein.",
+      "installationSlots": [
+        "eye-left",
+        "eye-right"
+      ],
+      "requirements": {
+        "parentType": "eye"
+      },
+      "funding": "cash",
+      "slots": 1,
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "color-shift",
+      "name": "Color Shift",
+      "category": "optics",
+      "cost": 100,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Mall",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Verändert Farbe und Muster des Cyberauges.",
+      "installationSlots": [
+        "eye-left",
+        "eye-right"
+      ],
+      "requirements": {
+        "parentType": "eye"
+      },
+      "funding": "cash",
+      "slots": 1,
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "micro-optics",
+      "name": "MicroOptics",
+      "category": "optics",
+      "cost": 100,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Vergrößert Details bis zu 400-fach.",
+      "installationSlots": [
+        "eye-left",
+        "eye-right"
+      ],
+      "requirements": {
+        "parentType": "eye"
+      },
+      "funding": "cash",
+      "slots": 1,
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "micro-video",
+      "name": "MicroVideo",
+      "category": "optics",
+      "cost": 500,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Zeichnet Bild und Ton auf.",
+      "installationSlots": [
+        "eye-left",
+        "eye-right"
+      ],
+      "requirements": {
+        "parentType": "eye"
+      },
+      "funding": "cash",
+      "slots": 2,
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "amplified-hearing",
+      "name": "Amplified Hearing",
+      "category": "audio",
+      "cost": 100,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "+2 Wahrnehmung nur bei Hörproben.",
+      "installationSlots": [
+        "audio"
+      ],
+      "requirements": {
+        "parentType": "audio"
+      },
+      "funding": "cash",
+      "effects": [
+        {
+          "type": "situational",
+          "target": "perception",
+          "value": 2,
+          "description": "Nur bei hörbezogenen Wahrnehmungsproben."
+        }
+      ],
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "audio-recorder",
+      "name": "Audio Recorder",
+      "category": "audio",
+      "cost": 100,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Zeichnet Ton auf.",
+      "installationSlots": [
+        "audio"
+      ],
+      "requirements": {
+        "parentType": "audio"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "internal-agent",
+      "name": "Internal Agent",
+      "category": "audio",
+      "cost": 100,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Interner Agent; ohne Anzeige nur Audio.",
+      "installationSlots": [
+        "audio"
+      ],
+      "requirements": {
+        "parentType": "audio"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "level-damper",
+      "name": "Level Damper",
+      "category": "audio",
+      "cost": 100,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Schützt vor schädlichem Lärm.",
+      "installationSlots": [
+        "audio"
+      ],
+      "requirements": {
+        "parentType": "audio"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "radio-communicator",
+      "name": "Radio Communicator",
+      "category": "audio",
+      "cost": 100,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Funkverbindung bis etwa 1,6 km.",
+      "installationSlots": [
+        "audio"
+      ],
+      "requirements": {
+        "parentType": "audio"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "voice-stress-analyzer",
+      "name": "Voice Stress Analyzer",
+      "category": "audio",
+      "cost": 100,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "+2 Menschenkenntnis und Verhör.",
+      "installationSlots": [
+        "audio"
+      ],
+      "requirements": {
+        "parentType": "audio"
+      },
+      "funding": "cash",
+      "effects": [
+        {
+          "type": "skill",
+          "target": "human-perception",
+          "value": 2,
+          "nonStacking": true
+        },
+        {
+          "type": "skill",
+          "target": "interrogation",
+          "value": 2,
+          "nonStacking": true
+        }
+      ],
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "nasal-filters",
+      "name": "Nasal Filters",
+      "category": "internal",
+      "cost": 100,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Schützt vor eingeatmeten Giftgasen.",
+      "installationSlots": [
+        "internal"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "toxin-binders",
+      "name": "Toxin Binders",
+      "category": "internal",
+      "cost": 100,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "+2 Folter/Drogen widerstehen.",
+      "installationSlots": [
+        "internal"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "effects": [
+        {
+          "type": "skill",
+          "target": "resist-torture-drugs",
+          "value": 2,
+          "nonStacking": true
+        }
+      ],
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "muscle-bone-lace",
+      "name": "Grafted Muscle & Bone Lace",
+      "category": "internal",
+      "cost": 1000,
+      "humanity": 14,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "+2 BODY, höchstens BODY 10.",
+      "installationSlots": [
+        "internal"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "effects": [
+        {
+          "type": "permanent",
+          "target": "BODY",
+          "value": 2,
+          "max": 10
+        }
+      ],
+      "humanityRoll": {
+        "dice": 4,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "independent-air",
+      "name": "Independent Air Supply",
+      "category": "internal",
+      "cost": 1000,
+      "humanity": 2,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "30 Minuten Sauerstoff; Wiederbefüllen dauert eine Stunde.",
+      "installationSlots": [
+        "internal"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 2
+      }
+    },
+    {
+      "id": "subdermal-pocket",
+      "name": "Subdermal Pocket",
+      "category": "external",
+      "cost": 100,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Verborgene Tasche unter der Haut.",
+      "installationSlots": [
+        "external"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "skin-weave",
+      "name": "Skin Weave",
+      "category": "external",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "SP 7 für Kopf und Körper; stärkster Schutzwert zählt.",
+      "installationSlots": [
+        "external"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "effects": [
+        {
+          "type": "armor",
+          "target": "both",
+          "value": 7,
+          "description": "SP 7 für Kopf und Körper, ohne Addition zu getragener Rüstung."
+        }
+      ],
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "subdermal-armor",
+      "name": "Subdermal Armor",
+      "category": "external",
+      "cost": 1000,
+      "humanity": 14,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "SP 11 für Kopf und Körper; stärkster Schutzwert zählt.",
+      "installationSlots": [
+        "external"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "effects": [
+        {
+          "type": "armor",
+          "target": "both",
+          "value": 11,
+          "description": "SP 11 für Kopf und Körper, ohne Addition zu getragener Rüstung."
+        }
+      ],
+      "humanityRoll": {
+        "dice": 4,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "grapple-hand",
+      "name": "Grapple Hand",
+      "category": "limbs",
+      "cost": 100,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Enterhakenhand mit 30 m Leine; keine Waffe.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "tool-hand",
+      "name": "Tool Hand",
+      "category": "limbs",
+      "cost": 100,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 111–116 / 358–367",
+      "description": "Werkzeughand; ersetzt ein Techtool.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm",
+        "allowNatural": true
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "talon-foot",
+      "name": "Talon Foot",
+      "category": "limbs",
+      "cost": 500,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "core",
+      "source": "Grundregelwerk S. 366",
+      "description": "Verborgene Fußklinge: leichte Nahkampfwaffe, 1W6, ROF 2.",
+      "installationSlots": [
+        "leg-left",
+        "leg-right"
+      ],
+      "requirements": {
+        "parentType": "leg",
+        "allowNatural": true
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "mantis-blade",
+      "name": "Mantisklinge",
+      "category": "limbs",
+      "cost": 500,
+      "humanity": 14,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "cemk",
+      "source": "Cyberpunk: Edgerunners Mission Kit, S. 35",
+      "description": "Ausfahrbare schwere Nahkampfwaffe in exzellenter Qualität: 3W6, 2 Angriffe, +1 auf Angriffe (eingerechnet). Eingefahren verdeckbar; ausgefahren kann diese Hand keine andere Waffe halten. Ein Paar in beiden Armen erlaubt Klettern ohne Bewegungsabzug.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm",
+        "uniquePerLocation": true
+      },
+      "funding": "cash",
+      "slots": 2,
+      "aliases": [
+        "Mantis Blade",
+        "Mantisklingen"
+      ],
+      "cyberWeapon": {
+        "damage": "3W6",
+        "rof": 2,
+        "skill": "melee-weapon",
+        "qualityBonus": 1,
+        "reach": 2,
+        "concealable": true
+      },
+      "humanityRoll": {
+        "dice": 4,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "gorilla-arm",
+      "name": "Gorilla-Arm",
+      "category": "limbs",
+      "cost": 1000,
+      "humanity": 14,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "cemk",
+      "source": "Cyberpunk: Edgerunners Mission Kit, S. 35",
+      "description": "Schwere Nahkampfwaffe in exzellenter Qualität: 3W6, 2 Angriffe, +1 auf Angriffe (eingerechnet); nicht verdeckbar. Zum Führen von Waffen gilt Körperkraft 11; echte Attribute, Trefferpunkte und Todesrettung bleiben unverändert. Ein Paar erlaubt außerdem Türen aufzubrechen, schwere Deckung zu bewegen sowie Gegner zu würgen oder zu Boden zu schleudern.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm",
+        "uniquePerLocation": true
+      },
+      "funding": "cash",
+      "slots": 2,
+      "aliases": [
+        "Gorilla Arms",
+        "Gorillaarme"
+      ],
+      "cyberWeapon": {
+        "damage": "3W6",
+        "rof": 2,
+        "skill": "melee-weapon",
+        "qualityBonus": 1,
+        "reach": 2,
+        "concealable": false
+      },
+      "humanityRoll": {
+        "dice": 4,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "monowire",
+      "name": "Monodraht",
+      "category": "limbs",
+      "cost": 1000,
+      "humanity": 14,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "cemk",
+      "source": "Cyberpunk: Edgerunners Mission Kit, S. 35",
+      "description": "Verborgene exotische Nahkampfwaffe: 3W6, 2 Angriffe, einhändig, Reichweite 6 m. Ohne Probe verdeckbar. Bei kritischer Verletzung zweimal auf der Verletzungstabelle würfeln und ein Ergebnis wählen; der kritische Zusatzschaden wird nur einmal angewendet.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm",
+        "uniquePerLocation": true
+      },
+      "funding": "cash",
+      "slots": 2,
+      "aliases": [
+        "Monowire",
+        "Monowires"
+      ],
+      "cyberWeapon": {
+        "damage": "3W6",
+        "rof": 2,
+        "skill": "melee-weapon",
+        "qualityBonus": 0,
+        "reach": 6,
+        "concealable": true
+      },
+      "humanityRoll": {
+        "dice": 4,
+        "divisor": 1
+      }
+    }
+  ],
+  "categories": [
+    {
+      "id": "accessories",
+      "name": "Accessoires",
+      "ruleCategory": "Fashionware"
+    },
+    {
+      "id": "neural",
+      "name": "Neuralsysteme",
+      "ruleCategory": "Neuralware"
+    },
+    {
+      "id": "optics",
+      "name": "Cyberoptik",
+      "ruleCategory": "Cyberoptics"
+    },
+    {
+      "id": "audio",
+      "name": "Cyberaudio",
+      "ruleCategory": "Cyberaudio"
+    },
+    {
+      "id": "internal",
+      "name": "Interne Körpercyberware",
+      "ruleCategory": "Internal Body Cyberware"
+    },
+    {
+      "id": "external",
+      "name": "Externe Körpercyberware",
+      "ruleCategory": "External Body Cyberware"
+    },
+    {
+      "id": "limbs",
+      "name": "Cybergliedmaßen",
+      "ruleCategory": "Cyberlimbs"
+    },
+    {
+      "id": "borg",
+      "name": "Borgware",
+      "ruleCategory": "Borgware"
+    }
+  ]
+}

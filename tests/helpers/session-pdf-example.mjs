@@ -1,0 +1,18 @@
+import {writeFile,mkdir} from 'node:fs/promises';
+import {rules,completeCharacter,templateBytes,fontBytes} from './pdf-fixture.mjs';
+import {createSessionDraft,previewSession,completeSession} from '../../js/session-report.js';
+import {quickAddCyberware} from '../../js/cyberware-quick-add.js';
+import {generateCharacterSheet} from '../../js/pdf-character.js';
+import {characterSheetData} from '../../js/pdf-character-data.js';
+import {characterSheetFields} from '../../js/pdf-character-layout.js';
+let c=completeCharacter('rockerboy');c.name='After Session Beispiel';const draft=createSessionDraft(c);draft.name='Der Watson-Auftrag';draft.notes='Belohnung erhalten, Cyberauge als Beute eingebaut und Folgen des Einsatzes erfasst.';draft.ipAward=500;
+const armor=rules.equipmentRules.items.find(d=>d.category==='armor'&&d.slot==='body'&&d.sp===11),ammo=rules.equipmentRules.items.find(d=>d.id==='ammo-heavy-pistol');
+draft.actions=[{type:'money',category:'reward',amount:800,description:'Erfolgreicher Auftrag'},{type:'skill',id:'cybertech',to:1},{type:'role',to:5},{type:'gear',id:'heavy-pistol',mode:'loot',quantity:1},{type:'gear',id:armor.id,mode:'loot',quantity:1},{type:'armor',equip:true,slot:'body',id:armor.id},{type:'armor',id:armor.id,loss:3,cost:0},{type:'health',mode:'damage',amount:12},{type:'cyber-acquire',id:'cybereye',mode:'loot',quantity:1},{type:'humanity',loss:5,reason:'Traumatisches Ereignis, durch Spielleitung bestätigt'},{type:'story',category:'contacts',text:'Ripperdoc Mira in Watson'},{type:'story',category:'goals',text:'Herausfinden, wer den Auftrag sabotiert hat.'},{type:'injury',name:'Gebrochene Rippen',notes:'Bei Bewegung über 4 m pro Zug 5 direkte TP; Behandlung noch offen.'}];
+let p=previewSession(c,rules,draft);if(!p.ok)throw Error(p.errors.join(' '));
+const plan=quickAddCyberware(p.character,rules,[],'cybereye');if(!plan.ok)throw Error(plan.error);draft.actions.push({type:'cyber-install',humanityLoss:7,confirmation:'2W6: 3 + 4',additions:plan.additions,owned:{[plan.additions[0].id]:p.character.campaign.cyberInventory[0].id}});
+draft.actions.push({type:'therapy',kind:'standard',days:7,safe:true,success:true,roll:9,provider:'provider'});
+if(ammo)draft.actions.push({type:'gear',id:ammo.id,mode:'loot',quantity:1},{type:'gear',id:ammo.id,mode:'consume',quantity:1,rounds:7});
+const result=completeSession(c,rules,draft);if(!result.ok)throw Error(result.error);c=result.character;
+await mkdir('output/pdf',{recursive:true});await mkdir('tmp/pdfs',{recursive:true});const pdf=await generateCharacterSheet(c,rules,{templateBytes,fontBytes});await writeFile('output/pdf/RED-After-Session-Beispiel.pdf',pdf.bytes);
+await writeFile('tmp/pdfs/session-expected-fields.json',JSON.stringify(characterSheetFields(characterSheetData(c,rules)).map(f=>[f.name,f.value])));
+await writeFile('test-results/session-example-character.json',JSON.stringify(c,null,2));await writeFile('test-results/session-example-report.json',JSON.stringify(c.campaign.history[0],null,2));console.log(JSON.stringify(result.report.after));
