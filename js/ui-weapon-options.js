@@ -1,5 +1,5 @@
 import { escapeHtml as e } from './html.js';
-import { weaponOptionLabels,weaponOptions,ownedWeaponOptions,WEAPON_OPTIONS_SOURCE } from './weapon-options.js?v=budget2';
+import { weaponOptionLabels,weaponOptions,ownedWeaponOptions,WEAPON_OPTIONS_SOURCE } from './weapon-options.js?v=shopping1';
 export function renderWeaponOptionCard(item,evaluated) {
   const labels=weaponOptionLabels(item);
   if(!labels.length)return '';

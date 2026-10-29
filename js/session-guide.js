@@ -1,8 +1,9 @@
 import {escapeHtml as e} from './html.js';
-import {improvementCost,THERAPIES,INJURY_STATUS} from './campaign-rules.js?v=budget2';
-import {renderCyberware} from './ui-cyberware.js?v=budget2';
+import {improvementCost,THERAPIES,INJURY_STATUS} from './campaign-rules.js?v=shopping1';
+import {renderCyberware} from './ui-cyberware.js?v=mobile1';
+import {renderRecoveryPlanner,renderRecoveryResult} from './ui-recovery-plan.js?v=recovery1';
 
-export const SESSION_PAGES=[['info','Session'],['rewards','Belohnung'],['health','Gesundheit'],['inventory','Ausrüstung'],['cyber','Cyberware'],['story','Geschichte'],['review','Prüfen']];
+export const SESSION_PAGES=[['info','Session'],['rewards','Belohnung'],['health','Gesundheit'],['recovery','Pause planen'],['inventory','Ausrüstung'],['cyber','Cyberware'],['story','Geschichte'],['review','Prüfen']];
 export function sessionActionPage(a){
   if(a.type==='money')return a.wizardReward?'rewards':'inventory';
   if(['skill','role','role-allocate'].includes(a.type))return 'rewards';
@@ -42,8 +43,8 @@ const titles={skill:'Eine Fertigkeit verbessern',role:'Deine Rollenfähigkeit ve
 function editor(task,body){return `<div class="session-editor"><button type="button" class="text-button" data-session-task="">← Andere Änderung wählen</button><h3>${titles[task]??'Was hat sich verändert?'}</h3>${body}</div>`;}
 function currentValues(state){return state.sessionFields?.task===(state.sessionTask??'')?state.sessionFields.values:{};}
 
-export function renderSessionWelcome({character,initial,metrics,history,exports,correction,savedSession,canExport}){
-  return `<section class="panel session-welcome"><span class="eyebrow">NACH DEM EINSATZ</span><h2>${savedSession?`Session ${savedSession} ist gespeichert.`:`Bring ${e(character.name)} auf den neuesten Stand.`}</h2><p>${savedSession?'Dein Charakter ist aktualisiert. Du kannst jetzt den neuen Charakterbogen herunterladen.':'Wir gehen die Session Schritt für Schritt durch. Alles ist zunächst ein Entwurf.'}</p>${savedSession?`<button class="primary" data-action="generate-character-sheet" ${!canExport?'disabled':''}>Charakterbogen herunterladen</button>`:''}<button class="${savedSession?'secondary':'primary'}" data-session-start>${savedSession?'Weitere Session nachtragen':'Session nachtragen →'}</button><details id="session-start-values"><summary>Aktuellen Charakterstand ansehen</summary>${metrics}</details>${correction}</section><details id="session-archive-tools" class="session-tools"><summary>Frühere Sessions & Charakter sichern <span>${character.campaign.history.length} Berichte</span></summary>${history}${exports}</details>`;
+export function renderSessionWelcome({character,initial,metrics,history,exports,correction,savedSession,canExport,recovery}){
+  return `<section class="panel session-welcome"><span class="eyebrow">NACH DEM EINSATZ</span><h2>${savedSession?`Session ${savedSession} ist gespeichert.`:`Bring ${e(character.name)} auf den neuesten Stand.`}</h2><p>${savedSession?'Dein Charakter ist aktualisiert. Du kannst jetzt den neuen Charakterbogen herunterladen.':'Wir gehen die Session Schritt für Schritt durch. Alles ist zunächst ein Entwurf.'}</p>${savedSession?`<button class="primary" data-action="generate-character-sheet" ${!canExport?'disabled':''}>Charakterbogen herunterladen</button>`:''}<button class="${savedSession?'secondary':'primary'}" data-session-start>${savedSession?'Weitere Session nachtragen':'Session nachtragen →'}</button><details id="session-start-values"><summary>Aktuellen Charakterstand ansehen</summary>${metrics}</details>${recovery?.ok?`<details id="session-saved-recovery"><summary>Erholung, Kosten und nächster Einsatz</summary>${renderRecoveryResult(recovery,character.name)}</details>`:""}${correction}</section><details id="session-archive-tools" class="session-tools"><summary>Frühere Sessions & Charakter sichern <span>${character.campaign.history.length} Berichte</span></summary>${history}${exports}</details>`;
 }
 
 export function renderSessionGuide({character,rules,state,initial,p,forms,meta,history,exports,summary,cyberState,evaluated,projected,contextSnapshot}){
@@ -76,10 +77,10 @@ export function renderSessionGuide({character,rules,state,initial,p,forms,meta,h
     }else body=forms[task]??'';
     continueLabel='Weiter zur Gesundheit →';
   }else if(page==='health'){
-    title='Wie geht es deinem Charakter?';intro=`Zuletzt hattest du ${snapshot.hp} von ${snapshot.maxHp} Trefferpunkten. Es wird nichts automatisch geheilt.`;
+    title='Wie viele Trefferpunkte fehlen dir nach dem Einsatz?';intro=`Dein Maximum: ${snapshot.maxHp} Trefferpunkte. Danach planen wir Behandlung, Erholung und den nächsten Einsatz.`;
     if(!task||task==='hp'){
-      const hp=Number(values.hp??snapshot.hp);
-      body=form('health-status',field('hp','Wie viele Trefferpunkte hast du jetzt?','number',`min="-10000" max="${snapshot.maxHp}" value="${hp}" required`)+(hp>snapshot.hp?field('confirmation','Was hat dich geheilt? Bestätigung der Spielleitung','text','required maxlength="1000"'):''),'Trefferpunkte merken und weiter →')+more(page,choices([['injury','Verletzung eintragen oder behandeln'],['stabilize','Stabilisiert worden','Beginnt die natürliche Heilung.'],['rest','Ausgeruht','Volle Ruhetage eintragen.'],['speedheal','Schnellheilung erhalten','Durch einen Medtech.']]));mainForm=true;
+      const missing=Number(values.missing??(values.hp!=null?snapshot.maxHp-Number(values.hp):Math.max(0,snapshot.maxHp-snapshot.hp))),hp=snapshot.maxHp-missing;
+      body=form('health-status',field('missing','Wie viele Trefferpunkte fehlen?','number',`min="0" max="${snapshot.maxHp+10000}" value="${missing}" required`)+(hp>snapshot.hp?field('confirmation','Was hat dich geheilt? Bestätigung der Spielleitung','text','required maxlength="1000"'):''),'Weiter zu Behandlung und Erholung →')+more(page,choices([['injury','Verletzung eintragen oder behandeln'],['stabilize','Stabilisiert worden','Beginnt die natürliche Heilung.'],['rest','Ausgeruht','Volle Ruhetage eintragen.'],['speedheal','Schnellheilung erhalten','Durch einen Medtech.']]),'Verletzungen und bisherige Heilung');mainForm=true;
     }else if(task==='injury'&&c.injuries.length)body=choices([['injury-new','Neue Verletzung eintragen'],['injury-treat','Vorhandene Verletzung behandeln']]);
     else if(task==='injury'||task==='injury-new')body=form('injury',field('name','Welche kritische Verletzung hast du erlitten?','text','maxlength="120" required list="session-injury-options"')+`<datalist id="session-injury-options">${['Abgetrennter Arm','Abgetrennte Hand','Kollabierte Lunge','Gebrochene Rippen','Gebrochener Arm','Fremdkörper','Gebrochenes Bein','Muskelriss','Wirbelsäulenverletzung','Zerquetschte Finger','Abgetrenntes Bein','Gehirnerschütterung','Beschädigtes Auge','Beschädigtes Ohr'].map(n=>`<option value="${n}">`).join('')}</datalist>`+field('notes','Was musst du dabei beachten? (optional)','text','maxlength="1000"')+'<p class="session-hint">Trefferpunkte werden hier nicht nochmals abgezogen.</p>');
     else if(task==='injury-treat')body=form('injury',pick('id','Welche Verletzung?',c.injuries.map(i=>[i.id,i.name]),values.id)+pick('status','Wie wurde sie behandelt?',[['quickfix','Vorübergehend versorgt (Quick Fix)'],['treated','Dauerhaft behandelt'],['resolved','Längerfristige Folge aufgehoben'],['active','Weiterhin aktiv']],values.status)+field('confirmation','Erfolgreiche Probe, Behandlungszeit oder Bestätigung der Spielleitung','text','required maxlength="1000"'));
@@ -87,7 +88,10 @@ export function renderSessionGuide({character,rules,state,initial,p,forms,meta,h
     else {
       const common=hidden('mode',task);
       body=form('health',common+(task==='stabilize'?field('confirmation','Welche erfolgreiche Probe hat dich stabilisiert?','text','required maxlength="1000"'):task==='damage'?field('amount','Wie viele Trefferpunkte hast du verloren?','number','min="1" max="10000" required'):task==='rest'?field('days','Wie viele volle Tage hast du dich ausgeruht?','number','min="1" max="365" value="1" required')+check('lightActivity','Ich war stabilisiert und habe mich nur leicht betätigt.'):field('date','An welchem Spieldatum?','date',`value="${e(draft.date)}"`)+check('medtech','Ein Medtech hat die Dosis verabreicht.')+check('onceDaily','Das war meine erste Schnellheilung an diesem Tag.')+field('cost','Bezahlte Behandlungskosten (eb)','number','min="0" value="0"')));
-    }continueLabel='Weiter zur Ausrüstung →';
+    }continueLabel='Weiter zur Erholungsplanung →';
+  }else if(page==='recovery'){
+    title='Wann bist du wieder einsatzbereit?';intro='Erst deine Behandlung, dann die Gruppe, dann der nächste Einsatz.';
+    body=renderRecoveryPlanner(projected,rules,draft,values,state.sessionRecoveryStage??'medical');mainForm=true;
   }else if(page==='inventory'){
     title='Hat sich deine Ausrüstung verändert?';intro='Wähle nur, was passiert ist. Du kannst mehrere Änderungen nacheinander eintragen.';
     if(!task)body=choices([['ammo','Munition verschossen','Verbrauchte Schuss eintragen.'],['gear-loot','Etwas erhalten','Beute oder Geschenk, ohne Kaufpreis.'],['gear-buy','Etwas gekauft','Der Preis wird einmal abgezogen.'],['gear-lost','Etwas verloren','Verloren oder gestohlen.']])+more(page,choices([['gear-consume','Anderen Gegenstand verbraucht'],['gear-sell','Etwas verkauft'],['custom','Eigener Gegenstand'],['armor','Rüstung beschädigt oder repariert'],['armor-equip','Andere Rüstung anlegen'],['attachment','Waffenaufsatz'],['money-spent','Geld ausgegeben'],['money-lost','Geld verloren'],['money-earned','Weiteres Geld erhalten'],['note','Andere Reparatur oder Verbesserung']]));
@@ -130,7 +134,7 @@ export function renderSessionGuide({character,rules,state,initial,p,forms,meta,h
     else if(task.startsWith('story-'))body=form('story',hidden('category',task.slice(6))+field('text','Was möchtest du dir merken?','text','required maxlength="600"'));
     else body=forms.reputation;
     continueLabel='Alles prüfen →';
-  }else {title='Passt alles?';intro='Nur diese Änderungen werden übernommen. Du kannst jeden Eintrag noch bearbeiten.';body=summary;}
+  }else {title='Passt alles?';intro='Nur diese Änderungen werden übernommen. Du kannst jeden Eintrag noch bearbeiten.';body=(p.recovery?`<details id="session-review-recovery"><summary>Erholungsplan und Gruppentermin</summary>${renderRecoveryResult(p.recovery,character.name)}</details>`:'')+summary;}
   const nav=draftCorrection(state)?'':`<nav class="session-progress" aria-label="Schritte des Session-Reports">${SESSION_PAGES.map(([id,label],i)=>`<button type="button" data-session-page="${id}" ${id===page?'aria-current="step"':''}><span>${i+1}</span><small>${label}</small></button>`).join('')}</nav>`;
   const entries=draft.actions.map((a,i)=>({a,i,text:p.log[i+(draft.ipAward?1:0)]})).filter(({a})=>sessionActionPage(a)===page&&!a.wizardReward);
   const staged=page!=='review'&&entries.length?`<section class="session-staged"><h3>Für diese Session gemerkt</h3><ul>${entries.map(({a,i,text})=>`<li><span>${e(text??'Bitte diesen Eintrag prüfen.')}</span><button class="text-button" data-session-edit="${i}" aria-label="Eintrag ${i+1} bearbeiten">Bearbeiten</button><button class="session-remove" data-session-remove="${i}" aria-label="Eintrag ${i+1} entfernen">×</button></li>`).join('')}</ul></section>`:'';

@@ -1,5 +1,5 @@
-import { createCharacter, migrateCharacter, validateCharacter, MAX_PORTRAIT_LENGTH } from './model.js?v=budget2';
-import { STORAGE_KEY } from './storage.js?v=budget2';
+import { createCharacter, migrateCharacter, validateCharacter, MAX_PORTRAIT_LENGTH } from './model.js?v=shopping1';
+import { STORAGE_KEY } from './storage.js?v=shopping1';
 const PREFIX = 'red-builder.character.archive.';
 export const ACTIVE_ARCHIVE_KEY = 'red-builder.character.activeArchive';
 

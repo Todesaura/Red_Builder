@@ -1,5 +1,5 @@
-import {INJURY_STATUS} from './campaign-rules.js?v=budget2';
-import {attachmentRuleText} from './weapon-attachments.js?v=budget2';
+import {INJURY_STATUS} from './campaign-rules.js?v=shopping1';
+import {attachmentRuleText} from './weapon-attachments.js?v=shopping1';
 // Presentation only: use evaluated bases; never apply an effect to character state.
 import { NET_SUPPORT_SUMMARIES } from './netrunner-german.js';
 const roll = value => `**${value} + 1W10**`;
@@ -201,7 +201,7 @@ export function quickReferenceColumns(data) {
     section('TREFFER / RÜSTUNG / KRITISCH',[
       '**Schaden - Schutzwert**, mindestens 0. Nahkampfwaffen/Kampfkunst halbieren Schutz (aufrunden), Handgemenge nicht. Normalziel: Körper.',
       'Durchdrungen: Trefferpunkte senken, **Schutzwert -1** (panzerbrechend -2) bis Reparatur; Kopf/Körper getrennt.',
-      '**2+ Sechsen:** kritische Verletzung (2W6-Tabelle) + **5 Direktschaden**, auch ohne Durchdringung.',
+      '**2+ Sechsen im Schadenswurf:** kritische Verletzung + **5 Direktschaden** (ignoriert Rüstung; kein Kopfbonus). Spielleitung: **2W6**, Kopftabelle bei Kopftreffer, sonst Körpertabelle.',
       '**Deckung:** stoppt Beschuss bis 0 Trefferpunkte; kein Restschaden desselben Treffers. Kopf muss erreichbar sein.'
     ])
   ],roleReference(data),[

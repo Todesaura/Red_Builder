@@ -1,7 +1,7 @@
-import { installationErrors, installCyberware } from './cyberware.js?v=budget2';
-import { evaluateFunds } from './economy.js?v=budget2';
-import { evaluateCharacter } from './rules.js?v=budget2';
-import { baseStats, cyberwareCandidate } from './cyberware-ui-model.js?v=budget2';
+import { installationErrors, installCyberware } from './cyberware.js?v=shopping1';
+import { evaluateFunds } from './economy.js?v=shopping1';
+import { evaluateCharacter } from './rules.js?v=shopping1';
+import { baseStats, cyberwareCandidate } from './cyberware-ui-model.js?v=shopping1';
 
 // Only additions live in the draft. Installed components cannot be undone by dragging.
 export function draftCharacter(character, additions = []) {

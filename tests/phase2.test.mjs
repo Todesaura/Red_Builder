@@ -35,9 +35,10 @@ test('26 Pflichtpunkte zählen zum Budget; Herkunftssprache Rang 4 ist kostenlos
   assert.equal(assignSkill(item, rules, 'native-language', 3).ok, false);
 });
 
-test('Pflichtfertigkeiten dürfen im Entwurf unter 2 liegen, blockieren aber den Abschluss', () => {
+test('Pflichtfertigkeiten bleiben mindestens auf 2, freie Fertigkeiten dürfen auf 0 liegen', () => {
   const item = character();
-  assert.equal(assignSkill(item, rules, 'athletics', 1).ok, true);
+  assert.equal(assignSkill(item, rules, 'athletics', 1).ok, false);
+  assert.equal(item.skills.ranks.athletics,2);
   assert.equal(assignSkill(item, rules, 'handgun', 0).ok, true);
   for (const value of [-1, 7, 1.5, NaN, '4', null]) assert.equal(assignSkill(item, rules, 'handgun', value).ok, false);
   assert.equal(assignSkill(item, rules, 'unknown', 2).ok, false);

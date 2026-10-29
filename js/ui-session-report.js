@@ -1,12 +1,12 @@
-import {renderSessionWelcome,renderSessionGuide} from './session-guide.js?v=budget2';
-import {ATTACHMENTS} from './weapon-attachments.js?v=budget2';
+import {renderSessionWelcome,renderSessionGuide} from './session-guide.js?v=mobile1';
+import {ATTACHMENTS} from './weapon-attachments.js?v=shopping1';
 import {escapeHtml as e} from './html.js';
-import {previewSession,sessionSnapshot} from './session-report.js?v=budget2';
-import {THERAPIES,TRANSACTION_TYPES,SESSION_SOURCES,INJURY_STATUS} from './campaign-rules.js?v=budget2';
-import {evaluateCharacter} from './rules.js?v=budget2';
-import {ROLE_POOLS,PHARMACEUTICALS} from './role-points.js?v=budget2';
-import {renderCyberware} from './ui-cyberware.js?v=budget2';
-import {characterSheetReadiness} from './pdf-character-data.js?v=budget2';
+import {previewSession,sessionSnapshot} from './session-report.js?v=recovery1';
+import {THERAPIES,TRANSACTION_TYPES,SESSION_SOURCES,INJURY_STATUS} from './campaign-rules.js?v=shopping1';
+import {evaluateCharacter} from './rules.js?v=shopping1';
+import {ROLE_POOLS,PHARMACEUTICALS} from './role-points.js?v=shopping1';
+import {renderCyberware} from './ui-cyberware.js?v=mobile1';
+import {characterSheetReadiness} from './pdf-character-data.js?v=shopping1';
 
 const options=(entries,selected='')=>entries.map(([value,label])=>`<option value="${e(String(value))}" ${String(value)===String(selected)?'selected':''}>${e(String(label))}</option>`).join('');
 const input=(name,label,type='text',attrs='')=>`<label>${e(label)}<input name="${name}" type="${type}" ${attrs}></label>`;
@@ -30,7 +30,7 @@ export function renderSessionReport(character,rules,state){
   const initial=sessionSnapshot(character,rules),draft=state.sessionDraft,forms={};
   const form=(type,body,label)=>{const markup=sessionForm(type,body,label);forms[type]=markup;return markup;};
   const exports=`<section class="panel session-export"><h3>Charakter sichern</h3><button class="secondary" data-session-export-character>Aktuellen Charakter als JSON exportieren</button><button class="primary" data-action="generate-character-sheet" ${!characterSheetReadiness(character,rules).ready||state.pdfExportBusy?'disabled':''}>Aktualisierten Charakterbogen exportieren</button><p role="status">${e(state.pdfExportMessage??'')}</p><small>Charakter und Berichte bleiben lokal in diesem Browser. Sichere wichtige Stände als JSON.</small></section>`;
-  if(!draft)return renderSessionWelcome({character,initial,savedSession:state.sessionSaved,canExport:characterSheetReadiness(character,rules).ready&&!state.pdfExportBusy,metrics:metrics(initial),history:history(character),exports,correction:state.sessionCorrection?form('correction',input('reason','Grund der Korrektur','text','required maxlength="1000"')+'<p>Der letzte Bericht bleibt erhalten. Seine Änderungen werden in einem neuen Bericht zurückgebucht.</p>','Korrekturvorschau erstellen'):''});
+  if(!draft)return renderSessionWelcome({recovery:character.campaign.history.at(-1)?.recoveryPlan,character,initial,savedSession:state.sessionSaved,canExport:characterSheetReadiness(character,rules).ready&&!state.pdfExportBusy,metrics:metrics(initial),history:history(character),exports,correction:state.sessionCorrection?form('correction',input('reason','Grund der Korrektur','text','required maxlength="1000"')+'<p>Der letzte Bericht bleibt erhalten. Seine Änderungen werden in einem neuen Bericht zurückgebucht.</p>','Korrekturvorschau erstellen'):''});
   const p=previewSession(character,rules,draft),context=state.sessionEditing!=null?previewSession(character,rules,{...draft,actions:draft.actions.slice(0,state.sessionEditing)}):p,projected=context.after?context.character:character,v=evaluateCharacter(projected,rules),c=projected.campaign;
   const warning=p.errors.length?`<div class="notice" role="alert"><strong>Vor dem Abschluss korrigieren</strong><ul>${p.errors.map(s=>`<li>${e(s)}</li>`).join('')}</ul></div>`:'';
   const meta=`<section class="panel"><h3>Session-Übersicht</h3><div class="session-form">${input('number','Session-Nummer','number',`id="session-number" data-session-meta="number" min="1" max="99999" value="${draft.number}"`)}${input('date','Datum','date',`id="session-date" data-session-meta="date" value="${e(draft.date)}"`)}${input('name','Session-Name (optional)','text',`id="session-name" data-session-meta="name" maxlength="120" value="${e(draft.name)}"`)}<label class="session-wide">Was ist passiert?<textarea id="session-notes" data-session-meta="notes" maxlength="2000">${e(draft.notes)}</textarea></label></div></section>`;

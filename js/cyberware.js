@@ -1,4 +1,4 @@
-import { evaluateFunds } from './economy.js?v=budget2';
+import { evaluateFunds } from './economy.js?v=shopping1';
 export const CYBERWARE_EFFECT_TYPES = Object.freeze({ PERMANENT: 'permanent', SITUATIONAL: 'situational', SKILL: 'skill' });
 export const createCyberware = () => ({ items: [], limit: null, removed: [] });
 

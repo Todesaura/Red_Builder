@@ -7,7 +7,7 @@ const root = fileURLToPath(new URL('.', import.meta.url));
 const port = Number(process.argv[2] || 8080);
 const basePath = process.argv[3] || '/';
 if (!basePath.startsWith('/') || !basePath.endsWith('/')) throw new Error('Der Basispfad muss mit / beginnen und enden.');
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.md': 'text/plain; charset=utf-8', '.pdf': 'application/pdf', '.ttf': 'font/ttf' };
+const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.ico': 'image/x-icon', '.md': 'text/plain; charset=utf-8', '.pdf': 'application/pdf', '.ttf': 'font/ttf' };
 createServer(async (request, response) => {
   try {
     const requestedPath = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);

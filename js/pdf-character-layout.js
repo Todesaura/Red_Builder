@@ -1,6 +1,6 @@
-import {INJURY_STATUS} from './campaign-rules.js?v=budget2';
+import {INJURY_STATUS} from './campaign-rules.js?v=shopping1';
 // Coordinates measured on the supplied, unmodified 1500 x 1165 rendering.
-import {CYBERWARE_PRINT_SUMMARIES,CYBERWARE_PRINT_NAMES} from './pdf-cyberware-summary.js?v=budget2';
+import {CYBERWARE_PRINT_SUMMARIES,CYBERWARE_PRINT_NAMES} from './pdf-cyberware-summary.js?v=shopping1';
 // Each rectangle is inside the printed cell, below its printed label.
 export const TEMPLATE_SHA256 = '4d5ed61178ef9c927178d0236f596642098af73bf5baff9d3d5046e5b55e4b4c';
 export function characterSheetFields(data) {

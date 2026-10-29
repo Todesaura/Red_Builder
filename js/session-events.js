@@ -1,13 +1,16 @@
-import {needsCyberwareSide} from './cyberware-placement.js?v=budget2';
-import {SESSION_PAGES,sessionActionPage,sessionActionTask,setSessionRewards} from './session-guide.js?v=budget2';
-import {createSessionDraft,previewSession,completeSession} from './session-report.js?v=budget2';
-import {sessionCyberState} from './ui-session-report.js?v=budget2';
-import {quickAddCyberware} from './cyberware-quick-add.js?v=budget2';
-import {addToCyberwareDraft,removeFromCyberwareDraft} from './cyberware-draft.js?v=budget2';
-import {initialInstallationLocation} from './cyberware-ui-model.js?v=budget2';
-import {saveCharacter,loadCharacter} from './storage.js?v=budget2';
-import {evaluateCharacter} from './rules.js?v=budget2';
-import {ROLE_POOLS} from './role-points.js?v=budget2';
+import {needsCyberwareSide} from './cyberware-placement.js?v=shopping1';
+import {SESSION_PAGES,sessionActionPage,sessionActionTask,setSessionRewards} from './session-guide.js?v=mobile1';
+import {createSessionDraft,previewSession,completeSession} from './session-report.js?v=recovery1';
+import {sessionCyberState} from './ui-session-report.js?v=mobile1';
+import {quickAddCyberware} from './cyberware-quick-add.js?v=shopping1';
+import {addToCyberwareDraft,removeFromCyberwareDraft} from './cyberware-draft.js?v=shopping1';
+import {initialInstallationLocation} from './cyberware-ui-model.js?v=shopping1';
+import {saveCharacter,loadCharacter} from './storage.js?v=shopping1';
+import {evaluateCharacter} from './rules.js?v=shopping1';
+import {ROLE_POOLS} from './role-points.js?v=shopping1';
+import {recoveryPlan} from './recovery-plan.js?v=recovery1';
+import {recoveryInput} from './ui-recovery-plan.js?v=recovery1';
+import {acknowledgeRecommendations} from './recommendation-hints.js?v=hints1';
 
 function downloadJson(value,name){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name.replace(/[<>:"/\\|?*]/g,'');a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 export function bindSessionEvents(root,state,rules,refresh){
@@ -40,7 +43,7 @@ export function bindSessionEvents(root,state,rules,refresh){
     const button=event.target.closest('button');if(!button)return;
     const config=button.closest('[data-session-configurator]');
     if(config){event.preventDefault();event.stopImmediatePropagation();const ui=cyber();
-      if(button.dataset.cyberCategory)ui.cyberCategory=button.dataset.cyberCategory;
+      if(button.dataset.cyberCategory){ui.cyberCategory=button.dataset.cyberCategory;acknowledgeRecommendations(state.character,'cyber:'+ui.cyberCategory);}
       else if(button.dataset.selectCyberware){const d=rules.cyberwareRules.items.find(d=>d.id===button.dataset.selectCyberware);ui.selectedCyberware=ui.selectedCyberware===d.id?null:d.id;ui.pendingLocation=initialInstallationLocation(d);}
       else if(button.dataset.action==='cancel-cyber-placement')ui.cyberPlacement=null;
       else if(button.dataset.confirmCyberLocation){const selected=ui.cyberPlacement;if(!selected)return;ui.cyberPlacement=null;return queueCyber(selected.id,button.dataset.confirmCyberLocation,selected.ownedId);}
@@ -60,12 +63,23 @@ export function bindSessionEvents(root,state,rules,refresh){
       else if(['show-installation','toggle-installation'].includes(button.dataset.action))ui.installationOpen=!ui.installationOpen;
       refresh();return;
     }
-    const key=Object.keys(button.dataset).find(key=>key.startsWith('session'));if(!key)return;
+    const key=Object.keys(button.dataset).find(key=>key.startsWith('session')||key.startsWith('recovery'));if(!key)return;
     event.preventDefault();event.stopImmediatePropagation();
+    if(button.dataset.recoveryStage){
+      const form=root.querySelector('[data-session-form="recovery-plan"]');
+      if(form){const values={...(state.sessionDraft.recoveryPlan??{}),...Object.fromEntries(new FormData(form))};state.sessionDraft.recoveryPlan=values.phase==='crew'?recoveryInput(values):values;}
+      state.sessionRecoveryStage=button.dataset.recoveryStage;state.sessionFields=null;refresh();return;
+    }
+    if(button.hasAttribute('data-recovery-member-add')){
+      const form=root.querySelector('[data-session-form="recovery-plan"]'),values=Object.fromEntries(new FormData(form));
+      const count=form.querySelectorAll('[name^="memberName"]').length;
+      if(count<12){values[`memberName${count}`]='';values[`memberDays${count}`]='';}
+      state.sessionFields={type:'recovery-plan',task:state.sessionTask??'',values};refresh();return;
+    }
     if(button.dataset.sessionPage){state.sessionPage=button.dataset.sessionPage;state.sessionTask='';state.sessionFields=null;state.sessionEditing=null;state.sessionToast='';state.sessionFormError='';refresh();document.getElementById('session-question')?.focus();return;}
     if(button.hasAttribute('data-session-task')){state.sessionTask=button.dataset.sessionTask;state.sessionFields=null;state.sessionEditing=null;state.sessionToast='';state.sessionFormError='';refresh();document.getElementById('session-question')?.focus();return;}
     if(button.hasAttribute('data-session-cancel-edit')){state.sessionEditing=null;state.error='';refresh();return;}
-    if(button.hasAttribute('data-session-start')){state.sessionSaved=null;state.sessionDraft=createSessionDraft(state.character);state.sessionPage='info';state.sessionTask='';state.sessionFields=null;state.sessionCyber=sessionCyberState();state.error='';refresh();return;}
+    if(button.hasAttribute('data-session-start')){state.sessionSaved=null;state.sessionDraft=createSessionDraft(state.character);state.sessionPage='info';state.sessionRecoveryStage='medical';state.sessionTask='';state.sessionFields=null;state.sessionCyber=sessionCyberState();state.error='';refresh();return;}
     if(button.hasAttribute('data-session-discard')){state.sessionDraft=null;state.sessionCyber=null;state.sessionEditing=null;state.error='';refresh();return;}
     if(button.dataset.sessionRemove!=null){state.sessionDraft.actions.splice(Number(button.dataset.sessionRemove),1);state.sessionEditing=null;state.error='';refresh();return;}
     if(button.dataset.sessionEdit!=null){
@@ -110,7 +124,7 @@ export function bindSessionEvents(root,state,rules,refresh){
       if(type==='armor'&&el.name==='id')delete values.sp;
       if(type==='skill'&&el.name==='id'){const selected=evaluateCharacter(current(),rules).skills.find(s=>s.id===el.value);if(selected)values.to=String(selected.level+1);}
       state.sessionFields={type,task:state.sessionTask??'',values};
-      if(el.tagName==='SELECT'||['skill','role'].includes(type)&&el.name==='to'||type==='health-status'&&el.name==='hp'||type==='armor'&&el.name==='sp'){event.stopImmediatePropagation();refresh();}
+      if(type==='recovery-plan'||el.tagName==='SELECT'||['skill','role'].includes(type)&&el.name==='to'||type==='health-status'&&['hp','missing'].includes(el.name)||type==='armor'&&el.name==='sp'){event.stopImmediatePropagation();refresh();}
       return;
     }
     if(!el.closest('[data-session-configurator]'))return;
@@ -131,9 +145,21 @@ export function bindSessionEvents(root,state,rules,refresh){
     const raw=new FormData(f),a={type};
     if(type==='rewards'){state.sessionDraft=setSessionRewards(state.sessionDraft,Number(raw.get('amount')),Number(raw.get('ipAward')),String(raw.get('description')??''));state.sessionPage='health';state.sessionTask='';state.sessionFields=null;state.sessionToast='';state.sessionFormError='';refresh();return;}
     if(type==='health-status'){
-      const hp=Number(raw.get('hp')),p=preview(),old=p.after?.hp??p.before?.hp,returning=state.sessionReturn==='review';
+      const p=preview(),hp=raw.has('missing')?(p.after?.maxHp??p.before?.maxHp)-Number(raw.get('missing')):Number(raw.get('hp')),old=p.after?.hp??p.before?.hp,returning=state.sessionReturn==='review';
       if(state.sessionEditing!=null||hp!==old){if(!queue({type:'health',mode:'set',hp,confirmation:raw.get('confirmation')??''}))return;}
-      state.sessionPage=returning?'review':'inventory';state.sessionTask='';state.sessionFields=null;refresh();return;
+      state.sessionPage=returning?'review':'recovery';state.sessionRecoveryStage='medical';state.sessionTask='';state.sessionFields=null;refresh();return;
+    }
+    if(type==='recovery-plan'){
+      const phase=String(raw.get('phase')),config={...(state.sessionDraft.recoveryPlan??{}),...Object.fromEntries(raw)};
+      const next=phase==='crew'?recoveryInput(config):config;
+      try{
+        const plan=recoveryPlan(current(),rules,phase==='medical'?{...next,members:[]}:next,state.sessionDraft.date);
+        if(!plan.ok){state.sessionFormError=plan.errors.join(' ');refresh();return;}
+        state.sessionDraft.recoveryPlan=next;
+        state.sessionRecoveryStage=phase==='medical'?'crew':'result';state.sessionFields=null;state.sessionFormError='';
+        if(phase==='result'){state.sessionPage='inventory';state.sessionToast='Erholungsplan gemerkt. Es wurden keine TP oder Geld verändert.';}
+        refresh();document.getElementById('session-question')?.focus();return;
+      }catch(err){state.sessionFormError=err.message;refresh();return;}
     }
     for(const [key,value] of raw.entries())a[key]=value;
     for(const key of ['rounds','amount','quantity','to','loss','days','roll','hp','sp','value','cost'])if(a[key]!=null)a[key]=a[key]===''?null:Number(a[key]);

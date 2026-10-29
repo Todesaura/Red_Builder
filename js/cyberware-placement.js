@@ -1,5 +1,5 @@
-import {cyberwareQuickOffer} from './cyberware-quick-add.js?v=budget2';
-import {draftCharacter} from './cyberware-draft.js?v=budget2';
+import {cyberwareQuickOffer} from './cyberware-quick-add.js?v=shopping1';
+import {draftCharacter} from './cyberware-draft.js?v=shopping1';
 import {escapeHtml as e} from './html.js';
 
 export function needsCyberwareSide(rules,id){

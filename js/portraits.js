@@ -1,4 +1,4 @@
-import { PORTRAITS } from './portrait-catalog.js?v=budget2';
+import { PORTRAITS } from './portrait-catalog.js?v=shopping1';
 
 export async function readGalleryPortrait(id) {
   const entry = PORTRAITS.find(portrait => portrait.id === id);

@@ -13,26 +13,27 @@ import { addToCyberwareDraft,commitCyberwareDraft } from '../js/cyberware-draft.
 function memory() {
   const data=new Map();return {data,get length(){return data.size;},key:i=>[...data.keys()][i],getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value)};
 }
-test('Reset gibt exakt 86 Punkte frei, erhält Sprache/Namen und setzt auch Spezialränge zurück',()=>{
+test('Reset gibt nach Pflichtwerten exakt 60 Punkte frei, erhält Sprache/Namen und setzt auch Spezialränge zurück',()=>{
   const c=completeCharacter('tech');c.skills.specialties.push({id:'specialty-40',skill:'science',name:'Chemie',level:0});
   const other=structuredClone({...c,skills:null});resetSkillPoints(c,rules);
-  assert.ok(Object.values(c.skills.ranks).every(rank=>rank===0));assert.ok(c.skills.specialties.every(item=>item.level===0));
+  assert.ok(rules.skillRules.skills.filter(s=>!s.specialized).every(s=>c.skills.ranks[s.id]===s.min));assert.ok(c.skills.specialties.every(item=>item.level===0));
   assert.equal(c.skills.nativeLanguage.level,4);assert.equal(c.skills.nativeLanguage.name,'Deutsch');assert.equal(c.skills.hometown,'Watson');
-  assert.equal(c.skills.specialties.at(-1).name,'Chemie');assert.equal(skillPointsRemaining(c,rules),86);assert.deepEqual({...c,skills:null},other);
+  assert.equal(c.skills.specialties.at(-1).name,'Chemie');assert.equal(skillPointsRemaining(c,rules),60);assert.deepEqual({...c,skills:null},other);
   assert.deepEqual(validateCharacter(c,rules),c);
 });
-test('Bewusster Reset bleibt nach Laden und Rollenwechsel leer, statt automatisch neu befüllt zu werden',()=>{
+test('Bewusster Reset behält nach Laden und Rollenwechsel die Pflichtwerte, statt automatisch neu befüllt zu werden',()=>{
   const c=completeCharacter();resetSkillPoints(c,rules);const storage=memory();storage.setItem(STORAGE_KEY,JSON.stringify(c));
   const loaded=loadCharacter(rules,storage).character;loaded.role='tech';assert.equal(automaticallyRecommendSkills(loaded,rules),false);
-  assert.equal(skillPointsRemaining(loaded,rules),86);assert.ok(Object.values(loaded.skills.ranks).every(rank=>rank===0));
+  assert.equal(skillPointsRemaining(loaded,rules),60);assert.ok(rules.skillRules.skills.filter(s=>!s.specialized).every(s=>loaded.skills.ranks[s.id]===s.min));
 });
-test('Nullränge sind speicherbar, aber fehlende Pflichtfertigkeiten blockieren den fertigen Charakter',()=>{
+test('Alte Nullränge bleiben ladbar; neue Eingaben können Pflichtfertigkeiten nicht absenken',()=>{
   const c=completeCharacter();resetSkillPoints(c,rules);
+  for(const skill of rules.skillRules.skills.filter(s=>!s.specialized))c.skills.ranks[skill.id]=0;
   for(const skill of rules.skillRules.skills.filter(s=>!s.specialized&&s.min===0&&s.cost===1).slice(0,13)) c.skills.ranks[skill.id]=6;
   c.skills.ranks[rules.skillRules.skills.find(s=>!s.specialized&&s.min===0&&s.cost===2).id]=4;
   assert.equal(skillPointsRemaining(c,rules),0);assert.equal(characterSheetReadiness(c,rules).ready,false);
   assert.equal(skillValidation(c,rules).filter(error=>error.includes('mindestens Rang 2')).length,13);
-  const free=completeCharacter();assert.equal(assignSkill(free,rules,'athletics',0).ok,true);assert.ok(skillValidation(free,rules).some(error=>error.includes('Athletik')));
+  const free=completeCharacter();assert.equal(assignSkill(free,rules,'athletics',0).ok,false);assert.ok(!skillValidation(free,rules).some(error=>error.includes('Athletik')));
 });
 test('Aktueller EMP-Fall ist 40 minus 44 Menschlichkeit, ohne kumulative Rechenfehler',()=>{
   const c=completeCharacter('tech');let draft=[];

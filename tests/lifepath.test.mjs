@@ -10,11 +10,11 @@ import { loadCharacter, saveCharacter, STORAGE_KEY } from '../js/storage.js';
 const json=async name=>JSON.parse(await readFile(new URL(`../data/${name}.json`,import.meta.url),'utf8'));
 const rules=await json('rules');rules.skillRules=await json('skills');rules.cyberwareRules=await json('cyberware');rules.equipmentRules=await json('equipment');
 const fresh=()=>{const c=createCharacter(rules);c.name='Test';c.role='solo';return c;};
-test('Lebensweg bietet vier unterschiedliche Vorschläge je Frage und wirkt nicht auf Spielwerte',()=>{
+test('Lebensweg bietet eindeutige Vorschläge mit unterschiedlichen Antwortzahlen und wirkt nicht auf Spielwerte',()=>{
  const c=fresh(),before=evaluateCharacter(c,rules);
- assert.equal(LIFEPATH_QUESTIONS.length,20);
- for(const question of LIFEPATH_QUESTIONS){assert.equal(question.options.length,4);assert.equal(new Set(question.options).size,4);assert.ok(chooseLifepath(c,question.id,'first').ok);}
- const after=evaluateCharacter(c,rules);assert.equal(after.lifepath.answered,20);
+ assert.equal(LIFEPATH_QUESTIONS.length,21);
+ for(const question of LIFEPATH_QUESTIONS){assert.ok(question.options.length>=4&&question.options.length<=9);if(question.group!=='daily')assert.equal(question.options.length,4);assert.equal(new Set(question.options).size,question.options.length);assert.ok(chooseLifepath(c,question.id,'first').ok);}
+ const after=evaluateCharacter(c,rules);assert.equal(after.lifepath.answered,21);
  for(const key of ['attributes','skills','funds','roleAbilities','derived'])assert.deepEqual(after[key],before[key]);
 });
 test('Eigene Idee, Vorschläge und Zurücknehmen bewahren den persönlichen Textentwurf',()=>{

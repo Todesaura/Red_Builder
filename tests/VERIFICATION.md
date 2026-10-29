@@ -1,3 +1,39 @@
+# Angeheftete Charakterübersicht beim Einkaufen – Prüfung (28.10.2026)
+
+355 automatisierte Tests bestanden, 0 fehlgeschlagen; vollständige Suite ca. 65 Sekunden. Protokoll: test-results/shopping-suite.txt. Sieben neue Tests sichern gemeinsame Geld-/Fashion-/Menschlichkeitswerte, Waffen-/Granatenbestand, getrennten angelegten Kopf-/Körperschutz, implantierten Schutz/Rüstungsverschleiß/Abzüge, tatsächliche statt geplante Cyberwaffen, getrennte NET-Ausrüstung und dieselbe Übersicht in sämtlichen Ausstattungsreitern. Nach Ergänzung der Kennzeichnung verbrauchter SP erneut alle sieben gezielten Prüfungen bestanden.
+
+Browser im getrennten localhost-Profil: Übersicht beim Scrollen zu Skinwatch sichtbar, position sticky, Oberkante 10 px, Höhe 192 px. 2.400 eb / 800 Fashion-eb / Menschlichkeit 33 von 38 / EMP 3 korrekt. Keine Waffe und getrennt SP 0 für Kopf/Körper sichtbar; Hinweise ausdrücklich optional. Klick auf Kopfschutz fokussiert armor-head im Rüstungsreiter, Übersicht bleibt bei 10 px. Keine Benutzerkäufe oder Charakterdaten verändert. Screenshot visuell geprüft: test-results/shopping-summary.png.
+
+---
+
+# Abschlussanzeige pro Erstellungsschritt – Prüfung (28.10.2026)
+
+348 automatisierte Tests bestanden, 0 fehlgeschlagen; vollständige Suite ca. 81 Sekunden. Protokoll: test-results/completion-suite.txt. Neun zusätzliche Tests decken alle zehn Rollen mit identischer PDF-Freigabe, fehlende Identität, getrennte Attribut-/Namensprüfung, freie Fertigkeitspunkte/Sprache/Heimat, Rollenpunkte/Präparate, offene Lebenswegfragen/Monatsbeträge, optionale Ausrüstung, offene Ausrüstungsentwürfe und sichere klickbare Darstellung ab. Die zentrale Ausrüstungsentwurfsprüfung wird von Anzeige und PDF-Freigabe gemeinsam genutzt.
+
+Browserprüfung im getrennten localhost-Profil: Navigation markiert vollständige Schritte, fehlende Sprache, vier offene Kampfpunkte und 21 offene Lebenswegfragen; Gesamtfortschritt 3/6. Klick auf „Sprache fehlt“ setzt den Fokus auf native-language-name. Überprüfung listet die drei offenen Schritte. Klick auf den Lebensweg-Hinweis öffnet direkt personality und fokussiert lifepath-step. Charakterdaten wurden durch Statusberechnung und Sprünge nicht verändert. Screenshot visuell geprüft: test-results/completion-progress.png.
+
+---
+
+# Mindestwerte für Pflichtfertigkeiten – Prüfung (28.10.2026)
+
+339 Tests bestanden, 0 fehlgeschlagen; vollständige Suite ca. 82 Sekunden. Protokoll: test-results/required-skills-suite.txt. Neue Prüfungen sichern alle 13 Rang-2-Untergrenzen in Engine/UI, 26 Pflichtpunkte plus 60 freie Punkte nach Reset, Reparatur alter Nullpunkt-Entwürfe bei ausreichendem Budget, Schutz voll verteilter Altbestände und unveränderte Kampagnenwerte. Bisherige Reset-/Entwurfstests an die gewünschte feste Untergrenze angepasst.
+
+Browser im getrennten localhost-Testprofil: freie Verteilung zeigt 26 von 86 Punkten verteilt, 60 Punkte frei; Athletik Rang 2 hat einen deaktivierten Minusknopf. Herkunftssprache bleibt Rang 4. Anschließend ursprüngliche Rollenempfehlung wiederhergestellt. Gespeicherten Benutzercharakter unter 127.0.0.1 nicht umverteilt. Screenshot: test-results/required-skills.png. Lokaler Server bleibt im Hintergrund auf Port 8080 aktiv.
+
+---
+
+# Server, aktuelle Budgetfragen und Fertigkeiten – Prüfung (28.10.2026)
+
+336 automatisierte Tests bestanden, 0 fehlgeschlagen; vollständige serielle Suite ca. 82 Sekunden. Protokoll: test-results/current-suite-final.txt. Die früheren sechs Fehler waren veraltete Sollwerte für sechs Budgetfragen/20 Lebenswegfragen und alte Monatsbeträge; sie prüfen jetzt die vom Nutzer vorgegebenen sieben Budgetfragen/21 Gesamtfragen, Nullkosten, Einnahmen und 5.250 eb für die teuerste Kombination.
+
+Sechs zusätzliche Prüfungen decken die exakten sieben Antwort-/Betragslisten, jede Auswahl bis zur neunten Wohnoption, Übernahme aller alten Budgetvorschläge mit Originaltext und Originalbetrag, Empfehlung/freie Ränge ohne Verlust von Sprache/Heimat, geschlossene Kategorien mit effektiven Startwerten und Suche ab.
+
+Der lokale Server lief nicht mehr. Er wurde als separater verborgener Hintergrundprozess neu gestartet. serve.mjs liefert PNG/JPEG/WebP/ICO jetzt mit passenden Bildtypen, damit lokale Galerieauswahl und Bildverarbeitung funktionieren. Seite, app.js, ein Originalporträt und ein Thumbnail liefern HTTP 200. Fehlerprotokoll leer.
+
+Browser: gespeicherten Charakter unter 127.0.0.1 nur angesehen, Kategorien geschlossen und Startwerte sichtbar. Unter getrenntem localhost-Testprofil Empfehlung → freie Punkte (0/86 verteilt, 86 frei) → Empfehlung (86/86 verteilt) erfolgreich durchgeführt. Kein gespeicherter Benutzercharakter zurückgesetzt. Screenshot: test-results/skills-recovered.png. Wieder erreichbare Fertigkeiten-Seite als Ergebnis offengelassen.
+
+---
+
 # Straßendrogen-Kaufmenü – Prüfung (27.10.2026)
 
 330 Tests bestanden, 0 fehlgeschlagen. Vollständige Suite seriell: test-results/drugshop-suite-final.txt (ca. 68 Sekunden). Nach Ergänzung der Airhypo-Kaufhilfe zusätzlich 26 gezielte Ausrüstungs-/Drogentests bestanden.
@@ -507,3 +543,48 @@ Browserprüfung in einem getrennten Speicher unter `http://127.0.0.1:8086/red-bu
 
 Spielhilfen sind eigene kurze Zusammenfassungen nach den freien RED-Regeln von Roll20 und RTGs Rules FAQ v1.3. Sie verwalten keine laufenden Kampfzustände und ersetzen nicht das Grundregelwerk.
 
+
+## 2026-10-28 – Kritische Verletzungen im Cheatsheet
+
+Die Waffentabelle enthält zwischen Schaden und Angr./Mag. eine auf eine Dezimalstelle gerundete Krit-Chance pro Schadenswurf nach einem Treffer. Die Berechnung zählt mindestens zwei Sechsen; Dauerfeuer verwendet 2W6 unabhängig vom Multiplikator. NET-Integritätsschaden und schadenslose Modi erhalten keine körperliche Krit-Chance. Der Regelhinweis nennt +5 rüstungsignorierenden Direktschaden ohne Kopfbonus und den 2W6-Wurf der Spielleitung auf die Kopf- beziehungsweise Körpertabelle.
+
+Neue Tests zählen sämtliche Würfelergebnisse für 1–4W6 unabhängig aus und prüfen 5/6W6 sowie gezielte Angriffe, Dauerfeuer, Schrot und NET. Die vorhandenen Prüfungen für alle zehn Rollen, umfangreiche Aufsatzkombinationen und das gesamte Arsenal sichern weiterhin eine A4-Cheatsheet-Seite. Quer- und Hochformat wurden als PNG gerendert und auf Lesbarkeit, vollständige Tabellenüberschriften und freie Seitenränder geprüft. Beispiel: output/pdf/cheatsheet-kritische-treffer.pdf. Regelgrundlage: RED Grundregelwerk S. 187–188 und https://rtalsoriangames.com/wp-content/uploads/2021/07/RTG-CPR-CoreBookFAQv1.3.pdf.
+Gesamtlauf nach der Änderung: 357 Tests bestanden, 0 fehlgeschlagen (test-results/critical-suite.txt).
+
+## 2026-10-28 – Geführte Erholung nach dem Einsatz
+
+Gesundheit fragt nach fehlenden Trefferpunkten statt nach dem Restwert. Anschließend führt „Pause planen“ durch drei getrennte Ansichten: Behandlung/Operationen und Erholungsort, manuell eingetragene Gruppenzeiten, Ergebnis mit frühestem gemeinsamen Einsatz und Nebenjob-Würfen. Zusatzkosten und Ausfallzeiten sowie Kostenaufschlüsselung bleiben aufklappbar.
+
+Die Berechnung verwendet volle Ruhetage (KRA TP/Tag nach Stabilisierung), vier Stunden je Behandlung, beim selben Klinikbesuch den höchsten erforderlichen SG einmal (50/100/500/1.000 eb), 100 eb je Krankenhausnacht und eine ausdrücklich als Schätzung markierte anteilige Lebenshaltung aus dem Monatsbudget. Unbekannte Gruppenzeiten oder unbehandelte kritische Verletzungen ergeben keine scheinbar vollständige Einsatzbereitschaft. Nebenjobs erhalten ausschließlich volle freie Wochen nach persönlicher Erholung: 1W6 je Woche auf der Tabelle der eigenen Rolle und des aktuellen Rangs. Keine automatischen Würfe, Einnahmen, TP-Heilung oder Geldbuchungen durch die Planung. Der gespeicherte Plan bleibt im Session-Bericht erhalten und ist nach Neuladen aufklappbar.
+
+Prüfung: 367 Tests bestanden, 0 fehlgeschlagen (test-results/recovery-suite.txt), darunter zehn neue Berechnungs-, Persistenz-, Formular- und Ereignistests. Im getrennten Browserbestand unter localhost geprüft: fehlende TP, OP-SG, Gruppenzeilen hinzufügen, spätester Termin, verfügbare Nebenjob-Woche, Merken, Abschluss und Neuladen. Browserkonsole ohne Fehler. Visuelle Prüfung: test-results/recovery-overview.png. Der reale Bestand unter 127.0.0.1 wurde nicht verändert.
+
+## 2026-10-29 – Rollenerklärungen und einmalige Empfehlungsmarkierungen
+
+Bei Rollen mit verteilbaren Punkten stehen die Bedienelemente direkt im Vordergrund. Die ergänzenden Erklärungen, Beispiele und passenden Fertigkeiten sind zunächst eingeklappt; Rollen ohne Punkteverteilung erklären ihre Fähigkeit weiterhin direkt. Die Übersicht anderer Rollen ist entfernt. Stattdessen besitzt jede Karte der Rollenauswahl einen separat bedienbaren, aufklappbaren Hinweis zur Rollenfähigkeit.
+
+Ausstattungsreiter und Cyberware-Kategorien zeigen die Anzahl unterschiedlicher empfohlener, noch nicht gekaufter beziehungsweise installierter Gegenstände. Der erste Klick quittiert nur das jeweilige Menü. Die Quittierung liegt getrennt von Charakterdaten im lokalen Browserspeicher, nach Profil und Rolle getrennt; neue Entwürfe erhalten neue Markierungen. Empfehlungseinträge im Katalog bleiben grün. Cyberware im bloßen Installationsentwurf gilt weiterhin nicht als tatsächlich installiert.
+
+Prüfung: Gesamtlauf 370 Tests bestanden (test-results/hints-suite.txt); nach der ergänzenden Quittierung im Session-Konfigurator nochmals 23 gezielte Tests bestanden (test-results/hints-final-focused.txt). Browserprüfung im getrennten localhost-Bestand: Rollenpunkte sichtbar, Zusatztexte geschlossen, Menümarkierung verschwindet nach Klick und bleibt auch nach Neuladen verschwunden. Screenshot: test-results/recommendation-hints.png. Server im Hintergrund auf 127.0.0.1:8080 gestartet und Seite im Browser erreichbar.
+
+## 2026-10-29 – Lore und Monatsbudget als getrennte Fragebögen
+
+Die automatische Lore-Navigation bleibt auf die 14 Hintergrundfragen begrenzt. Nach der letzten Antwort erscheint ein ausdrücklicher Lore-Abschluss mit separatem Startknopf für das Monatsbudget. Die sieben Geldfragen sind goldfarben gekennzeichnet, stellen den Monatsbetrag jeder vorgegebenen Antwort getrennt heraus und wechseln erst nach „Budgetantwort übernehmen“ zur nächsten Frage. Eigene Antworten sowie Änderungen und direkte Sprünge über die Abschlussanzeige behalten den richtigen Bereich. Die bisherige Zusammenfassung bleibt erhalten, jetzt mit zwei getrennten, zunächst geschlossenen Abschnitten. Antworten, Preise, Summenberechnung und gespeicherte Charakterdaten bleiben unverändert.
+
+Prüfung: Gesamtlauf 374 Tests bestanden, 0 fehlgeschlagen (test-results/life-split-suite.txt). Vier neue Navigationstests prüfen die Bereichsgrenze, explizite Budgetbestätigung, gezielte Bearbeitung und getrennte Zusammenfassung. Zwei bestehende Prüfungen wurden an die neuen Überschriften und die bewusste Bereichswahl angepasst. Im separaten localhost-Testbestand alle 14 Lore-Fragen durchgeklickt: Danach keine offene Budgetfrage und ein sichtbarer Startknopf. Budgetauswahl bleibt bis zur Bestätigung stehen; danach öffnet die zweite Budgetfrage. Browserkonsole ohne Fehler; visuelle Prüfung und Screenshot: test-results/lifepath-separated.png. Kein Eingriff in den tatsächlichen Bestand unter 127.0.0.1.
+
+## 2026-10-29 – Regeln an Rollenpunkten und getrennte Geldfarben
+
+Die redundante Zeile „Startwert für den Wurf · dazu 1W10“ ist aus den Fertigkeits-Kategorieübersichten entfernt; die konkreten Fertigkeitswerte bleiben sichtbar. Solo, Tech und Medtech besitzen je verteilbarer Unterfähigkeit einen eigenen geschlossenen Regelbereich direkt in der Punktezeile, einschließlich aktueller Werte. Die separate Sammlung der Erklärungen, Beispiele und passenden Fertigkeiten wird für diese Rollen nicht zusätzlich gerendert. Rollen ohne Unterverteilung erklären ihre Mechanik weiterhin direkt.
+
+Normales Geld erscheint mintgrün, Fashion-eb violett, zusätzlich jeweils beschriftet. Kaufpreise für Kleidung, Ausrüstung und Cyberware berücksichtigen den noch verfügbaren Fashion-Zuschuss und zeigen bei Überschreitung beide Anteile getrennt; erforderliche Cyberware-Basisimplantate sind enthalten. Im laufenden Session-Kauf wird kein neuer Erstellungszuschuss angenommen. Die Anzeige verändert keine Kauf-, Budget- oder Rollenberechnungen.
+
+Prüfung: 378 automatisierte Tests bestanden (test-results/inline-suite.txt); darunter neue Tests für reine/gemischte Finanzierung, tatsächliche Abbuchung eines 200-eb-Kleidungsstücks bei 100 eb Restzuschuss, Unterfähigkeiten-Regeln und Fertigkeitsübersichten. Browserprüfung im separaten localhost-Bestand: Chirurgie-Regeln direkt unter der Verteilung, aktueller Wurf nach +1 Medizinpunkt und geöffneter Zustand bleiben erhalten; Farben und Textkennzeichnung in Geldleiste, Kleidung und Cyberware lesbar, Browserkonsole ohne Fehler. Screenshots: test-results/inline-role-rules.png und test-results/funding-colors.png. Der reale Charakterbestand unter 127.0.0.1 wurde nicht verändert.
+
+## 2026-10-29 – Mobile Cyberware-Verwaltung und Hinweise zu niedrigen Attributen
+
+Die Einkaufsleiste bietet in jedem Ausstattungsreiter einen direkten Einstieg zur installierten Cyberware samt Anzahl. Der Sprung berücksichtigt die Höhe der angehefteten Leiste. Auf kleinen Bildschirmen zeigen Karten Name, Einbauort und belegte Basisplätze; Wirkungen und Menschlichkeitsangaben stehen in eigenen Details. Erweiterungen bleiben sichtbar unter dem Basisimplantat. „Kostenlos entfernen“ beziehungsweise „Ausbaukosten ansehen“ sind große beschriftete Schaltflächen. Auch das Kostenformular berücksichtigt die mobile Breite und die Sprungposition unter der Einkaufsleiste. Kauf-/Ausbauregeln sind unverändert.
+
+Bei einem effektiven Attribut unter 5 steht ein nicht blockierender, attributspezifischer Hinweis direkt auf der Karte. KRA nennt die unmodifizierte Todesrettungschance; BEW nennt die aktuelle Strecke je Bewegungsaktion. Andere Hinweise unterscheiden Trefferpunkte, Abwehr, Wahrnehmung und indirekte soziale Risiken, statt jedem niedrigen Wert einen unmittelbaren Todesmechanismus zuzuschreiben. Die Schwelle 5 ist die gewünschte Orientierung für Anfänger und keine zusätzliche Spielregel. Grundlage für Todesrettung, Heilung, Attributszuordnungen und Glück: https://roll20.net/compendium/cpunk/Playing%20the%20Game.
+
+Prüfung: 383 Tests bestanden (test-results/mobile-suite.txt), nach der breiteren Darstellung niedriger Attributkarten nochmals 13 gezielte Tests bestanden (test-results/mobile-final-focused.txt). Browserprüfung mit 390×844 und 320×740 Pixeln: Cyberauge plus Chyron als verschachtelte Karten, sichtbare Entfernen-Schaltfläche, Entfernung von Chyron erstattet korrekt und senkt den Zähler. Keine horizontale Seitenüberbreite bei 320 Pixeln (305 Pixel Inhalts- und sichtbare Breite mit Scrollbalken). KRA 4 warnt mit 1–3/30 Prozent ohne Todesrettungsabzüge; Warnkarten erhalten auf schmalen Bildschirmen die volle Breite. Konsole ohne Fehler; temporäre Browsergröße zurückgesetzt. Screenshots: test-results/mobile-installed-cyberware.png und test-results/mobile-attribute-risk.png. Tatsächlicher Bestand unter 127.0.0.1 unverändert.

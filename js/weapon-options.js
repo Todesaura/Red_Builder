@@ -1,5 +1,5 @@
-import {installedCyberWeapons} from './cyberware-weapons.js?v=budget2';
-import {weaponConfiguration,secondaryWeapons,attachmentRuleText} from './weapon-attachments.js?v=budget2';
+import {installedCyberWeapons} from './cyberware-weapons.js?v=shopping1';
+import {weaponConfiguration,secondaryWeapons,attachmentRuleText} from './weapon-attachments.js?v=shopping1';
 // Core weapon types only. No fire mode is inferred from magazine size or skill.
 export const WEAPON_PROFILES = Object.freeze({
   'light-melee': 'melee', tomahawk:'melee', 'medium-melee':'melee', 'medium-melee-one-handed':'melee',

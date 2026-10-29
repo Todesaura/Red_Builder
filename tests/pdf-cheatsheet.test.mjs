@@ -9,7 +9,37 @@ import {buyEquipment} from '../js/economy.js';
 import {equipArmor} from '../js/armor.js';
 import {weaponOptions} from '../js/weapon-options.js';
 import {generateCharacterSheet,wrapPdfText} from '../js/pdf-character.js';
-import {RANGE_BANDS,SINGLE_SHOT_DVS,AUTOFIRE_DVS,cheatsheetWeaponRows,cheatsheetColumns,drawCheatsheet} from '../js/pdf-cheatsheet.js';
+import {RANGE_BANDS,SINGLE_SHOT_DVS,AUTOFIRE_DVS,criticalInjuryChance,cheatsheetWeaponRows,cheatsheetColumns,drawCheatsheet} from '../js/pdf-cheatsheet.js';
+
+test('Kritische Verletzungen: Wahrscheinlichkeit entspricht vollständig ausgezählten Würfelergebnissen',()=>{
+  for(let dice=1;dice<=4;dice++){
+    let critical=0;
+    for(let outcome=0;outcome<6**dice;outcome++){
+      let value=outcome,sixes=0;
+      for(let die=0;die<dice;die++){if(value%6===5)sixes++;value=Math.floor(value/6);}
+      if(sixes>=2)critical++;
+    }
+    assert.ok(Math.abs(criticalInjuryChance(`${dice}W6`)-critical/6**dice)<1e-12);
+  }
+  assert.ok(Math.abs(criticalInjuryChance('5W6')-1526/7776)<1e-12);
+  assert.ok(Math.abs(criticalInjuryChance('6W6')-12281/46656)<1e-12);
+  assert.equal(criticalInjuryChance('2W6 x4 max.'),criticalInjuryChance('2W6'));
+  for(const damage of ['-',undefined,'Blendung'])assert.equal(criticalInjuryChance(damage),null);
+});
+
+test('Krit-Chancen folgen dem Feuermodus; NET und Unterdrücken verursachen keine körperlichen Krits',()=>{
+  const c=completeCharacter('netrunner');
+  const data=characterSheetData(c,rules),v=evaluateCharacter(c,rules);
+  data.attackOptions=['assault-rifle','shotgun'].map(id=>{const item=rules.equipmentRules.items.find(i=>i.id===id);return {item,options:weaponOptions(item,v)};});
+  data.netWeapons=[{definition:{id:'test-net',name:'Test'},damage:{ordinary:'3W6',blackIce:'3W6'},attackBase:4}];
+  const rows=cheatsheetWeaponRows(data);
+  for(const id of ['assault-rifle','assault-rifle.aimed','shotgun'])assert.equal(rows.find(r=>r.id===id).criticalChance,criticalInjuryChance('5W6'));
+  assert.equal(rows.find(r=>r.id==='assault-rifle.auto').criticalChance,criticalInjuryChance('2W6'));
+  assert.equal(rows.find(r=>r.id==='shotgun.shell').criticalChance,criticalInjuryChance('3W6'));
+  for(const id of ['test-net','assault-rifle.suppressive'])assert.equal(rows.find(r=>r.id===id).criticalChance,null);
+  const text=JSON.stringify(cheatsheetColumns(data));
+  for(const part of ['2+ Sechsen im Schadenswurf','5 Direktschaden','Kopftabelle','Körpertabelle','Spielleitung'])assert.ok(text.includes(part),part);
+});
 
 test('Entfernungs-DVs unterscheiden Pistolentypen, Slugs, Gewehre und Autofeuer; außerhalb der Reichweite keine DV',()=>{
   assert.equal(RANGE_BANDS.length,8);assert.equal(RANGE_BANDS[0],'0-6 m');assert.equal(RANGE_BANDS[7],'401-800 m');

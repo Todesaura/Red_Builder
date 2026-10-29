@@ -1,4 +1,4 @@
-import {campaignSkillConfig} from './campaign-state.js?v=budget2';
+import {campaignSkillConfig} from './campaign-state.js?v=shopping1';
 export function createSkills(config) {
   return {
     ranks: Object.fromEntries(config.skills.filter(skill => !skill.specialized).map(skill => [skill.id, skill.min])),
@@ -15,10 +15,24 @@ export function markSkillsEdited(character) {
 
 export function resetSkillPoints(character, rules) {
   const skills = character.skills;
-  for (const id of Object.keys(skills.ranks)) skills.ranks[id] = 0;
+  for (const definition of rules.skillRules.skills.filter(skill=>!skill.specialized)) skills.ranks[definition.id] = definition.min;
   for (const item of skills.specialties) item.level = 0;
   skills.nativeLanguage.level = rules.skillRules.nativeLanguageFreeRank;
   markSkillsEdited(character);
+  if(!skills.recommendation&&Object.hasOwn(rules.skillRules.recommendations,character.role))skills.recommendation={role:character.role,edited:true};
+}
+
+// Repair older free-start drafts when their existing budget can cover the minima.
+// Never discard other ranks or make an old character fail to load.
+export function restoreRequiredSkills(character,rules){
+  if(character.campaign?.active)return false;
+  const missing=rules.skillRules.skills.filter(skill=>!skill.specialized&&character.skills.ranks[skill.id]<skill.min);
+  const cost=missing.reduce((sum,skill)=>sum+(skill.min-character.skills.ranks[skill.id])*skill.cost,0);
+  if(!missing.length||cost>skillPointsRemaining(character,rules))return false;
+  for(const skill of missing)character.skills.ranks[skill.id]=skill.min;
+  markSkillsEdited(character);
+  if(!character.skills.recommendation&&Object.hasOwn(rules.skillRules.recommendations,character.role))character.skills.recommendation={role:character.role,edited:true};
+  return true;
 }
 
 export function skillPointsSpent(skills, config) {
@@ -37,7 +51,7 @@ export function assignSkill(character, rules, id, value) {
   const native = id === 'native-language';
   const definition = native ? { min: config.nativeLanguageFreeRank, cost: 1 } : config.skills.find(skill => skill.id === (specialty?.skill ?? id));
   if (!definition || (!native && definition.specialized && !specialty)) return { ok: false, error: 'Unbekannte Fertigkeit.' };
-  const minimum = native ? config.nativeLanguageFreeRank : 0;
+  const minimum = native ? config.nativeLanguageFreeRank : definition.min;
   if (!Number.isInteger(value) || value < minimum || value > config.maxRank) return { ok: false, error: `Der Rang muss zwischen ${minimum} und ${config.maxRank} liegen.` };
   const current = native ? character.skills.nativeLanguage.level : specialty ? specialty.level : character.skills.ranks[id];
   if ((value - current) * definition.cost > skillPointsRemaining(character, rules)) return { ok: false, error: 'Dein Fertigkeitsbudget reicht dafür nicht aus.' };

@@ -1,7 +1,7 @@
 import { localizeAttributeText } from './attribute-labels.js';
 import {germanNetText} from './netrunner-german.js';
-import {quickReferenceColumns} from './pdf-cheatsheet-content.js?v=budget2';
-import { WEAPON_PROFILES,weaponProfile } from './weapon-options.js?v=budget2';
+import {quickReferenceColumns} from './pdf-cheatsheet-content.js?v=critical1';
+import { WEAPON_PROFILES,weaponProfile } from './weapon-options.js?v=shopping1';
 
 // Cyberpunk RED core, p. 173: single-shot and Autofire are separate tables.
 export const RANGE_BANDS = ['0-6 m','7-12 m','13-25 m','26-50 m','51-100 m','101-200 m','201-400 m','401-800 m'];
@@ -12,6 +12,14 @@ export const SINGLE_SHOT_DVS = Object.freeze({
   grenade:[16,15,15,17,20,22,25,null], rocket:[17,16,15,15,20,20,25,30]
 });
 export const AUTOFIRE_DVS = Object.freeze({smg:[20,17,20,25,30,null,null,null],assault:[22,20,17,20,25,null,null,null]});
+
+// At least two sixes among the dice actually rolled; damage multipliers add no dice.
+export function criticalInjuryChance(damage) {
+  const match=String(damage??'').match(/^\s*(\d+)\s*[Wd]6\b/i);
+  if(!match)return null;
+  const dice=Number(match[1]);
+  return dice<2?0:1-(5/6)**dice-dice/6*(5/6)**(dice-1);
+}
 
 const plainStats={INT:'Intelligenz',REF:'Reflexe',GES:'Geschicklichkeit',TCH:'Technik',COO:'Coolness',WIL:'Willenskraft',GLK:'Glück',BEW:'Bewegung',KRA:'Körperkraft',EMP:'Empathie',SP:'Schutzwert',TP:'Trefferpunkte',HUM:'Menschlichkeit',DV:'Schwierigkeitsgrad',ROF:'Angriffe',Interface:'Schnittstelle',Maker:'Erfinder',Teamwork:'Teamführung',Operator:'Vermittler',Moto:'Fahrzeugmeisterschaft',Speedheal:'Schnellheilung',Stim:'Stimulans',Surge:'Wachmacher',Rapidetox:'Schnellentgiftung',Antibiotic:'Antibiotikum'};
 export const cheatsheetGerman = value => germanNetText(localizeAttributeText(String(value).replace(/EMP-Granate/g,'Impulsgranate'))).replace(/Neural Link/g,'Neuralimplantat').replace(/Interface Plugs/g,'Schnittstellenbuchsen').replace(/\b(INT|REF|GES|TCH|COO|WIL|GLK|BEW|KRA|EMP|SP|TP|HUM|DV|ROF|Interface|Maker|Teamwork|Operator|Moto|Speedheal|Stim|Surge|Rapidetox|Antibiotic)\b/g,key=>plainStats[key]).replace(/Cyberware/g,'Implantate').replace(/Slugs/g,'Flintenlaufgeschosse');
@@ -40,7 +48,7 @@ export function cheatsheetWeaponRows(data) {
     damage:e.damage.ordinary===e.damage.blackIce?e.damage.ordinary:e.damage.ordinary.replace('W6','')+'/'+e.damage.blackIce,
     rof:'-',magazine:'-',base:e.attackBase??'-',dvs:null,
     netNote:e.damage.ordinary===e.damage.blackIce?`${e.damage.ordinary} Integrität gegen Programme${e.automatic?' / selbstständiger Angriff':''}`:`${e.damage.ordinary} gegen gewöhnliche Programme / ${e.damage.blackIce} gegen Schwarzes ICE`}));
-  return [...digital,...physical];
+  return [...digital,...physical].map(row=>({...row,criticalChance:row.net?null:criticalInjuryChance(row.damage)}));
 }
 
 export function cheatsheetColumns(data) {
@@ -132,13 +140,16 @@ export function drawCheatsheet(pdf,data,{font,rgb,text,preferPortrait=false,comp
   const humanity=`Menschlichkeit ${data.humanity.current}/${data.humanity.maximum} / Empathie ${data.attributes.EMP.effective}`;
   line(portrait?vitals:vitals+'    '+defense,margin+7,height-55,9,ink,bold);
   line(portrait?defense+'    '+humanity:humanity+`    Rüstungsabzug -${data.armor.penalty} bereits enthalten; situative Boni extra.`,margin+7,height-66,8,muted);
-  line('WAFFEN / WÜRFEL / ENTFERNUNGSWERTE IN METERN',margin,height-86,8.5,red,bold);
+  line('WAFFEN / WÜRFEL / DISTANZ (m) · Krit. % je Schadenswurf nach Treffer; NET: nicht anwendbar.',margin,height-86,8.5,red,bold);
   const factor=(width-2*margin)/794;
-  const widths=portrait?[120,37,27,55,55,...Array(8).fill((width-2*margin-294)/8)]:[145,40,44,62,47,...Array(8).fill(57)].map(n=>n*factor);
-  const heads=['Waffe / Modus','Schaden',portrait?'A/M':'Angr./Mag.','Würfel',compactModes?'Gezielt':'Schuss',...RANGE_BANDS.map(range=>portrait?range.replace(' m',''):range)];
+  const widths=portrait?[110,35,32,28,55,45,...Array(8).fill((width-2*margin-305)/8)]:[125,40,36,50,60,43,...Array(8).fill(55)].map(n=>n*factor);
+  const heads=['Waffe / Modus','Schaden','Krit. %',portrait?'A/M':'Angr./Mag.','Würfel',compactModes?'Gezielt':'Schuss',...RANGE_BANDS.map(range=>portrait?range.replace(' m',''):range)];
   let x=margin;
   page.drawRectangle({x:margin,y:height-108,width:width-2*margin,height:16,color:ink});
-  heads.forEach((head,i)=>{oneLine(head,x+3,height-103,widths[i]-5,i<5?(portrait?6.8:7.5):7.1,rgb(1,1,1),bold);x+=widths[i];});
+  heads.forEach((head,i)=>{
+    const size=Math.min(i<6?(portrait?6.8:7.5):7.1,(widths[i]-5)/bold.widthOfTextAtSize(text(head),1));
+    oneLine(head,x+3,height-103,widths[i]-5,size,rgb(1,1,1),bold);x+=widths[i];
+  });
   const actualRows=tableRows.length?tableRows:[{name:'Keine Waffe gekauft',damage:'-',rof:'-',magazine:'-',base:'-',dvs:null}];
   actualRows.forEach((row,index)=>{
     const y=height-108-rowHeight-index*rowHeight;
@@ -147,10 +158,11 @@ export function drawCheatsheet(pdf,data,{font,rgb,text,preferPortrait=false,comp
     if(portrait)rowName=rowName.replace('Schwere Maschinenpistole','Schwere MP').replace('Maschinenpistole','MP').replace('/ Dauerfeuer','/ Dauer').replace('Schrotflinte / Schrotpatrone','Schrotflinte / Schrot');
     const magazine=compactModes?row.magazine:row.capacity??row.magazine;
     const damage=row.mode==='auto'?'2W6 x':row.damage;
-    const values=[rowName,damage,`${row.rof}/${magazine}`,Number.isFinite(row.base)?`${row.base}+1W10`:'-',compactModes?(Number.isFinite(row.aimed)?`${row.aimed}+1W10`:'-'):row.rounds??'-',...(row.melee||row.shell||row.net||row.suppressive?Array(8).fill(''):(row.dvs??Array(8).fill(null)).map(v=>v??'-'))];
-    x=margin;values.forEach((value,i)=>{oneLine(String(value),x+3,y+2,widths[i]-5,8,ink,i===3||i===4?bold:font);x+=widths[i];});
+    const chance=Number.isFinite(row.criticalChance)?(row.criticalChance*100).toFixed(1).replace('.',',')+'%':'-';
+    const values=[rowName,damage,chance,`${row.rof}/${magazine}`,Number.isFinite(row.base)?`${row.base}+1W10`:'-',compactModes?(Number.isFinite(row.aimed)?`${row.aimed}+1W10`:'-'):row.rounds??'-',...(row.melee||row.shell||row.net||row.suppressive?Array(8).fill(''):(row.dvs??Array(8).fill(null)).map(v=>v??'-'))];
+    x=margin;values.forEach((value,i)=>{oneLine(String(value),x+3,y+2,widths[i]-5,8,ink,i===4||i===5?bold:font);x+=widths[i];});
     const note=row.net?row.netNote:row.suppressive?'Bis 25 m / Willenskraft + Konzentration + 1W10; kein Schaden':row.melee?`Bis ${row.reach} m / Ziel: GES + Ausweichen + Mod. + 1W10`:row.shell?'Schwierigkeit 13 / '+(row.shellPattern??'6 x 6 m direkt vor dir'):null;
-    if(note)oneLine(note,margin+widths.slice(0,5).reduce((a,b)=>a+b,0)+3,y+2,widths.slice(5).reduce((a,b)=>a+b,0)-5,8,muted);
+    if(note)oneLine(note,margin+widths.slice(0,6).reduce((a,b)=>a+b,0)+3,y+2,widths.slice(6).reduce((a,b)=>a+b,0)-5,8,muted);
   });
   const bounds=[];
   plan.groups.forEach((cards,index)=>{

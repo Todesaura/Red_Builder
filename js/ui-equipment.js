@@ -1,15 +1,16 @@
-import {renderClothing} from './ui-clothing.js?v=budget2';
+import {fundingPrice} from './ui-funding.js?v=inline1';
+import {renderClothing} from './ui-clothing.js?v=inline1';
 import {renderStreetDrugs} from './ui-street-drugs.js';
-import {evaluateLoadout,purchaseLoadoutError} from './loadout-limits.js?v=budget2';
-import {attachmentList,secondaryWeapons} from './weapon-attachments.js?v=budget2';
-import {renderWeaponAttachments} from './ui-weapon-attachments.js?v=budget2';
+import {evaluateLoadout,purchaseLoadoutError} from './loadout-limits.js?v=shopping1';
+import {attachmentList,secondaryWeapons} from './weapon-attachments.js?v=shopping1';
+import {renderWeaponAttachments} from './ui-weapon-attachments.js?v=shopping1';
 import { netrunnerStats, NETRUNNER_GROUPS } from './netrunner.js';
 import { renderNetrunnerHelp } from './ui-netrunner.js';
-import { renderWeaponOptionCard,renderOwnedWeaponOptions } from './ui-weapon-options.js?v=budget2';
+import { renderWeaponOptionCard,renderOwnedWeaponOptions } from './ui-weapon-options.js?v=shopping1';
 import { isRecommended, recommendationPriority } from './equipment-recommendations.js';
 import { renderCustomEquipment } from './ui-custom-equipment.js';
 import { escapeHtml as e } from './html.js';
-import { weaponAmmoBundle } from './economy.js?v=budget2';
+import { weaponAmmoBundle } from './economy.js?v=shopping1';
 const eb = value => `${value.toLocaleString('de-DE')} eb`;
 const names = { weapons: 'Waffen', armor: 'Rüstung', misc: 'Sonstiges', clothing: 'Normale Kleidung', netrunner: 'Netrunner-Waffen' };
 function meleeHelp(evaluated) {
@@ -30,13 +31,13 @@ function buyBundle(item, character, rules, evaluated) {
   const owned = id => character.equipment.items.find(entry => entry.catalogId === id)?.quantity ?? 0;
   const limitError=purchaseLoadoutError(character,rules,item.id);
   const disabled = !!limitError || evaluated.funds.remaining < bundle.cost || owned(item.id) >= 99 || owned(bundle.ammo.id) + bundle.quantity > 99;
-  return `<button class="secondary" id="buy-ammo-bundle-${item.id}" data-buy-ammo-bundle="${item.id}" ${disabled ? 'disabled' : ''} aria-describedby="bundle-info-${item.id}" ${limitError?`title="${e(limitError)}"`:""}>${limitError?'Limit erreicht':'Kaufen + Munition'} · ${eb(bundle.cost)}</button>`;
+  return `<button class="secondary" id="buy-ammo-bundle-${item.id}" data-buy-ammo-bundle="${item.id}" ${disabled ? 'disabled' : ''} aria-describedby="bundle-info-${item.id}" ${limitError?`title="${e(limitError)}"`:""}>${limitError?'Limit erreicht':'Kaufen + Munition'} · ${fundingPrice([{cost:bundle.cost}],evaluated.funds)}</button>`;
 }
 function buy(item, character, rules, evaluated, wear = false) {
   const totalCost=item.cost+attachmentList(character,item.id).reduce((sum,a)=>sum+a.cost,0);
   const limitError=purchaseLoadoutError(character,rules,item.id);
   const disabled = !!limitError || evaluated.funds.remaining + (item.funding==='fashion'?evaluated.funds.fashionRemaining:0) < totalCost || (character.equipment.items.find(entry => entry.catalogId === item.id)?.quantity ?? 0) >= 99;
-  return `<button class="secondary" id="buy-equipment-${item.id}" data-buy-equipment="${item.id}" ${wear ? `data-wear-armor="${item.slot}"` : ''} ${disabled ? 'disabled' : ''} ${limitError?`title="${e(limitError)}"`:''}>${limitError?'Limit erreicht':wear ? 'Kaufen & anlegen' : 'Kaufen +'} · ${eb(totalCost)}</button>`;
+  return `<button class="secondary" id="buy-equipment-${item.id}" data-buy-equipment="${item.id}" ${wear ? `data-wear-armor="${item.slot}"` : ''} ${disabled ? 'disabled' : ''} ${limitError?`title="${e(limitError)}"`:''}>${limitError?'Limit erreicht':wear ? 'Kaufen & anlegen' : 'Kaufen +'} · ${fundingPrice([{cost:totalCost,funding:item.funding}],evaluated.funds)}</button>`;
 }
 function armorSelection(character, rules, evaluated) {
   return `<section class="armor-loadout"><h3>Deine getragene Rüstung</h3><div class="armor-slots">${['head', 'body'].map(slot => {

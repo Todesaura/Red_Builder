@@ -1,10 +1,10 @@
-import {createCampaign,validateCampaign,campaignSkillConfig,roleRank} from './campaign-state.js?v=budget2';
-import { createLifepath, validateLifepath } from './lifepath.js?v=budget2';
-import { PORTRAITS } from './portrait-catalog.js?v=budget2';
-import { createRolePoints, validateRolePoints } from './role-points.js?v=budget2';
-import { createSkills, validateSkillState } from './skills.js?v=budget2';
-import { createCyberware, validateCyberware } from './cyberware.js?v=budget2';
-import { createEquipment, validateEquipment } from './economy.js?v=budget2';
+import {createCampaign,validateCampaign,campaignSkillConfig,roleRank} from './campaign-state.js?v=shopping1';
+import { createLifepath, validateLifepath } from './lifepath.js?v=shopping1';
+import { PORTRAITS } from './portrait-catalog.js?v=shopping1';
+import { createRolePoints, validateRolePoints } from './role-points.js?v=shopping1';
+import { createSkills, validateSkillState } from './skills.js?v=shopping1';
+import { createCyberware, validateCyberware } from './cyberware.js?v=shopping1';
+import { createEquipment, validateEquipment } from './economy.js?v=shopping1';
 
 export const FORMAT_VERSION = 11;
 export const MAX_PORTRAIT_LENGTH = 400000;

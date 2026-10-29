@@ -1,20 +1,24 @@
+import {renderAttributeRisk} from './attribute-risks.js?v=emprisk1';
+import {ROLE_ABILITIES} from './role-abilities.js?v=shopping1';
 import {bindNightCity} from './ui-night-city.js';
-import {restoreSessionForms} from './session-guide.js?v=budget2';
-import {renderSessionReport} from './ui-session-report.js?v=budget2';
+import {completionProgress} from './completion-progress.js';
+import {renderCompletion} from './ui-completion.js';
+import {restoreSessionForms} from './session-guide.js?v=mobile1';
+import {renderSessionReport} from './ui-session-report.js?v=mobile1';
 import { attributeLabel, localizeAttributeText } from './attribute-labels.js';
-import { renderPortraitGallery } from './ui-portraits.js?v=budget2';
-import { renderEquipmentWarnings } from './ui-equipment-warnings.js?v=budget2';
-import { renderOwnedWeaponOptions } from './ui-weapon-options.js?v=budget2';
-import { renderLifepath, renderLifepathSummary } from './ui-lifepath.js?v=budget2';
-import { characterSheetReadiness } from './pdf-character-data.js?v=budget2';
-import { renderRoleAbilities, renderRoleAbilitySummary } from './ui-role-abilities.js?v=budget2';
-import { pointsRemaining, evaluateCharacter } from './rules.js?v=budget2';
-import { explainAttribute, explainEmpathy } from './explanations.js?v=budget2';
+import { renderPortraitGallery } from './ui-portraits.js?v=shopping1';
+import { renderEquipmentWarnings } from './ui-equipment-warnings.js?v=shopping1';
+import { renderOwnedWeaponOptions } from './ui-weapon-options.js?v=shopping1';
+import { renderLifepath, renderLifepathSummary } from './ui-lifepath.js?v=lifesplit1';
+import { characterSheetReadiness } from './pdf-character-data.js?v=shopping1';
+import { renderRoleAbilities, renderRoleAbilitySummary } from './ui-role-abilities.js?v=inline1';
+import { pointsRemaining, evaluateCharacter } from './rules.js?v=shopping1';
+import { explainAttribute, explainEmpathy } from './explanations.js?v=shopping1';
 
 import { escapeHtml } from './html.js';
 export { escapeHtml } from './html.js';
-import { renderSkills, renderDerived, renderSkillSummary } from './ui-skills.js?v=budget2';
-import { renderCyberware, renderCyberwareSummary, renderWallet, renderEquipmentSummary } from './ui-cyberware.js?v=budget2';
+import { renderSkills, renderDerived, renderSkillSummary } from './ui-skills.js?v=inline1';
+import { renderCyberware, renderCyberwareSummary, renderWallet, renderEquipmentSummary } from './ui-cyberware.js?v=mobile1';
 
 const steps = [
   ['identity', 'Identität', 'Name & Rolle'],
@@ -30,13 +34,15 @@ const steps = [
 export function attributeCard(attribute, character, rules, evaluated) {
   const { id, name, hint } = attribute;
   const value = evaluated.attributes[id];
+  const riskValue = id === 'EMP' ? value.base : value.effective;
   const recommended = character.method === 'recommendation';
   const remaining = recommended ? 0 : pointsRemaining(character, rules);
   const control = `<div class="stepper"><button id="minus-${id}" data-adjust="-1" data-stat="${id}" aria-label="${name} verringern" ${value.base === null || value.base <= rules.pointBuy.min ? 'disabled' : ''}>−</button><output tabindex="-1" aria-label="${name}: aktueller Wert">${value.base ?? '—'}</output><button id="plus-${id}" data-adjust="1" data-stat="${id}" aria-label="${name} erhöhen" ${value.base === null || value.base >= rules.pointBuy.max || remaining <= 0 ? 'disabled' : ''}>+</button></div>`;
-  return `<article class="attribute-card ${value.base === null ? 'unassigned' : ''}">
+  return `<article id="attribute-${id}" tabindex="-1" class="attribute-card ${value.base === null ? 'unassigned' : ''} ${Number.isFinite(riskValue)&&riskValue<5?'attribute-low':''}">
     <div class="attribute-heading"><span class="stat-code">${attributeLabel(id)}</span><span class="stat-number">${value.effective ?? '—'}</span></div>
     <h3>${name}</h3><p class="attribute-hint">${hint}</p>
     ${control}
+    ${renderAttributeRisk(id,riskValue)}
     <div class="stat-source">${recommended ? 'Empfehlung' : 'Punkteverteilung'} <span>↗</span></div>
     <details id="explain-${id}"><summary aria-label="Wofür ist ${name} wichtig?">Wofür ist der Wert wichtig? <span>+</span></summary><p>${escapeHtml(explainAttribute(id, value, character.method))}</p><dl class="explanation-data"><dt>Basiswert</dt><dd>${value.base ?? 'offen'}</dd><dt>Dauerhafte Änderungen</dt><dd>${escapeHtml(value.modifiers.filter(modifier => modifier.type === 'permanent').map(modifier => `${modifier.label}: ${modifier.value >= 0 ? '+' : ''}${modifier.value}`).join('; ') || 'Keine')}</dd><dt>Getragene Rüstung</dt><dd>${escapeHtml(value.modifiers.filter(modifier => modifier.type === 'equipment').map(modifier => `${modifier.label}: ${modifier.value}`).join('; ') || 'Keine Abzüge')}</dd><dt>Effektiver Wert</dt><dd>${value.effective ?? 'offen'}</dd></dl></details>
   </article>`;
@@ -62,7 +68,7 @@ function identity(character, rules, state = {}) {
     ${renderCharacterLibrary(state,rules)}<div class="identity-fields"><label class="field-label" for="character-name">Charaktername <span>Pflichtfeld</span></label>
     <input id="character-name" type="text" maxlength="60" autocomplete="off" placeholder="Dein Name auf der Straße" value="${escapeHtml(character.name)}"><p class="identity-intro">Ein Name, ein Gesicht, eine Geschichte.<br>Wähle anschließend die Rolle deines Edgerunners.</p></div>
     <div class="field-label role-label" id="role-label">Deine Rolle <span>Eine Rolle auswählen</span></div>
-    <div class="roles" role="group" aria-labelledby="role-label">${rules.roles.map((role, index) => `<button id="role-${role.id}" class="role-card ${character.role === role.id ? 'selected' : ''}" data-role="${role.id}" aria-pressed="${character.role === role.id}"><span class="role-top"><span class="role-index">R / ${String(index + 1).padStart(2, '0')}</span><span class="role-indicator">${character.role === role.id ? '●' : '○'}</span></span><strong>${role.name}</strong><span>${role.description}</span></button>`).join('')}</div>
+    <div id="identity-roles" tabindex="-1" class="roles" role="group" aria-labelledby="role-label">${rules.roles.map((role, index) => `<div class="role-choice"><button id="role-${role.id}" class="role-card ${character.role === role.id ? 'selected' : ''}" data-role="${role.id}" aria-pressed="${character.role === role.id}"><span class="role-top"><span class="role-index">R / ${String(index + 1).padStart(2, '0')}</span><span class="role-indicator">${character.role === role.id ? '●' : '○'}</span></span><strong>${role.name}</strong><span>${role.description}</span></button><details class="role-choice-help" id="identity-role-help-${role.id}"><summary>ⓘ Rollenfähigkeit</summary><p><strong>${escapeHtml(ROLE_ABILITIES[role.id].name)}</strong><br>${escapeHtml(ROLE_ABILITIES[role.id].description)}</p></details></div>`).join('')}</div>
     ${renderPortraitGallery(character,rules)}
     <p class="inline-note">ⓘ Deine Rolle bestimmt den Startvorschlag unter „Empfehlung“. Sie verleiht keine zusätzlichen Attributboni.</p>
     <div class="panel-footer"><span>Deine Eingaben bleiben beim Wechsel erhalten.</span><button class="primary" data-view="attributes">Weiter zu den Attributen <span>→</span></button></div></section>`;
@@ -96,15 +102,17 @@ function review(character, rules, evaluated, state = {}) {
 export function render(root, state, rules) {
   const { character, view, storageStatus, storageBlocked, storageMessage, error } = state;
   const evaluated = evaluateCharacter(character, rules);
+  const progress=completionProgress(character,rules,state,evaluated);
   const role = rules.roles.find(item => item.id === character.role);
   const focused = document.activeElement?.id;
   const selection = (document.activeElement instanceof HTMLTextAreaElement || (document.activeElement instanceof HTMLInputElement && document.activeElement.type === 'text')) ? [document.activeElement.selectionStart, document.activeElement.selectionEnd] : null;
   const openDetails = [...root.querySelectorAll('details[open]')].map(element => element.id).filter(Boolean);
   root.innerHTML = `<header class="topbar"><a class="brand" href="#identity" aria-label="RED Builder, Identität"><span class="brand-mark">R<span>//</span></span><span>RED<span class="brand-slashes">//</span>BUILDER<small>CHARAKTEREDITOR</small></span></a><div class="topbar-right"><button id="new-character" class="secondary new-character-button" data-action="new-character" ${state.pdfExportBusy?'disabled':''}>+ Neuen Charakter erstellen</button><span class="version">PROTOTYP <b>v0.9</b></span><span class="save-status ${storageStatus === 'error' || storageBlocked ? 'warning' : ''}" role="status"><span class="tiny-dot"></span>${escapeHtml(storageStatus === 'error' || storageBlocked ? 'Speichern pausiert' : storageStatus === 'saved' ? 'Lokal gespeichert' : 'Lokaler Entwurf')}</span></div></header>
-    <div class="app-layout"><aside class="sidebar"><div class="sidebar-top"><span class="eyebrow">CHARAKTER ERSTELLEN</span><nav aria-label="Editor-Schritte">${steps.map(([id, title, description], index) => id==='session'&&!character.campaign?.sessionUnlocked?'': `<button data-view="${id}" class="nav-step ${view === id ? 'active' : ''}" ${view === id ? 'aria-current="step"' : ''} ${id !== 'identity' && (!character.name.trim() || !character.role) ? 'disabled' : ''}><span class="step-index">0${index + 1}</span><span><strong>${title}</strong><small>${description}</small></span><span class="step-arrow">↗</span></button>`).join('')}</nav><div class="future-steps"><span class="eyebrow">CHARACTERSHEET</span><p>PDF-Export <span>↗</span></p><small>Unter Überprüfung nach Abschluss aller Pflichtangaben.</small></div></div><div class="sidebar-bottom"><span class="eyebrow">DEIN ENTWURF</span><strong>${escapeHtml(character.name.trim() || 'Unbenannter Charakter')}</strong><span>${escapeHtml(role?.name ?? 'Noch keine Rolle')}</span><div class="mini-divider"></div><span class="privacy-note"><span class="tiny-dot"></span> Nur in deinem Browser</span></div></aside>
+    <div class="app-layout"><aside class="sidebar"><div class="sidebar-top"><span class="eyebrow">CHARAKTER ERSTELLEN</span><nav aria-label="Editor-Schritte">${steps.map(([id, title, description], index) => {const completion=progress.steps.find(step=>step.id===id);return id==='session'&&!character.campaign?.sessionUnlocked?'': `<button data-view="${id}" class="nav-step ${view === id ? 'active' : ''} ${completion?'nav-'+completion.status:''}" ${view === id ? 'aria-current="step"' : ''} ${id !== 'identity' && (!character.name.trim() || !character.role) ? 'disabled' : ''}><span class="step-index">0${index + 1}</span><span><strong>${title}</strong><small>${description}</small>${completion?`<small class="nav-step-status">${completion.complete?(completion.status==='warning'?'!':'✓'):'○'} ${escapeHtml(completion.label)}</small>`:''}</span><span class="step-arrow">↗</span></button>`;}).join('')}</nav><div class="future-steps"><span class="eyebrow">CHARACTERSHEET</span><p>PDF-Export <span>↗</span></p><small>Unter Überprüfung nach Abschluss aller Pflichtangaben.</small></div></div><div class="sidebar-bottom"><span class="eyebrow">DEIN ENTWURF</span><strong>${escapeHtml(character.name.trim() || 'Unbenannter Charakter')}</strong><span>${escapeHtml(role?.name ?? 'Noch keine Rolle')}</span><div class="mini-divider"></div><span class="privacy-note"><span class="tiny-dot"></span> Nur in deinem Browser</span></div></aside>
     <main id="main" tabindex="-1" class="${view==='cyberware'?'equipment-main':view==='session'?'session-main':''}"><div class="page-title"><div><span class="eyebrow"><span class="red-line"></span> DEIN CHARAKTER. DEINE ENTSCHEIDUNGEN.</span><h1>${view === 'session' ? 'Nach dem Einsatz.' : view === 'identity' ? 'Eine neue Identität.' : view === 'review' ? 'Bereit für die Straße?' : view === 'cyberware' ? 'Dein Körper. Deine Ausrüstung.' : view === 'role-abilities' ? 'Deine Rolle. Dein Spezialgebiet.' : view === 'lifepath' ? 'Dein Weg durch Night City.' : view === 'skills' ? 'Mach den Unterschied.' : 'Baue deine Grundlage.'}</h1><p>${view === 'session' ? 'Ein paar kurze Fragen bringen deinen Charakter auf den neuesten Stand.' : view === 'identity' ? 'Wer wirst du in der Zeit des Roten sein?' : view === 'review' ? 'Deine Entscheidungen, transparent zusammengefasst.' : view === 'cyberware' ? 'Wähle, was zu dir passt. Kosten und Spielwerte rechnen wir für dich.' : view === 'role-abilities' ? 'Verstehe deine Rollenfähigkeit mit Beispielen aus deinen aktuellen Charakterwerten.' : view === 'lifepath' ? 'Gib deinem Charakter eine Vergangenheit und einen Grund weiterzumachen.' : view === 'skills' ? 'Verteile dein Training. Entdecke deine Stärken.' : 'Verteile deine Attribute und forme deinen Edgerunner.'}</p></div><span class="phase-badge">PHASE <b>04</b><small>DEIN EDGERUNNER</small></span></div>
     ${storageMessage&&(view!=='session'||storageBlocked||storageStatus==='error') ? `<div class="notice" role="alert">${escapeHtml(storageMessage)}${storageBlocked ? '<button class="secondary" data-action="resume-storage">Diesen Entwurf speichern</button>' : ''}</div>` : ''}
     ${error ? `<div class="notice" role="alert">${escapeHtml(error)}</div>` : ''}
+    ${renderCompletion(progress,view)}
     ${character.campaign?.active&&view!=='session'?'<p class="inline-note">Kampagnencharakter · Änderungen an Werten und Ausstattung werden in Schritt 8 mit Protokoll vorgenommen.</p>':''}${view === 'session' ? renderSessionReport(character,rules,state) : view === 'identity' ? identity(character, rules, state) : view === 'review' ? review(character, rules, evaluated, state) : view === 'cyberware' ? renderCyberware(character, rules, evaluated, state) : view === 'role-abilities' ? renderRoleAbilities(character, rules, evaluated) : view === 'lifepath' ? renderLifepath(character,state) : view === 'skills' ? renderSkills(character, rules, evaluated, state) : attributes(character, rules, evaluated)}
     <footer><div><strong>RED<span>//</span>BUILDER</strong><span>Ein kostenloses Fanprojekt für Cyberpunk RED.</span></div><details><summary>Regelstand & rechtliche Hinweise</summary><p>Phase 4: Körperansicht mit Drag-and-drop und Klickbedienung. Gemeinsames Complete-Package-Startkapital 2.550 eb plus 800 eb zweckgebunden für Kleidung/Fashionware. Der Katalog ist noch nicht vollständig; Quellen stehen unter Ausstattung. Fertigkeiten: 86 Fertigkeitspunkte, maximal Rang 6, 13 Pflichtfertigkeiten auf mindestens Rang 2. Herkunftssprache startet kostenlos auf Rang 4. Fertigkeitszuordnungen und ×2-Kosten: offizieller RTG-Charakterbogen. Formeln und Erstellungsregeln: Grundregelwerk S. 79/90; abschließender Abgleich mit aktueller eigener Ausgabe empfohlen. Attribute: 62 Punkte und Grenzen 2–8 nach Projektvorgabe; Abgleich mit Grundregelwerk S. 78 und aktuellen Errata steht aus. Die rollenspezifischen Empfehlungen sind eigene Homebrew-Startvorschläge, keine offiziellen Tabellen. Keine offiziellen Tabellen oder Regeltexte werden reproduziert.</p><p><a href="https://rtalsoriangames.com/wp-content/uploads/2020/11/RTG-CPR-CharacterSheet-Fillable.pdf" target="_blank" rel="noopener noreferrer">Fertigkeitsreferenz: RTG-Charakterbogen ↗</a> · <a href="https://rtalsoriangames.com/2020/10/09/cyberpunk-red-alert/" target="_blank" rel="noopener noreferrer">Offizielle Rollen & Methoden ↗</a> · <a href="https://rtalsoriangames.com/homebrew-content-policy/" target="_blank" rel="noopener noreferrer">RTG Homebrew Content Policy ↗</a></p></details><p lang="en">RED//BUILDER is unofficial content provided under the Homebrew Content Policy of R. Talsorian Games and is not approved or endorsed by RTG. This content references materials that are the property of R. Talsorian Games and its licensees.</p></footer>
     </main></div>${renderDeleteCharacterDialog(state.pendingArchiveDeletion)}`;

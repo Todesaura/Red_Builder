@@ -1,31 +1,32 @@
-import {needsCyberwareSide} from './cyberware-placement.js?v=budget2';
-import {bindSessionEvents} from './session-events.js?v=budget2';
-import { quickAddCyberware } from './cyberware-quick-add.js?v=budget2';
+import {acknowledgeRecommendations,resetDraftRecommendationHints} from './recommendation-hints.js?v=hints1';
+import {needsCyberwareSide} from './cyberware-placement.js?v=shopping1';
+import {bindSessionEvents} from './session-events.js?v=mobile1';
+import { quickAddCyberware } from './cyberware-quick-add.js?v=shopping1';
 import { emptyCustomEquipmentDraft } from './ui-custom-equipment.js';
-import { characterSheetReadiness } from './pdf-character-data.js?v=budget2';
-import { archivedCharacters, readArchivedCharacter, switchCharacter, resetCharacterUi, deleteArchivedCharacter } from './character-library.js?v=budget2';
+import { characterSheetReadiness } from './pdf-character-data.js?v=shopping1';
+import { archivedCharacters, readArchivedCharacter, switchCharacter, resetCharacterUi, deleteArchivedCharacter } from './character-library.js?v=shopping1';
 import { removeCustomEquipment } from './custom-equipment.js';
-import { chooseLifepath, editLifepath, editLifepathCost, evaluateLifepath } from './lifepath.js?v=budget2';
-import { assignRolePoint, choosePharmaceutical } from './role-points.js?v=budget2';
-import { equipArmor } from './armor.js?v=budget2';
-import { createCharacter } from './model.js?v=budget2';
-import { assignAttribute, applyRecommendation, pointsRemaining, evaluateCharacter } from './rules.js?v=budget2';
-import { removeCyberware, canUndoCyberwarePurchase, cyberwareRemovalItems } from './cyberware.js?v=budget2';
-import { addToCyberwareDraft, removeFromCyberwareDraft, commitCyberwareDraft } from './cyberware-draft.js?v=budget2';
-import { baseStats, bindBodyDrag } from './ui-body.js?v=budget2';
-import { initialInstallationLocation } from './cyberware-ui-model.js?v=budget2';
-import { buyEquipment, removeEquipment, useStreetDrug, buyWeaponWithAmmo, saveCustomEquipment, addWeaponAttachment, removeWeaponAttachment } from './economy.js?v=budget2';
-import { loadCharacter, saveCharacter, STORAGE_KEY } from './storage.js?v=budget2';
-import { render } from './ui.js?v=budget2';
-import { readPortrait, readGalleryPortrait } from './portraits.js?v=budget2';
-import { assignSkill, addSpecialty, skillPointsRemaining, markSkillsEdited, resetSkillPoints } from './skills.js?v=budget2';
-import { applySkillRecommendation, automaticallyRecommendSkills, isInitialSkillAllocation } from './skill-recommendations.js?v=budget2';
+import { lifepathChoiceNavigation, chooseLifepath, editLifepath, editLifepathCost, evaluateLifepath } from './lifepath.js?v=lifesplit1';
+import { assignRolePoint, choosePharmaceutical } from './role-points.js?v=shopping1';
+import { equipArmor } from './armor.js?v=shopping1';
+import { createCharacter } from './model.js?v=shopping1';
+import { assignAttribute, applyRecommendation, pointsRemaining, evaluateCharacter } from './rules.js?v=shopping1';
+import { removeCyberware, canUndoCyberwarePurchase, cyberwareRemovalItems } from './cyberware.js?v=shopping1';
+import { addToCyberwareDraft, removeFromCyberwareDraft, commitCyberwareDraft } from './cyberware-draft.js?v=shopping1';
+import { baseStats, bindBodyDrag } from './ui-body.js?v=shopping1';
+import { initialInstallationLocation } from './cyberware-ui-model.js?v=shopping1';
+import { buyEquipment, removeEquipment, useStreetDrug, buyWeaponWithAmmo, saveCustomEquipment, addWeaponAttachment, removeWeaponAttachment } from './economy.js?v=shopping1';
+import { loadCharacter, saveCharacter, STORAGE_KEY } from './storage.js?v=shopping1';
+import { render } from './ui.js?v=emprisk1';
+import { readPortrait, readGalleryPortrait } from './portraits.js?v=shopping1';
+import { assignSkill, addSpecialty, skillPointsRemaining, markSkillsEdited, resetSkillPoints, restoreRequiredSkills } from './skills.js?v=shopping1';
+import { applySkillRecommendation, automaticallyRecommendSkills, isInitialSkillAllocation } from './skill-recommendations.js?v=shopping1';
 
 const root = document.getElementById('app');
 
 async function start() {
   let portraitRequest = 0;
-  const responses = await Promise.all(['rules.json', 'skills.json', 'cyberware.json', 'equipment.json'].map(file => fetch(new URL(`../data/${file}?v=budget2`, import.meta.url))));
+  const responses = await Promise.all(['rules.json', 'skills.json', 'cyberware.json', 'equipment.json'].map(file => fetch(new URL(`../data/${file}?v=shopping1`, import.meta.url))));
   if (responses.some(response => !response.ok)) throw new Error('Die Regelkonfiguration konnte nicht geladen werden.');
   const [rules, skillRules, cyberwareRules, equipmentRules] = await Promise.all(responses.map(response => response.json()));
   rules.skillRules = skillRules;
@@ -62,6 +63,7 @@ async function start() {
     state.storageStatus = result.ok ? 'saved' : 'error';
     state.storageMessage = result.ok ? '' : result.error;
   }
+  if(restoreRequiredSkills(state.character,rules))persist();
   if (state.character.role && isInitialSkillAllocation(state.character.skills, rules.skillRules)) {
     applySkillRecommendation(state.character, rules);
     persist();
@@ -187,7 +189,7 @@ async function start() {
     if (event.target.dataset.lifepathChoice) {
       const id = event.target.dataset.lifepathChoice;
       const result = chooseLifepath(state.character, id, event.target.value);
-      state.lifepathQuestion = event.target.value === 'custom' ? id : null;
+      if(result.ok)Object.assign(state,lifepathChoiceNavigation(id,event.target.value));
       state.error = result.ok ? '' : result.error; persist(); refresh(); announceBudget();
       if (result.ok && event.target.value !== 'custom') document.getElementById('lifepath-step')?.focus({preventScroll:true});
       if (result.ok && event.target.value === 'custom') document.getElementById(`life-text-${id}`)?.focus();
@@ -232,6 +234,17 @@ async function start() {
   root.addEventListener('click', async event => {
     const button = event.target.closest('button');
     if (!button) return;
+    if(button.dataset.progressStep){
+      if(!views.includes(button.dataset.progressStep))return;
+      if(button.dataset.progressLife&&evaluateLifepath(state.character).entries.some(q=>q.id===button.dataset.progressLife))Object.assign(state,lifepathChoiceNavigation(button.dataset.progressLife,'custom'));
+      if(['cyberware','weapons','armor','misc','clothing','drugs','netrunner'].includes(button.dataset.progressTab))state.equipmentTab=button.dataset.progressTab;
+      navigate(button.dataset.progressStep);
+      const target=document.getElementById(button.dataset.progressFocus)||document.getElementById('main');
+      for(let parent=target.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;
+      if(!target.matches('input,select,textarea,button,a[href],[tabindex]'))target.tabIndex=-1;
+      if(button.dataset.progressFocus==='installed-cyberware'){const dock=document.querySelector('.equipment-shopping-dock');window.scrollTo({top:Math.max(0,window.scrollY+target.getBoundingClientRect().top-(dock?.getBoundingClientRect().height??0)-24),behavior:'smooth'});}else target.scrollIntoView({block:'center',behavior:'smooth'});target.focus({preventScroll:true});
+      return;
+    }
     if(button.dataset.useDrug){
       const result=useStreetDrug(state.character,rules,button.dataset.useDrug);
       state.error=result.ok?'':result.error;if(result.ok)persist();refresh();return;
@@ -284,7 +297,15 @@ async function start() {
       finally { refresh(); }
       return;
     }
-    if (button.dataset.action === 'new-character') { activateCharacter(createCharacter(rules)); return; }
+    if (button.dataset.action === 'new-character') { activateCharacter(createCharacter(rules)); if(!state.character.role)resetDraftRecommendationHints(); return; }
+    if (['skills-recommendation','skills-free'].includes(button.dataset.action)) {
+      try {
+        if(button.dataset.action==='skills-recommendation')applySkillRecommendation(state.character,rules);
+        else if(state.character.skills.recommendation&&!state.character.skills.recommendation.edited)resetSkillPoints(state.character,rules);
+        state.error='';persist();
+      }catch(error){state.error=error.message;}
+      refresh();announceBudget();return;
+    }
     if (button.dataset.action === 'reset-skill-points') {
       resetSkillPoints(state.character,rules);state.error='';persist();refresh();announceBudget();return;
     }
@@ -295,7 +316,7 @@ async function start() {
       const snapshot=structuredClone(state.character);
       state.pdfExportBusy=true;state.pdfExportMessage='';state.error='';refresh();
       try {
-        const { downloadCharacterSheet } = await import('./pdf-character.js?v=budget2');
+        const { downloadCharacterSheet } = await import('./pdf-character.js?v=critical1');
         const filename=await downloadCharacterSheet(snapshot,rules);
         state.pdfExportMessage=`PDF erstellt: ${filename}. Der Download wurde gestartet.`;
       } catch (error) { state.error=`Charactersheet konnte nicht erstellt werden: ${error.message}`; }
@@ -304,12 +325,12 @@ async function start() {
     }
     state.error = '';
     if(button.dataset.lifepathSection){state.lifepathSection=button.dataset.lifepathSection;state.lifepathQuestion=null;refresh();document.getElementById('lifepath-step')?.focus({preventScroll:true});return;}
-    if (button.dataset.lifepathEdit) { state.lifepathSection=null;state.lifepathQuestion=button.dataset.lifepathEdit; refresh(); document.getElementById('lifepath-step')?.scrollIntoView({block:'start'}); return; }
+    if (button.dataset.lifepathEdit) { Object.assign(state,lifepathChoiceNavigation(button.dataset.lifepathEdit,'custom')); refresh(); document.getElementById('lifepath-step')?.scrollIntoView({block:'start'}); return; }
     if (button.dataset.action === 'lifepath-next') { state.lifepathQuestion=null; refresh(); document.getElementById('lifepath-step')?.focus({preventScroll:true}); return; }
     if (button.dataset.warningEquipment) { state.equipmentTab=button.dataset.warningEquipment; navigate('cyberware'); return; }
-    if (button.dataset.equipmentTab) { state.equipmentTab = button.dataset.equipmentTab; refresh(); return; }
+    if (button.dataset.equipmentTab) { state.equipmentTab = button.dataset.equipmentTab; acknowledgeRecommendations(state.character,'tab:'+state.equipmentTab); refresh(); return; }
     if (button.dataset.cyberCategory) {
-      state.cyberCategory=button.dataset.cyberCategory; state.selectedCyberware=null; state.pendingLocation=null; state.installationOpen=false; refresh(); return;
+      state.cyberCategory=button.dataset.cyberCategory; acknowledgeRecommendations(state.character,'cyber:'+state.cyberCategory); state.selectedCyberware=null; state.pendingLocation=null; state.installationOpen=false; refresh(); return;
     }
     if (button.dataset.selectCyberware) { if (state.selectedCyberware === button.dataset.selectCyberware) { state.selectedCyberware = null; state.pendingLocation = null; refresh(); } else selectCyberware(button.dataset.selectCyberware); return; }
     if(button.dataset.action==='cancel-cyber-placement'){state.cyberPlacement=null;refresh();return;}
@@ -357,7 +378,7 @@ async function start() {
       if (state.customEquipmentDraft.id === button.dataset.removeCustom) state.customEquipmentDraft=emptyCustomEquipmentDraft();
     }
     else if (button.dataset.lifepathClear) {
-      state.lifepathQuestion=button.dataset.lifepathClear;
+      Object.assign(state,lifepathChoiceNavigation(button.dataset.lifepathClear,'custom'));
       const result = chooseLifepath(state.character, button.dataset.lifepathClear, null);
       if (!result.ok) state.error = result.error;
     }
@@ -383,7 +404,7 @@ async function start() {
     else if (button.dataset.removeCyberware) {
       if(canUndoCyberwarePurchase(state.character)&&cyberwareRemovalItems(state.character,rules,button.dataset.removeCyberware).length===1){const result=removeCyberware(state.character,rules,button.dataset.removeCyberware,baseStats(evaluateCharacter(state.character,rules)),0);state.error=result.ok?'':result.error;if(result.ok)persist();refresh();announceBudget();return;}
       state.removingCyberware = button.dataset.removeCyberware; state.removalFee = '';
-      refresh(); document.getElementById('removal-panel')?.scrollIntoView({block:'nearest',behavior:'instant'}); document.getElementById('removal-panel')?.focus({preventScroll:true}); return;
+      refresh(); const panel=document.getElementById('removal-panel');if(panel){const dock=document.querySelector('.equipment-shopping-dock');window.scrollTo({top:Math.max(0,window.scrollY+panel.getBoundingClientRect().top-(dock?.getBoundingClientRect().height??0)-24),behavior:'instant'});panel.focus({preventScroll:true});}return;
     }
     else if (button.dataset.method) state.character.method = button.dataset.method;
     else if (button.dataset.skillAdjust) {

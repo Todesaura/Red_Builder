@@ -1,0 +1,48 @@
+import {escapeHtml as e} from './html.js';
+import {recoveryPlan} from './recovery-plan.js?v=recovery1';
+const money=n=>n==null?'Monatsbudget ergänzen':`${n.toLocaleString('de-DE')} eb`;
+const day=s=>s.split('-').reverse().join('.');
+const input=(name,label,value,min=0,max=365)=>`<label>${label}<input name="${name}" type="number" min="${min}" max="${max}" value="${e(String(value))}" required></label>`;
+const select=(name,label,options,value)=>`<label>${label}<select name="${name}" required>${options.map(([id,text])=>`<option value="${id}" ${id===value?'selected':''}>${text}</option>`).join('')}</select></label>`;
+export function recoveryInput(values){
+  const members=[];
+  for(let i=0;i<12;i++)if(Object.hasOwn(values,`memberName${i}`))members.push({name:values[`memberName${i}`],days:values[`memberDays${i}`]});
+  return {...values,members};
+}
+export function renderRecoveryResult(plan,name){
+  // Saved reports may come from imported JSON. Never interpolate unchecked metadata.
+  if(plan.ok){
+    const nums=['ownDays','missing','rate','healingDays','hours','procedures','highestDV','medical','extraCost','nights','hospital','groupDays','freeDays','weeks','roleRank'];
+    const validDate=s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s);
+    if(!nums.every(k=>Number.isFinite(plan[k]))||!['expenses','income','total'].every(k=>plan[k]===null||Number.isFinite(plan[k]))||!validDate(plan.readyDate)||!validDate(plan.groupDate)||!Array.isArray(plan.members)||!plan.members.every(m=>typeof m.name==='string'&&['days','freeDays','weeks'].every(k=>Number.isFinite(m[k]))&&validDate(m.readyDate))||!Array.isArray(plan.jobs)||!plan.jobs.every(j=>typeof j==='string'))return '<p class="notice">Dieser gespeicherte Erholungsplan muss neu berechnet werden.</p>';
+  }
+  if(!plan.ok)return `<div class="notice" role="status">${plan.errors.map(s=>`<p>${e(s)}</p>`).join('')}</div>`;
+  const rows=[{name,days:plan.ownDays,readyDate:plan.readyDate,freeDays:plan.freeDays,weeks:plan.weeks},...plan.members];
+  return `<section class="recovery-result">
+    <p class="session-outcome"><strong>Nächster gemeinsamer Einsatz: ${day(plan.groupDate)}</strong><br>${plan.groupDays} Tage nach dem Einsatz · ${plan.members.length?'späteste eingetragene Erholungszeit':'bisher nur dein Charakter; ergänzt noch die Gruppe'}<br>Dein geschätzter Nettobedarf: <strong>${plan.total==null?money(plan.fees)+' + noch offene Lebenshaltung':money(plan.total)}</strong></p>
+    <div class="recovery-table"><table><thead><tr><th>Charakter</th><th>Bereit ab</th><th>Freie Tage</th><th>Nebenjob-Wochen</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${e(r.name)}</td><td>${day(r.readyDate)}</td><td>${r.freeDays}</td><td>${r.weeks}</td></tr>`).join('')}</tbody></table></div>
+    <details class="session-more"><summary>Deine Erholung · ${plan.ownDays} Tage, davon ${plan.healingDays} Ruhetage</summary><p>${plan.missing} fehlende TP ÷ ${plan.rate} TP pro Ruhetag → ${plan.healingDays} volle Ruhetage.${plan.hours?` Behandlungen: ${plan.procedures} × 4 Stunden.`:''} Zusätzliche Ausfallzeit ist berücksichtigt.</p><p>Voraussetzung: erfolgreiche Stabilisierung, dauerhafte Behandlung kritischer Verletzungen und nur leichte Aktivität an Ruhetagen.</p></details>
+    <details class="session-more"><summary>Kosten für ${plan.groupDays} Tage · Aufschlüsselung</summary><dl class="session-diff"><div><dt>Klinik · höchster SG ${plan.highestDV||'–'} einmal je Besuch</dt><dd>${money(plan.medical)}</dd></div><div><dt>Weitere Behandlungskosten</dt><dd>${money(plan.extraCost)}</dd></div><div><dt>Krankenhaus · ${plan.nights} Nächte × 100 eb</dt><dd>${money(plan.hospital)}</dd></div><div><dt>Lebenshaltung · ${plan.groupDays} Tage</dt><dd>${money(plan.expenses)}</dd></div><div><dt>Laufende Einnahmen</dt><dd>${plan.income==null?'–':'−'+money(plan.income)}</dd></div><div><dt>Nettobedarf</dt><dd><strong>${money(plan.total)}</strong></dd></div></dl><p class="session-hint">Schätzung: Monatsbudget ÷ 30 × Tage. Ausgaben auf-, Einnahmen abgerundet. Miete und Verpflichtungen laufen auch im Krankenhaus weiter. Bereits bezahlte Monatskosten nicht erneut buchen.</p></details>
+    <h3>Geld verdienen, während du wartest</h3><p><strong>${plan.freeDays} freie Tage → ${plan.weeks} ${plan.weeks===1?'volle Nebenjob-Woche':'volle Nebenjob-Wochen'}.</strong></p><p><strong>Je voller Woche 1W6</strong> auf der Nebenjob-Tabelle deiner Rolle, Rang ${plan.roleRank}. Das Ergebnis bestimmt Auftrag und Bezahlung (Grundregelwerk S. 381–385).</p><p class="session-hint">Mögliche Aufträge: ${plan.jobs.map(e).join(' · ')}. Unter 7 freien Tagen kein regulärer Nebenjob-Wurf; Kurzaufträge nur nach Absprache mit der Spielleitung. Bestätigten Verdienst unter „Ausrüstung → Weiteres Geld erhalten“ eintragen.</p>
+  </section>`;
+}
+
+export function renderRecoveryPlanner(character,rules,draft,values={},stage='medical'){
+  const raw={...(draft.recoveryPlan??{}),...values};
+  const config=Object.keys(values).some(k=>k.startsWith('memberName'))?recoveryInput(raw):raw;
+  let plan;try{plan=recoveryPlan(character,rules,stage==='medical'?{...config,members:[]}:config,draft.date);}catch(error){plan={ok:false,errors:[error.message]};}
+  const care=config.care??'',treatment=['treatment','surgery'].includes(care);
+  let body='',button='';
+  if(stage==='medical'){
+    body=`<p class="eyebrow">1 / 3 · Behandlung und Erholung</p>${select('care','Sind kritische Verletzungen zu behandeln oder Operationen nötig?',[['','Bitte auswählen'],['none','Nein, keine dauerhafte Behandlung nötig'],['treated','Nein, notwendige Behandlungen sind bereits erfolgt'],['stabilize','Nur Stabilisierung, keine kritische Verletzung'],['treatment','Ja, eine oder mehrere Behandlungen'],['surgery','Ja, eine Operation beim Medtech']],care)}${select('stabilized','Bist du bereits erfolgreich stabilisiert worden?',[['no','Nein / noch nicht bestätigt'],['yes','Ja']],config.stabilized??(character.campaign?.stabilized?'yes':'no'))}${treatment?`<p class="session-hint">Die Spielleitung nennt Behandlung und SG. Eine Operation braucht Chirurgie beim Medtech. Quick Fix ist keine dauerhafte Behandlung.</p>${select('dv','Höchster SG aller benötigten Behandlungen',[['10','SG 10 · 50 eb'],['13','SG 13 · 100 eb'],['15','SG 15 · 500 eb'],['17','SG 17 oder höher · 1.000 eb']],String(config.dv??15))}${input('procedures','Wie viele Behandlungen / Operationen sind nötig? · je 4 Stunden',config.procedures??1,1,20)}`:''}${select('stay','Wo erholst du dich?',[['home','Zu Hause · bestehendes Monatsbudget'],['hospital','Im Krankenhaus · zusätzlich 100 eb pro Nacht']],config.stay??'home')}${config.stay==='hospital'?input('nights','Wie viele Krankenhausnächte?',config.nights??plan.ownDays??0):''}<details class="session-more"><summary>Zusätzliche Ausfallzeit oder Behandlungskosten</summary>${input('extraDays','Frühestens wieder einsatzbereit nach … Tagen laut Spielleitung (0 = keine zusätzliche Einschränkung)',config.extraDays??0)}${input('extraCost','Weitere Kosten · Prothesen, Zusatzleistungen, zusätzliche Klinikbesuche',config.extraCost??0,0,1000000)}<p class="session-hint">Ein Klinikbesuch: Nur den höchsten erforderlichen SG berechnen, nicht jede Operation einzeln. Grundregelwerk S. 225.</p></details>${plan.ok?`<p class="session-outcome"><strong>${plan.ownDays} Tage bis einsatzbereit · ${day(plan.readyDate)}</strong><br>${plan.missing} fehlende TP · ${plan.rate} TP je vollem Ruhetag${plan.hours?` · ${plan.hours} Stunden Behandlung`:''}<br>Behandlung und Krankenhaus: ${money(plan.fees)} · Lebenshaltung folgt im Gruppenvergleich.</p>`:renderRecoveryResult(plan,character.name)}`;
+    button='Weiter zum Gruppenvergleich →';
+  }else if(stage==='crew'){
+    const members=config.members??[],count=Math.min(12,Math.max(2,members.length));
+    body=`<p class="eyebrow">2 / 3 · Die Gruppe vergleichen</p><p class="session-outcome">Du bist nach <strong>${plan.ownDays??'–'} Tagen</strong> wieder bereit. Wie lange brauchen die anderen?</p><p class="session-hint">Alle Angaben zählen ab dem Einsatz am ${day(draft.date)}. Fragt nach den vollständigen Erholungszeiten einschließlich Operationen. Leere Zeilen werden ignoriert.</p>${Array.from({length:count},(_,i)=>`<div class="recovery-member"><label>Name<input name="memberName${i}" maxlength="60" value="${e(members[i]?.name??'')}"></label><label>Tage bis wieder einsatzbereit<input name="memberDays${i}" type="number" min="0" max="365" value="${e(String(members[i]?.days??''))}"></label></div>`).join('')}${count<12?'<button type="button" class="text-button" data-recovery-member-add>+ Weiteres Gruppenmitglied</button>':''}${plan.ok?`<p class="session-outcome">${plan.members.length?'Gruppe':'Bisher nur dein Charakter'} bereit ab <strong>${day(plan.groupDate)}</strong> · Du hast <strong>${plan.freeDays} freie Tage</strong>.</p>`:renderRecoveryResult(plan,character.name)}<button type="button" class="text-button" data-recovery-stage="medical">← Behandlung ändern</button>`;
+    button='Kosten und Nebenjobs anzeigen →';
+  }else{
+    body=`<p class="eyebrow">3 / 3 · Euer nächster Einsatz</p>${renderRecoveryResult(plan,character.name)}<button type="button" class="text-button" data-recovery-stage="crew">← Gruppenzeiten ändern</button><p class="session-hint">Dieser Plan bucht kein Geld und heilt keine TP vorzeitig. Vergangene Ruhe und erfolgreiche Behandlungen trägst du bei „Gesundheit“ ein, bezahlte Rechnungen bei „Ausrüstung“.</p>`;
+    button='Plan merken und weiter →';
+  }
+  return `<form data-session-form="recovery-plan" class="session-form session-simple-form"><input type="hidden" name="phase" value="${stage}">${body}<button class="primary" ${plan.ok?'':'disabled'}>${button}</button></form>`;
+}

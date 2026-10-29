@@ -1,14 +1,15 @@
-import {ATTACHMENTS,attachmentList} from './weapon-attachments.js?v=budget2';
-import {createCampaign,roleRank} from './campaign-state.js?v=budget2';
-import {validateCharacter} from './model.js?v=budget2';
-import {evaluateCharacter} from './rules.js?v=budget2';
-import {evaluateFunds,buyEquipment,removeEquipment,saveCustomEquipment,addWeaponAttachment,removeWeaponAttachment} from './economy.js?v=budget2';
-import {commitCyberwareDraft} from './cyberware-draft.js?v=budget2';
-import {removeCyberware} from './cyberware.js?v=budget2';
-import {equipArmor} from './armor.js?v=budget2';
-import {rolePool,validateRolePoints,PHARMACEUTICALS} from './role-points.js?v=budget2';
-import {improvementCost,THERAPIES,TRANSACTION_TYPES,humanityRollBounds} from './campaign-rules.js?v=budget2';
-import {evaluateLifepath} from './lifepath.js?v=budget2';
+import {ATTACHMENTS,attachmentList} from './weapon-attachments.js?v=shopping1';
+import {createCampaign,roleRank} from './campaign-state.js?v=shopping1';
+import {validateCharacter} from './model.js?v=shopping1';
+import {evaluateCharacter} from './rules.js?v=shopping1';
+import {evaluateFunds,buyEquipment,removeEquipment,saveCustomEquipment,addWeaponAttachment,removeWeaponAttachment} from './economy.js?v=shopping1';
+import {commitCyberwareDraft} from './cyberware-draft.js?v=shopping1';
+import {removeCyberware} from './cyberware.js?v=shopping1';
+import {equipArmor} from './armor.js?v=shopping1';
+import {rolePool,validateRolePoints,PHARMACEUTICALS} from './role-points.js?v=shopping1';
+import {improvementCost,THERAPIES,TRANSACTION_TYPES,humanityRollBounds} from './campaign-rules.js?v=shopping1';
+import {evaluateLifepath} from './lifepath.js?v=shopping1';
+import {recoveryPlan} from './recovery-plan.js?v=recovery1';
 
 const number=(n,min=0,max=1000000)=>{if(!Number.isSafeInteger(n)||n<min||n>max)throw Error(`Gib eine ganze Zahl von ${min} bis ${max} ein.`);return n;};
 const string=(s,max=1000)=>{if(typeof s!=='string'||s.length>max)throw Error(`Text darf höchstens ${max} Zeichen enthalten.`);return s.trim();};
@@ -221,14 +222,19 @@ export function previewSession(character,rules,draft){
     errors.push(...evaluated.errors.filter(error=>!evaluated.cyberware.warnings.includes(error)));
     if(c.campaign.hp!==null&&c.campaign.hp>(evaluated.derived.find(d=>d.id==='hp')?.value??0))errors.push('Aktuelle TP überschreiten das Maximum.');
     warnings.push(...evaluated.cyberware.warnings);
+    let recovery=null;
+    if(draft.recoveryPlan){
+      try{recovery=recoveryPlan(c,rules,draft.recoveryPlan,draft.date);if(!recovery.ok)warnings.push('Erholungsplan aktualisieren: '+recovery.errors.join(' '));}
+      catch(error){warnings.push('Erholungsplan aktualisieren: '+error.message);}
+    }
     if((c.campaign.hp??before.hp)<=0)warnings.push('Charakter ist sterbend: Todesrettung und Stabilisierung beachten.');
     if(c.campaign.injuries.some(i=>i.status==='quickfix'))warnings.push('Quick Fix unterdrückt den Verletzungseffekt nur bis zum Tagesende; keine dauerhafte Behandlung.');
-    return {ok:!errors.length,character:c,before,after:sessionSnapshot(c,rules),errors:[...new Set(errors)],warnings,log,costs,cashFlows,changes:changesBetween(character,c)};
+    return {ok:!errors.length,character:c,before,after:sessionSnapshot(c,rules),errors:[...new Set(errors)],warnings,log,costs,cashFlows,recovery,changes:changesBetween(character,c)};
   }catch(error){errors.push(error.message);return {ok:false,character:c,before:before??null,after:null,errors,warnings,log,costs,cashFlows,changes:[]};}
 }
 export function completeSession(character,rules,draft){
   const preview=previewSession(character,rules,draft);if(!preview.ok)return {ok:false,error:preview.errors.join(' ')};
   const next=preview.character;
-  next.campaign.history.push({id:draft.id,number:draft.number,date:draft.date,name:draft.name,notes:draft.notes,before:preview.before,after:preview.after,changes:preview.changes,log:preview.log,correctionOf:draft.actions[0]?.type==='correction'?draft.actions[0].reportId:null});
+  next.campaign.history.push({id:draft.id,number:draft.number,date:draft.date,name:draft.name,notes:draft.notes,before:preview.before,after:preview.after,changes:preview.changes,log:preview.log,...(preview.recovery?.ok?{recoveryPlan:preview.recovery}:{}),correctionOf:draft.actions[0]?.type==='correction'?draft.actions[0].reportId:null});
   try{return {ok:true,character:validateCharacter(next,rules),report:next.campaign.history.at(-1)};}catch(error){return {ok:false,error:error.message};}
 }

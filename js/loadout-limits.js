@@ -1,4 +1,4 @@
-import {weaponConfiguration} from './weapon-attachments.js?v=budget2';
+import {weaponConfiguration} from './weapon-attachments.js?v=shopping1';
 
 export const LOADOUT_LIMITS=Object.freeze({grenades:3,oneHanded:3,twoHanded:1});
 export const isGrenade=item=>item?.kind==='grenade'||item?.id==='ammo-grenade';

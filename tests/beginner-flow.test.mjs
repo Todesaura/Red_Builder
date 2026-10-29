@@ -23,9 +23,9 @@ test('Genau eine offene Frage sichtbar, Antwort wechselt automatisch; Zusammenfa
  let html=renderLifepath(c);assert.equal((html.match(/<fieldset /g)||[]).length,1);assert.match(html,/life-card-personality/);assert.doesNotMatch(html,/life-card-appearance/);assert.equal((html.match(/type="radio"/g)||[]).length,5);
  chooseLifepath(c,'personality','fourth');assert.equal(activeLifepathQuestion(c).id,'appearance');
  assert.equal(activeLifepathQuestion(c,{lifepathQuestion:'goal'}).id,'goal');
- html=renderLifepath(c);assert.match(html,/life-card-appearance/);assert.match(html,/Deine Geschichte bisher/);assert.match(html,/data-lifepath-edit="personality"/);
+ html=renderLifepath(c);assert.match(html,/life-card-appearance/);assert.match(html,/Deine Antworten · getrennt nach Bereich/);assert.match(html,/data-lifepath-edit="personality"/);
  chooseLifepath(c,'appearance','custom');editLifepath(c,'appearance','Eigene Jacke');assert.match(renderLifepath(c,{lifepathQuestion:'appearance'}),/Antwort übernehmen/);
- assert.equal(activeLifepathQuestion(c),null);assert.match(renderLifepath(c),/Lebensweg ist vollständig/);
+ assert.equal(activeLifepathQuestion(c),null);assert.match(renderLifepath(c),/Lore abgeschlossen/);
 });
 test('Cyberauge per Button belegt erst links, dann rechts; drittes Auge scheitert ohne Mutation',()=>{
  const c=completeCharacter(),before=structuredClone(c);let a=quickAddCyberware(c,rules,[],'cybereye');assert.equal(a.location,'eye-left');assert.equal(a.cost,100);

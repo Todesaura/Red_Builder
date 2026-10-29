@@ -1,4 +1,4 @@
-import { migrateCharacter, MAX_PORTRAIT_LENGTH } from './model.js?v=budget2';
+import { migrateCharacter, MAX_PORTRAIT_LENGTH } from './model.js?v=shopping1';
 
 export const STORAGE_KEY = 'red-builder.character.v1';
 export const BACKUP_KEY = 'red-builder.character.v1.backup';

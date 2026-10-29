@@ -1,4 +1,4 @@
-import {roleRank} from './campaign-state.js?v=budget2';
+import {roleRank} from './campaign-state.js?v=shopping1';
 export const ROLE_RANK = 4;
 export const ROLE_POOLS = {
   solo: { budget: 4, label: 'Kampfpunkte', fields: [

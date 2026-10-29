@@ -1,10 +1,10 @@
-import {cyberwareRemovalItems} from './cyberware.js?v=budget2';
-import {humanityRollText} from './campaign-rules.js?v=budget2';
-import {previewSession,createSessionDraft} from './session-report.js?v=budget2';
-import {evaluateCharacter} from './rules.js?v=budget2';
+import {cyberwareRemovalItems} from './cyberware.js?v=shopping1';
+import {humanityRollText} from './campaign-rules.js?v=shopping1';
+import {previewSession,createSessionDraft} from './session-report.js?v=shopping1';
+import {evaluateCharacter} from './rules.js?v=shopping1';
 import { attributeLabel } from './attribute-labels.js';
 import { escapeHtml as e } from './html.js';
-import { evaluateCyberwareDraft } from './cyberware-draft.js?v=budget2';
+import { evaluateCyberwareDraft } from './cyberware-draft.js?v=shopping1';
 const money = value => `${value.toLocaleString('de-DE')} eb`;
 const place = (rules, id) => rules.cyberwareRules.locations.find(location => location.id === id)?.name ?? id;
 

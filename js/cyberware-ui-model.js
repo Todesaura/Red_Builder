@@ -1,7 +1,7 @@
 import { recommendationPriority } from './equipment-recommendations.js';
-import { installationErrors, installCyberware } from './cyberware.js?v=budget2';
-import { evaluateFunds } from './economy.js?v=budget2';
-import { evaluateCharacter } from './rules.js?v=budget2';
+import { installationErrors, installCyberware } from './cyberware.js?v=shopping1';
+import { evaluateFunds } from './economy.js?v=shopping1';
+import { evaluateCharacter } from './rules.js?v=shopping1';
 
 export const baseStats = evaluated => Object.fromEntries(Object.entries(evaluated.attributes).map(([id,value])=>[id,value.base]));
 export function cyberwareCandidate(character,rules,id,location) {

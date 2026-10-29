@@ -341,3 +341,28 @@ Ausstattung → Straßendrogen enthält die 18 gewünschten offiziellen RED-Drog
 Die Spielleitung verwaltet Wirkungen, Dauer, Widerstandsproben und Sucht. Es gibt keine automatische Drogen-Engine oder Änderungen an Attributen/Fertigkeiten. „1 Dosis verwendet“ streicht lediglich eine Inventareinheit, für Eigengebrauch oder Verabreichen an Gegner; der Kaufpreis bleibt ausgegeben. „Kauf rückgängig“ korrigiert wie bisher nur noch vorhandene Startkäufe. Käufe und Restmengen nutzen die bestehende Speicherung und PDF-Inventarliste. Nachkäufe beim Kampagnencharakter erfolgen wie andere Ausrüstung im Session-Bericht.
 
 Regelquellen: Cyberpunk RED Grundregelwerk S. 227–229/357–358; Hornet’s Pharmacy v1.11 S. 2–3; Black Chrome+ v1.21; Jumpstart Kit Conversion Guide v1.1 S. 4; Interface RED Vol. 5 v1.1 S. 127–129, Red Lace und Mortalis zusätzlich im offiziellen DLC Seeing Double S. 7–8. Links stehen direkt an den Karten. Gegen unwillige Ziele beschreibt das Menü den Airhypo-Nahkampfangriff laut Grundregelwerk S. 227; keine automatische Gegner- oder Kampfverwaltung.
+
+### Fertigkeiten: Verteilungswahl und Kategorienübersicht
+
+Auf der Fertigkeiten-Seite wählt man zwischen „Empfehlung“ (Rollenverteilung neu übernehmen) und „Freie Punkte“ (beim Wechsel Pflichtfertigkeiten auf Rang 2, andere gekaufte Ränge auf 0 setzen). Herkunftssprache und Heimat bleiben erhalten. Individuelle Rangänderungen markieren die Verteilung wie bisher als angepasst und zeigen die freie Auswahl als aktiv. Bereits eigene Verteilungen werden beim erneuten Anklicken der aktiven freien Auswahl nicht gelöscht; dafür bleibt „Punkte zurücksetzen“ verfügbar.
+
+Kategorien beginnen geschlossen. Ihre Kopfzeile nennt die relevanten effektiven Attribute; darunter stehen alle belegten Fertigkeiten mit ihrem effektiven Startwert für den Wurf und separat dem Rang. Attribut + Rang + feste Boni sind im Startwert enthalten, 1W10 kommt hinzu. Auch ungeübte Fertigkeiten behalten beim Aufklappen ihre berechneten Startwerte. Eine Suche oder ein Kategorienfilter öffnet die passenden Gruppen; bei Änderungen bleiben manuell geöffnete Gruppen erhalten. Verteilungswahl nutzt bestehende Daten und Budgetregeln. Für diese Änderung wurden auf Wunsch keine Tests ausgeführt.
+
+
+### Pflichtfertigkeiten ohne zusätzlichen Verteilungsaufwand
+
+Pflichtfertigkeiten lassen sich weder am Minusknopf noch über die zentrale Rangvergabe unter Rang 2 setzen. „Freie Punkte“ und „Punkte zurücksetzen“ behalten diese 26 Pflichtpunkte bei; 60 von 86 Punkten bleiben frei. Die Herkunftssprache bleibt kostenlos auf Rang 4. Ältere freie Nullpunkt-Entwürfe werden beim Öffnen auf Pflichtwerte angehoben, sofern ihr Restbudget reicht; andere Ränge werden dabei nicht gelöscht. Voll verteilte Altbestände und Kampagnencharaktere werden nicht automatisch umverteilt.
+
+
+### Abschlussanzeige und direkte Korrekturlinks
+
+Die Navigation zeigt für jeden Erstellungsschritt „Vollständig“, eine konkrete offene Angabe oder ausdrücklich optionale Ausstattungshinweise. Oberhalb der jeweiligen Seite steht der Gesamtfortschritt der sechs Vorbereitungsschritte. Fehlende Namen, Sprache, Heimat, Restpunkte, Rollenpunkte, Präparate, Lebenswegantworten, eigene Monatsbeträge und offene Ausrüstungsentwürfe bekommen passende Sprunglinks. Diese öffnen die zuständige Seite, gegebenenfalls die konkrete Lebenswegfrage oder Ausrüstungskategorie, und fokussieren den betroffenen Bereich. Auf „Überprüfung“ werden alle offenen Vorbereitungsschritte zusammengefasst.
+
+Die Statusberechnung verändert keine Charakterdaten und verwendet die vorhandene Regelauswertung sowie dieselbe PDF-Freigabe. Optionale fehlende Waffen/Rüstung/Rollenausstattung verhindern den Abschluss weiterhin nicht. Session-Berichte erhalten keine irreführende Erstellungs-Abschlussanzeige.
+
+
+### Einkaufsübersicht: Geld, Waffen, Schutz und Menschlichkeit
+
+Die angeheftete Leiste ist auf jedem Ausstattungsreiter identisch. Sie zeigt Restgeld, Fashion-Zuschuss, aktuelle/maximale Menschlichkeit und EMP sowie vorhandene reale Waffen einschließlich gültiger Cyberwaffen und getrennt gezählte Granaten. Kopf- und Körperpanzerung verwenden die tatsächlich angelegten bzw. implantierten effektiven SP. Gekaufte, nicht angelegte Rüstung und aufgebrauchte Schutzwerte werden korrekt unterschieden; vorhandene Rüstungsabzüge bleiben sichtbar. Kacheln öffnen Waffen- bzw. passende Kopf-/Körperverwaltung. Netrunner sehen zusätzlich den Kaufbestand an Cyberdeck und NET-Waffen.
+
+Kurze optionale Ausstattungshinweise führen zur passenden Kategorie; weitere Hinweise zur Überprüfung. Ein offener Cyberware-Plan wird separat vom tatsächlichen Stand angezeigt. Keine neuen Berechnungsregeln oder automatischen Änderungen an Charakterdaten.

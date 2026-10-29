@@ -1,5 +1,12 @@
 import { LIFEPATH_QUESTIONS, DAILY_LIFEPATH_QUESTIONS } from './lifepath-data.js';
 import { LEGACY_DAILY_QUESTIONS } from './lifepath-budget-legacy.js';
+
+// A choice can advance within Lore, but must never cross into the budget flow.
+export function lifepathChoiceNavigation(id,choice){
+ const question=LIFEPATH_QUESTIONS.find(q=>q.id===id);
+ if(!question)throw Error('Unbekannte Lebensweg-Frage.');
+ return {lifepathSection:question.group==='daily'?'daily':'flair',lifepathQuestion:question.group==='daily'||choice==='custom'?id:null};
+}
 export const MAX_LIFEPATH_TEXT = 600;
 export const LIFEPATH_CHOICES = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth'];
 const definition = id => LIFEPATH_QUESTIONS.find(question => question.id === id);

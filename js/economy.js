@@ -1,6 +1,6 @@
 import { validateCustomEquipment, customEquipmentCost, MAX_CUSTOM_ITEMS } from './custom-equipment.js';
-import { ATTACHMENTS,validateAttachments,weaponConfiguration,attachmentList } from './weapon-attachments.js?v=budget2';
-import {evaluateLoadout,isGrenade,LOADOUT_LIMITS} from './loadout-limits.js?v=budget2';
+import { ATTACHMENTS,validateAttachments,weaponConfiguration,attachmentList } from './weapon-attachments.js?v=shopping1';
+import {evaluateLoadout,isGrenade,LOADOUT_LIMITS} from './loadout-limits.js?v=shopping1';
 export const createEquipment = () => ({ items: [], custom: [], attachments: [], armor: { head: null, body: null } });
 export function validateEquipment(input, rules) {
   if (!input || !Array.isArray(input.items) || input.items.length > 100) throw new Error('Die Ausrüstung ist ungültig.');

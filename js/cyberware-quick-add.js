@@ -1,4 +1,4 @@
-import { addToCyberwareDraft, draftCharacter } from './cyberware-draft.js?v=budget2';
+import { addToCyberwareDraft, draftCharacter } from './cyberware-draft.js?v=shopping1';
 
 const BASES = {eye:'cybereye',audio:'cyberaudio-suite',neural:'neural-link',arm:'cyberarm',leg:'cyberleg'};
 export function cyberwareQuickOffer(character,rules,additions,id,preferred=null){

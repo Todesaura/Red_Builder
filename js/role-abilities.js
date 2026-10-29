@@ -1,5 +1,5 @@
-import {roleRank} from './campaign-state.js?v=budget2';
-import { evaluateRolePoints } from './role-points.js?v=budget2';
+import {roleRank} from './campaign-state.js?v=shopping1';
+import { evaluateRolePoints } from './role-points.js?v=shopping1';
 // Explanations use the same saved allocations and effects as the central rules engine.
 export const STARTING_ROLE_RANK = 4;
 const overviewSource = 'https://rtalsoriangames.com/2020/10/09/cyberpunk-red-alert/';

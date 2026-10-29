@@ -1,13 +1,21 @@
 import {livingCosts} from './lifepath.js';
-import {installedCyberWeapons} from './cyberware-weapons.js?v=budget2';
-import {weaponConfiguration,attachmentList,secondaryWeapons} from './weapon-attachments.js?v=budget2';
+import {installedCyberWeapons} from './cyberware-weapons.js?v=shopping1';
+import {weaponConfiguration,attachmentList,secondaryWeapons} from './weapon-attachments.js?v=shopping1';
 import { netrunnerStats } from './netrunner.js';
 import { netIntegrityWeapons } from './netrunner-german.js';
-import { ownedWeaponOptions } from './weapon-options.js?v=budget2';
-import { validateCharacter } from './model.js?v=budget2';
-import { evaluateCharacter } from './rules.js?v=budget2';
-import { ROLE_ABILITIES, roleAbilityExamples } from './role-abilities.js?v=budget2';
-import { ROLE_POOLS, PHARMACEUTICALS } from './role-points.js?v=budget2';
+import { ownedWeaponOptions } from './weapon-options.js?v=shopping1';
+import { validateCharacter } from './model.js?v=shopping1';
+import { evaluateCharacter } from './rules.js?v=shopping1';
+import { ROLE_ABILITIES, roleAbilityExamples } from './role-abilities.js?v=shopping1';
+import { ROLE_POOLS, PHARMACEUTICALS } from './role-points.js?v=shopping1';
+
+export function characterSheetDraftErrors(state={}){
+  const errors=[];
+  if (state.cyberDraft?.length) errors.push('Installiere oder leere zuerst die offene Cyberware-Auswahl.');
+  if (state.removingCyberware) errors.push('Schließe zuerst den offenen Cyberware-Ausbau ab oder brich ihn ab.');
+  if (state.customEquipmentDraft && (state.customEquipmentDraft.id || state.customEquipmentDraft.name?.trim() || state.customEquipmentDraft.notes?.trim() || state.customEquipmentDraft.cost?.trim() || state.customEquipmentDraft.quantity && state.customEquipmentDraft.quantity !== '1')) errors.push('Speichere oder verwerfe zuerst den eigenen Ausrüstungsentwurf.');
+  return errors;
+}
 
 export function characterSheetReadiness(character, rules, state = {}) {
   try {
@@ -16,9 +24,7 @@ export function characterSheetReadiness(character, rules, state = {}) {
     const errors = evaluated.errors.filter(error=>!safe.campaign.active||!evaluated.cyberware.warnings.includes(error));
     const missing = evaluated.lifepath.entries.filter(entry => !entry.answer);
     if (missing.length) errors.push(`Beantworte für das Charactersheet noch ${missing.length} Lebensweg-Frage${missing.length === 1 ? '' : 'n'}.`);
-    if (state.cyberDraft?.length) errors.push('Installiere oder leere zuerst die offene Cyberware-Auswahl.');
-    if (state.removingCyberware) errors.push('Schließe zuerst den offenen Cyberware-Ausbau ab oder brich ihn ab.');
-    if (state.customEquipmentDraft && (state.customEquipmentDraft.id || state.customEquipmentDraft.name?.trim() || state.customEquipmentDraft.notes?.trim() || state.customEquipmentDraft.cost?.trim() || state.customEquipmentDraft.quantity && state.customEquipmentDraft.quantity !== '1')) errors.push('Speichere oder verwerfe zuerst den eigenen Ausrüstungsentwurf.');
+    errors.push(...characterSheetDraftErrors(state));
     return { ready: errors.length === 0, errors: [...new Set(errors)], character: safe, evaluated };
   } catch (error) { return { ready: false, errors: [error.message] }; }
 }
