@@ -1512,7 +1512,6 @@ input::placeholder {
 .attribute-risk{padding:12px;margin:14px 0;border-left:3px solid #e4b65f;border-radius:4px;background:#332b1e;color:#f1d9a8}.attribute-risk strong{font-size:12px;line-height:1.5;display:block}.attribute-risk p{font-size:12px;line-height:1.65;margin:7px 0 0}.shopping-installed{display:block;width:100%;min-height:44px;margin-top:9px;padding:8px 12px;border:1px solid #537264;border-radius:5px;color:#d8f0df;background:#1d3628;text-align:left;font-size:12px}.shopping-installed:focus-visible{outline:2px solid var(--mint);outline-offset:2px}.installed-instructions{max-width:720px;font-size:13px!important}.installed-main{min-width:0}.installed-main>strong{font-size:15px;line-height:1.5;overflow-wrap:anywhere}.installed-entry .installed-location{font-size:12px;line-height:1.6;color:#c9d8d0}.installed-info{margin-top:9px;font-size:12px;line-height:1.6}.installed-info summary{cursor:pointer;color:var(--mint);padding:5px 0}.installed-entry .installed-info small{font-size:12px;line-height:1.7;overflow-wrap:anywhere}.installed-remove{min-height:44px!important;font-size:12px!important;white-space:normal;line-height:1.5}.installed-cyberware{scroll-margin-top:260px}.removal-panel{overflow-wrap:anywhere}.removal-panel form button{min-height:44px}
 @media(max-width:700px){.installed-heading{display:block}.installed-heading h2{font-size:19px;line-height:1.5}.installed-heading>small{display:block;font-size:12px;line-height:1.6}.installed-entry{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;border:1px solid #3b4c45;border-radius:8px;margin:12px 0;padding:14px;background:#151d19;min-width:0;max-width:100%}.installed-entry>div{min-width:0;max-width:100%}.installed-entry>ul{min-width:0;max-width:100%;padding-left:10px}.installed-entry>button{width:100%;text-align:center}.installed-child{background:#1b2520;padding:11px}.installed-main>strong{font-size:16px}.shopping-hints{display:none}.shopping-installed{font-size:12px}.removal-panel form{display:grid;grid-template-columns:minmax(0,1fr)}.removal-panel input{width:100%;max-width:none}.removal-panel form button{width:100%}.installed-info summary{min-height:36px;display:flex;align-items:center}}
 @media(max-width:650px){.attribute-card.attribute-low{grid-column:1/-1}.attribute-risk p{font-size:13px;line-height:1.65}.installed-info summary{display:list-item;min-height:44px;padding-top:10px}}
-/* Mobile follows the document order: installed implants, shop, then body view. */
 .cyber-shop { display:grid; grid-template-columns:minmax(0,1fr); gap:24px; align-items:start; margin:24px 0; }
 .cyber-shop > :is(.installed-cyberware,.shop-body) { min-width:0; margin:0; padding:16px; border:1px solid var(--border); background:#11151b; }
 .cyber-shop > :is(.installed-cyberware,.shop-body) h3 { margin-top:0; }
@@ -1527,11 +1526,9 @@ input::placeholder {
 .character-file-actions { display:flex; flex-wrap:wrap; gap:12px; margin:14px 0; }
 .character-file-actions button { min-height:44px; }
 .character-files p:empty { display:none; }
+.cyber-shop > .shop-body { max-width:600px; }
 .shop-body .body-editor { position:static; width:100%; max-width:none; max-height:none; border:0; padding:0; margin:0; }
 @media(min-width:801px) {
- .cyber-shop { grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); }
- .cyber-shop > .shop-body { grid-area:1 / 2; }
- .cyber-shop > .shop-catalog { grid-column:1/-1; }
  .cyber-shop > :is(.installed-cyberware,.shop-body) { padding:22px; }
 }
 .play-heading { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
