@@ -1,9 +1,15 @@
 import { escapeHtml as e } from './html.js';
-import { weaponOptionLabels,weaponOptions,ownedWeaponOptions,WEAPON_OPTIONS_SOURCE } from './weapon-options.js?v=shopping1';
-export function renderWeaponOptionCard(item,evaluated) {
-  const labels=weaponOptionLabels(item);
-  if(!labels.length)return '';
-  return `<div class="weapon-option-tags">${labels.map(label=>`<span>${e(label)}</span>`).join('')}</div><details class="weapon-option-help"><summary>Angriffsoptionen erklären</summary>${renderOptions(weaponOptions(item,evaluated))}</details>`;
+import { weaponOptions,ownedWeaponOptions,WEAPON_OPTIONS_SOURCE } from './weapon-options.js?v=shopping1';
+export function renderWeaponOptionCard(item,evaluated,secondary=[],quantity=null,openSections=[]) {
+  const options=weaponOptions(item,evaluated).filter(option=>!option.id.startsWith('attachment-'));
+  const skill=evaluated.skills.find(entry=>entry.id===item.skill);
+  const base=(skill?.base??0)+(evaluated.roleAbilities?.bonuses.attack??0)+(item.combatBonus??item.smartBonus??0)+(item.qualityBonus??0);
+  const normal=skill&&!options.some(option=>option.id==='explosive')?`<p><strong>Normaler Angriff:</strong> ${base} + 1W10 (${e(skill.name)}).</p>`:'';
+  const id=`${quantity===null?'shop':'stock'}-weapon-${e(item.id)}`;
+  const open=openSections.includes(id);
+  return `<header class="shop-weapon-heading"><h3>${quantity===null?'':`${quantity} × `}${e(item.name)}</h3>
+    <button type="button" class="secondary" data-weapon-explanation="${id}" aria-controls="${id}" aria-expanded="${open}" aria-label="Erklärungen zu ${e(item.name)}">Erklärungen</button></header>
+    <div class="weapon-option-help shop-weapon-details" id="${id}" ${open?'':'hidden'}>${normal}${renderOptions(options)}${secondary.map(({item:child})=>`<h4>${e(child.shortName)}</h4>${renderOptions(weaponOptions(child,evaluated))}`).join('')}<small>${e(item.reference??'')}${item.houseRule?' · Handführung/Preis: Hausregel':''}</small></div>`;
 }
 function renderOptions(options) {
   return `<dl>${options.map(option=>`<div><dt>${e(option.name)}</dt><dd>${e(option.description)}</dd></div>`).join('')}</dl>`;

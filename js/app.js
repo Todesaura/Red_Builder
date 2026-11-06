@@ -2,15 +2,15 @@ import {bindGroupSync} from './group-client.js?v=group1';
 import {applyPlayAction} from './play-tracking.js?v=freedlc1';
 import {canOpenPlay} from './ui-play.js?v=sessionend1';
 import {characterJson, characterJsonFilename, readCharacterFile} from './character-files.js?v=group1';
-import {acknowledgeRecommendations,resetDraftRecommendationHints} from './recommendation-hints.js?v=hints1';
+import {acknowledgeRecommendations,resetDraftRecommendationHints} from './recommendation-hints.js?v=shoplabels1';
 import {needsCyberwareSide} from './cyberware-placement.js?v=shopping1';
-import {bindSessionEvents} from './session-events.js?v=sessionend1';
+import {bindSessionEvents} from './session-events.js?v=shopcompact1';
 import { quickAddCyberware } from './cyberware-quick-add.js?v=shopping1';
 import { emptyCustomEquipmentDraft } from './ui-custom-equipment.js';
 import { characterSheetReadiness } from './pdf-character-data.js?v=group1';
 import { archivedCharacters, readArchivedCharacter, switchCharacter, resetCharacterUi, deleteArchivedCharacter } from './character-library.js?v=group1';
 import { removeCustomEquipment } from './custom-equipment.js';
-import { lifepathChoiceNavigation, chooseLifepath, editLifepath, editLifepathCost, evaluateLifepath } from './lifepath.js?v=lifesplit1';
+import { lifepathChoiceNavigation, chooseLifepath, editLifepath, evaluateLifepath } from './lifepath.js?v=finance1';
 import { assignRolePoint, choosePharmaceutical } from './role-points.js?v=shopping1';
 import { equipArmor } from './armor.js?v=magazines1';
 import { createCharacter } from './model.js?v=group1';
@@ -19,9 +19,9 @@ import { removeCyberware, canUndoCyberwarePurchase, cyberwareRemovalItems } from
 import { addToCyberwareDraft, removeFromCyberwareDraft, commitCyberwareDraft } from './cyberware-draft.js?v=shopping1';
 import { baseStats, bindBodyDrag } from './ui-body.js?v=shopping1';
 import { initialInstallationLocation } from './cyberware-ui-model.js?v=shopping1';
-import { buyEquipment, removeEquipment, useStreetDrug, buyWeaponWithAmmo, saveCustomEquipment, addWeaponAttachment, removeWeaponAttachment } from './economy.js?v=shopping1';
+import { buyEquipment, removeEquipment, useStreetDrug, buyWeaponWithAmmo, saveCustomEquipment, addWeaponAttachment, removeWeaponAttachment } from './economy.js?v=shopcompact1';
 import { loadCharacter, saveCharacter, STORAGE_KEY } from './storage.js?v=group1';
-import { render } from './ui.js?v=sessionend1';
+import { render } from './ui.js?v=shoplabels1';
 import { readPortrait, readGalleryPortrait } from './portraits.js?v=shopping1';
 import { assignSkill, addSpecialty, skillPointsRemaining, markSkillsEdited, resetSkillPoints, restoreRequiredSkills } from './skills.js?v=shopping1';
 import { applySkillRecommendation, automaticallyRecommendSkills, isInitialSkillAllocation } from './skill-recommendations.js?v=shopping1';
@@ -66,9 +66,14 @@ async function start() {
       ? 'Rollenspezifische Empfehlung ausgewählt. 62 Punkte verteilt.'
       : `${pointsRemaining(state.character, rules)} Punkte übrig.`);
   }
+  function setWeaponSection(key,expanded){
+    const open=new Set(state.weaponSections??[]);
+    if(expanded)open.add(key);else open.delete(key);
+    state.weaponSections=[...open];
+  }
   root.addEventListener('toggle',event=>{
-    const key=event.target.dataset?.weaponSection;if(!key)return;
-    const open=new Set(state.weaponSections??[]);if(event.target.open)open.add(key);else open.delete(key);state.weaponSections=[...open];
+    const key=event.target.dataset?.weaponSection;
+    if(key)setWeaponSection(key,event.target.open);
   },true);
   function persist() {
     state.pdfExportMessage = '';
@@ -170,7 +175,6 @@ async function start() {
     if(event.target.id==='player-name'){state.character.playerName=event.target.value.slice(0,60);persist();refresh();return;}
     if (event.target.id === 'removal-fee') { state.removalFee = event.target.value; return; }
     if (event.target.dataset.customField && ['name','cost','quantity','notes'].includes(event.target.dataset.customField)) { state.customEquipmentDraft[event.target.dataset.customField] = event.target.value; return; }
-    if(event.target.dataset.lifepathCost){if(event.target.validity.badInput)return;const result=editLifepathCost(state.character,event.target.dataset.lifepathCost,event.target.value===''?undefined:Number(event.target.value));state.error=result.ok?'':result.error;if(result.ok)persist();refresh();return;}
     if (event.target.dataset.lifepathText) {
       const result = editLifepath(state.character, event.target.dataset.lifepathText, event.target.value);
       state.error = result.ok ? '' : result.error; persist(); refresh(); return;
@@ -238,10 +242,6 @@ async function start() {
       const result = choosePharmaceutical(state.character, event.target.dataset.pharmaceutical, event.target.checked);
       state.error = result.ok ? '' : result.error; persist(); refresh(); announceBudget(); return;
     }
-    if (event.target.dataset.armorSlot) {
-      const result = equipArmor(state.character, rules, event.target.dataset.armorSlot, event.target.value || null);
-      state.error = result.ok ? '' : result.error; persist(); refresh(); return;
-    }
     if (event.target.id === 'cyber-sort') { state.cyberSort=event.target.value; refresh(); return; }
     if (event.target.id === 'cyber-installable') { state.onlyInstallable=event.target.checked; refresh(); return; }
     if (event.target.id === 'installation-location') { state.pendingLocation=event.target.value||null; refresh(); return; }
@@ -273,6 +273,16 @@ async function start() {
   root.addEventListener('click', async event => {
     const button = event.target.closest('button');
     if (!button) return;
+    if(button.dataset.weaponExplanation){
+      const key=button.dataset.weaponExplanation,panel=document.getElementById(key);
+      if(panel){
+        const expanded=panel.hidden;
+        panel.hidden=!expanded;
+        button.setAttribute('aria-expanded',String(expanded));
+        setWeaponSection(key,expanded);
+      }
+      return;
+    }
     if(button.dataset.action==='end-session'){
       if(state.view!=='play'||!canOpenPlay(state.character,rules,state)||state.storageBlocked)return;
       if(!state.character.campaign.sessionUnlocked){
@@ -478,6 +488,10 @@ async function start() {
       const result = buyEquipment(state.character,rules,button.dataset.buyEquipment);
       if (!result.ok) state.error = result.error;
       else if (button.dataset.wearArmor) equipArmor(state.character, rules, button.dataset.wearArmor, button.dataset.buyEquipment);
+    }
+    else if (button.dataset.equipArmor) {
+      const result = equipArmor(state.character, rules, button.dataset.wearArmor, button.dataset.equipArmor);
+      if (!result.ok) state.error = result.error;
     }
     else if (button.dataset.removeEquipment) removeEquipment(state.character,button.dataset.removeEquipment);
     else if (button.dataset.removeCyberware) {

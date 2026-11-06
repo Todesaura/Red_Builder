@@ -1,4 +1,4 @@
-import { LIFEPATH_QUESTIONS, DAILY_LIFEPATH_QUESTIONS } from './lifepath-data.js';
+import { LIFEPATH_QUESTIONS, DAILY_LIFEPATH_QUESTIONS } from './lifepath-data.js?v=finance1';
 import { LEGACY_DAILY_QUESTIONS } from './lifepath-budget-legacy.js';
 
 // A choice can advance within Lore, but must never cross into the budget flow.
@@ -8,7 +8,7 @@ export function lifepathChoiceNavigation(id,choice){
  return {lifepathSection:question.group==='daily'?'daily':'flair',lifepathQuestion:question.group==='daily'||choice==='custom'?id:null};
 }
 export const MAX_LIFEPATH_TEXT = 600;
-export const LIFEPATH_CHOICES = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth'];
+export const LIFEPATH_CHOICES = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh'];
 const definition = id => LIFEPATH_QUESTIONS.find(question => question.id === id);
 const validChoice=(question,choice)=>choice===null||choice==='custom'||LIFEPATH_CHOICES.slice(0,question.options.length).includes(choice);
 export function createLifepath() {
@@ -35,10 +35,11 @@ export function validateLifepath(input) {
   }));
 }
 export function chooseLifepath(character, id, choice) {
-  if (!definition(id) || !validChoice(definition(id),choice)) return { ok: false, error: 'Unbekannte Lebensweg-Auswahl.' };
+  const question=definition(id);
+  if (!question || !validChoice(question,choice) || question.group==='daily'&&choice==='custom') return { ok: false, error: 'Unbekannte Lebensweg-Auswahl.' };
   character.lifepath[id]??={choice:null,custom:''};
   character.lifepath[id].choice = choice;
-  if(definition(id).group==='daily')character.lifepath[id].revision=2;
+  if(question.group==='daily')character.lifepath[id].revision=2;
   return { ok: true };
 }
 export function editLifepath(character, id, text) {
@@ -56,16 +57,10 @@ export function evaluateLifepath(character) {
   const entries = LIFEPATH_QUESTIONS.map(question => ({ ...question, answer: [lifepathAnswer(question, character.lifepath?.[question.id]),...(character.campaign?.[additions[question.id]]??[])].filter(Boolean).join('\n') }));
   for(const entry of entries)entry.complete=Boolean(entry.answer)&&(!entry.monthlyCosts||character.lifepath?.[entry.id]?.choice!=='custom'||character.lifepath[entry.id].monthlyCost!==undefined);
   const errors = entries.filter(entry => character.lifepath?.[entry.id]?.choice === 'custom' && !entry.answer).map(entry => `Lebensweg „${entry.title}“: Ergänze deine eigene Idee oder nimm die Auswahl zurück.`);
-  for(const q of DAILY_LIFEPATH_QUESTIONS)if(q.monthlyCosts&&character.lifepath?.[q.id]?.choice==='custom'&&character.lifepath[q.id].monthlyCost===undefined)errors.push('Trage den monatlichen Betrag für „'+q.budgetLabel+'“ ein.');
+  for(const q of DAILY_LIFEPATH_QUESTIONS)if(q.monthlyCosts&&character.lifepath?.[q.id]?.choice==='custom'&&character.lifepath[q.id].monthlyCost===undefined)errors.push('Für „'+q.budgetLabel+'“ fehlt ein monatlicher Betrag. Wähle eine Finanzantwort aus der Liste.');
   return { entries, answered: entries.filter(entry => entry.complete).length, total: entries.length, errors };
 }
 
-export function editLifepathCost(character,id,value){
- const q=definition(id),minimum=q?.allowIncome?-1000000:0;
- if(!q?.monthlyCosts||!character.lifepath?.[id]||value!==undefined&&(!Number.isSafeInteger(value)||value<minimum||value>1000000))return {ok:false,error:'Trage einen gültigen ganzen monatlichen Betrag ein.'};
- if(value===undefined)delete character.lifepath[id].monthlyCost;else character.lifepath[id].monthlyCost=value;
- return {ok:true};
-}
 export function livingCosts(character) {
  const items=DAILY_LIFEPATH_QUESTIONS.filter(q=>q.monthlyCosts).map(q=>{
   const entry=character.lifepath?.[q.id];

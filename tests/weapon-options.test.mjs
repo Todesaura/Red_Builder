@@ -55,7 +55,10 @@ test('Übersicht und PDF-Daten enthalten nur tatsächlich gekaufte Waffen und ve
 });
 test('Kaufkarten bleiben kompakt; Erklärungen stehen in einer aufklappbaren Ansicht',()=>{
   const v=evaluateCharacter(completeCharacter(),rules),html=renderWeaponOptionCard(item('smg'),v);
-  assert.match(html,/Autofeuer \(3\)/);assert.match(html,/Unterdrückungsfeuer/);assert.match(html,/<details class="weapon-option-help">/);assert.doesNotMatch(html,/undefined|NaN/);
+  assert.match(html,/Autofeuer \(3\)/);assert.match(html,/Unterdrückungsfeuer/);
+  assert.match(html,/<h3>Maschinenpistole[^<]*<\/h3>\s*<button[^>]*aria-controls="shop-weapon-smg" aria-expanded="false"[^>]*>Erklärungen<\/button>/);
+  assert.match(html,/id="shop-weapon-smg" hidden/);
+  assert.doesNotMatch(html,/undefined|NaN|weapon-option-tags/);
 });
 test('Erzeugtes PDF enthält genau ein Cheatsheet statt wiederholter Anhänge',async()=>{
   const c=completeCharacter();buyEquipment(c,rules,'smg');buyEquipment(c,rules,'shotgun');

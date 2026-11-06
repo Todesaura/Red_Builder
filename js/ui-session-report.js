@@ -1,7 +1,7 @@
 import {renderSessionWelcome,renderSessionGuide} from './session-guide.js?v=sessionend1';
 import {ATTACHMENTS} from './weapon-attachments.js?v=shopping1';
 import {escapeHtml as e} from './html.js';
-import {previewSession,sessionSnapshot,sessionEndStatus} from './session-report.js?v=sessionend1';
+import {previewSession,sessionSnapshot,sessionEndStatus} from './session-report.js?v=shopcompact1';
 import {THERAPIES,TRANSACTION_TYPES,SESSION_SOURCES,INJURY_STATUS} from './campaign-rules.js?v=shopping1';
 import {evaluateCharacter} from './rules.js?v=group1';
 import {ROLE_POOLS,PHARMACEUTICALS} from './role-points.js?v=shopping1';

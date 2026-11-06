@@ -1,6 +1,7 @@
 import { validateCustomEquipment, customEquipmentCost, MAX_CUSTOM_ITEMS } from './custom-equipment.js';
 import { ATTACHMENTS,validateAttachments,weaponConfiguration,attachmentList } from './weapon-attachments.js?v=shopping1';
 import {evaluateLoadout,isGrenade,LOADOUT_LIMITS} from './loadout-limits.js?v=shopping1';
+import {armorPurchaseError} from './armor.js?v=shopcompact1';
 export const createEquipment = () => ({ items: [], custom: [], attachments: [], armor: { head: null, body: null } });
 export function validateEquipment(input, rules) {
   if (!input || !Array.isArray(input.items) || input.items.length > 100) throw new Error('Die Ausrüstung ist ungültig.');
@@ -39,10 +40,13 @@ export function evaluateFunds(character, rules) {
 }
 
 export function buyEquipment(character, rules, catalogId) {
-  if (!rules.equipmentRules?.items.some(item => item.id === catalogId)) return { ok: false, error: 'Unbekannte Ausrüstung.' };
+  const definition = rules.equipmentRules?.items.find(item => item.id === catalogId);
+  if (!definition) return { ok: false, error: 'Unbekannte Ausrüstung.' };
+  const armorError = armorPurchaseError(character, rules, definition);
+  if (armorError) return { ok: false, error: armorError };
   const items = character.equipment.items.map(item => ({ ...item }));
   const existing = items.find(item => item.catalogId === catalogId);
-  if(existing&&rules.equipmentRules.items.find(item=>item.id===catalogId)?.category==='clothing')return {ok:false,error:'Dieses Kleidungsstück ist bereits in deinem Kleiderschrank. Jedes Teil kann nur einmal gekauft werden.'};
+  if(existing&&definition.category==='clothing')return {ok:false,error:'Dieses Kleidungsstück ist bereits in deinem Kleiderschrank. Jedes Teil kann nur einmal gekauft werden.'};
   if (existing?.quantity >= 99) return { ok: false, error: 'Du kannst höchstens 99 Stück mitnehmen.' };
   if (existing) existing.quantity++; else items.push({ catalogId, quantity: 1 });
   const candidate={ ...character, equipment: { ...character.equipment, items } };

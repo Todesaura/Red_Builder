@@ -38,6 +38,9 @@ test('Eigenes Kaufmenü: alphabetisch, aufklappbare Regeln und alle Drogen ohne 
  assert.equal(rules.equipmentRules.items.find(i=>i.id==='airhypo').cost,50);assert.ok(html.includes('data-buy-equipment="airhypo"'));
  assert.ok(html.indexOf('data-drug-card="drug-berserker"')<html.indexOf('data-drug-card="drug-black-lace"'));
  assert.doesNotMatch(html,/data-drug-filter|drug-filters|type="search"/);
- assert.equal((renderStreetDrugs(c,rules,v,{drugFilters:{price:'10'}}).match(/data-drug-card=/g)??[]).length,18);
- assert.ok(html.includes('Gegnern verabreichen'));assert.ok(html.includes('Airhypo'));assert.ok(!html.includes('Spielzeit vorspulen'));
+ assert.match(html,/<details[^>]*id="drug-group-consumption"><summary>Konsum- und Leistungsdrogen/);
+ assert.match(html,/<details[^>]*id="drug-group-chemicals"><summary>Kampfchemikalien und Neurotoxine/);
+ assert.match(html,/id="drug-details-drug-black-lace"><summary><h3>Black Lace/);
+ assert.match(html,/Airhypo · Druckinjektor/);assert.match(html,/unwilliges Ziel.*Nahkampfangriff/);
+ assert.doesNotMatch(html,/Dein Vorrat|Spielzeit vorspulen/);
 });

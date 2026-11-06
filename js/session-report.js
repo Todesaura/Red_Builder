@@ -4,13 +4,13 @@ import {ATTACHMENTS,attachmentList} from './weapon-attachments.js?v=shopping1';
 import {createCampaign,roleRank} from './campaign-state.js?v=magazines1';
 import {validateCharacter} from './model.js?v=group1';
 import {evaluateCharacter} from './rules.js?v=group1';
-import {evaluateFunds,buyEquipment,removeEquipment,saveCustomEquipment,addWeaponAttachment,removeWeaponAttachment} from './economy.js?v=shopping1';
+import {evaluateFunds,buyEquipment,removeEquipment,saveCustomEquipment,addWeaponAttachment,removeWeaponAttachment} from './economy.js?v=shopcompact1';
 import {commitCyberwareDraft} from './cyberware-draft.js?v=shopping1';
 import {removeCyberware} from './cyberware.js?v=shopping1';
 import {equipArmor} from './armor.js?v=magazines1';
 import {rolePool,validateRolePoints,PHARMACEUTICALS} from './role-points.js?v=shopping1';
 import {improvementCost,THERAPIES,TRANSACTION_TYPES,humanityRollBounds} from './campaign-rules.js?v=shopping1';
-import {evaluateLifepath} from './lifepath.js?v=shopping1';
+import {evaluateLifepath} from './lifepath.js?v=finance1';
 import {recoveryPlan} from './recovery-plan.js?v=recovery1';
 
 const number=(n,min=0,max=1000000)=>{if(!Number.isSafeInteger(n)||n<min||n>max)throw Error(`Gib eine ganze Zahl von ${min} bis ${max} ein.`);return n;};

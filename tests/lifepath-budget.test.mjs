@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {completeCharacter,rules} from './helpers/pdf-fixture.mjs';
-import {createLifepath,chooseLifepath,editLifepath,editLifepathCost,livingCosts,evaluateLifepath,validateLifepath} from '../js/lifepath.js';
+import {createLifepath,chooseLifepath,livingCosts,evaluateLifepath,validateLifepath} from '../js/lifepath.js';
 import {DAILY_LIFEPATH_QUESTIONS,LIFEPATH_QUESTIONS} from '../js/lifepath-data.js';
 import {renderLifepath,renderLifepathSummary,activeLifepathQuestion} from '../js/ui-lifepath.js';
 import {characterSheetData} from '../js/pdf-character-data.js';
@@ -16,7 +16,7 @@ test('Hintergrund bleibt kostenfreier Flair, aktuelles Leben hat sieben getrennt
  assert.ok(DAILY_LIFEPATH_QUESTIONS.every(q=>q.monthlyCosts.length===q.options.length&&q.monthlyCosts.every(Number.isSafeInteger)));
  assert.equal(evaluateLifepath(c).answered,14);
  const html=renderLifepath(c,{lifepathSection:'flair'});
- assert.match(html,/Hintergrund &amp; Persönlichkeit/);assert.match(html,/nur Flair/);assert.match(html,/Monatsbudget bewusst öffnen/);
+ assert.match(html,/Hintergrund &amp; Persönlichkeit/);assert.match(html,/nur Flair/);assert.match(html,/>Finanzen →<\/button>/);
  assert.equal(activeLifepathQuestion(c,{lifepathSection:'daily'}).id,'security');
 });
 
@@ -35,23 +35,29 @@ test('Aufwendiger Lebensstil ergibt 5250 eb und fehlende Antworten bleiben offen
  chooseLifepath(c,'pastime',null);assert.equal(livingCosts(c).total,null);assert.equal(livingCosts(c).complete,false);
 });
 
-test('Eigene Einnahmen werden validiert und eine Antwort ohne Monatsbetrag bleibt bearbeitbar',()=>{
- const c=completeCharacter();chooseLifepath(c,'dependents','custom');editLifepath(c,'dependents','Ich erhalte eine vereinbarte Unterstützung.');
+test('Frühere freie Finanzantworten bleiben erhalten; neue Antworten haben feste Monatsbeträge',()=>{
+ const c=completeCharacter();
+ assert.equal(chooseLifepath(c,'dependents','custom').ok,false);
+ c.lifepath.dependents={choice:'custom',custom:'Ich erhalte eine vereinbarte Unterstützung.',revision:2};
  assert.equal(evaluateLifepath(c).answered,20);assert.equal(activeLifepathQuestion(c,{lifepathSection:'daily'}).id,'dependents');
- assert.match(evaluateLifepath(c).errors.join(' '),/monatlichen Betrag/);
- assert.ok(editLifepathCost(c,'dependents',-300).ok);assert.equal(livingCosts(c).income,300);
+ assert.match(evaluateLifepath(c).errors.join(' '),/monatlicher Betrag/);
+ let html=renderLifepath(c,{lifepathSection:'daily'});
+ assert.match(html,/Betrag offen/);assert.doesNotMatch(html,/Eigene Idee|data-lifepath-cost/);
+ c.lifepath.dependents.monthlyCost=-300;
+ assert.equal(livingCosts(c).income,300);
  assert.equal(evaluateLifepath(c).answered,21);assert.deepEqual(validateCharacter(c,rules),c);
- const before=structuredClone(c);
- for(const value of [0.5,NaN,Infinity,-1000001,1000001])assert.equal(editLifepathCost(c,'dependents',value).ok,false);
- assert.equal(editLifepathCost(c,'housing',-1).ok,false);assert.equal(editLifepathCost(c,'personality',1).ok,false);assert.deepEqual(c,before);
+ html=renderLifepath(c,{lifepathSection:'daily',lifepathQuestion:'dependents'});
+ assert.match(html,/\+300 eb Einnahme/);
  assert.throws(()=>validateLifepath({...c.lifepath,dependents:{...c.lifepath.dependents,monthlyCost:-1000001}}));
+ assert.ok(chooseLifepath(c,'housing','eleventh').ok);
+ assert.equal(livingCosts(validateCharacter(c,rules)).housing,3000);
 });
 
 test('Alte Speicherstände behalten Antworten und erhalten offene Zusatzfragen',()=>{
  const c=completeCharacter(),old=structuredClone(c.lifepath);for(const id of ['dependents','commitments','pastime'])delete old[id];
  const safe=validateLifepath(old);assert.deepEqual(safe.personality,c.lifepath.personality);assert.equal(safe.dependents.choice,null);
  assert.equal(livingCosts({...c,lifepath:safe}).total,null);
- const html=renderLifepathSummary({...c,lifepath:safe});assert.match(html,/Hintergrund &amp; Persönlichkeit/);assert.match(html,/Aktuelles Leben &amp; Monatsbudget/);
+ const html=renderLifepathSummary({...c,lifepath:safe});assert.match(html,/Hintergrund &amp; Persönlichkeit/);assert.match(html,/<h4>Finanzen<\/h4>/);
 });
 
 test('PDF übernimmt Verpflichtungen und Netto-Monatsbudget, ohne vorhandene Gegenstände zu ersetzen',()=>{

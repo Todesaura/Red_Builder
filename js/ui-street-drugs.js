@@ -1,22 +1,40 @@
-import {armorSelection} from './ui-armor-loadout.js';
 import {escapeHtml as e} from './html.js';
 
 const duration=seconds=>seconds%3600===0?`${seconds/3600} ${seconds===3600?'Stunde':'Stunden'}`:seconds%60===0?`${seconds/60} ${seconds===60?'Minute':'Minuten'}`:`${seconds} Sekunden (${seconds/3} Runden)`;
 const combatChemicals=new Set(['drug-rime','drug-terrifier','drug-mortalis','drug-mindfire','drug-deliriant']);
-const groupOf=drug=>combatChemicals.has(drug.id)?1:0;
-const groupNames=['Konsum- und Leistungsdrogen','Kampfchemikalien und Neurotoxine'];
 
-export function renderStreetDrugs(character,rules,evaluated,state={}){
- const catalog=rules.equipmentRules.items.filter(d=>d.kind==='drug').sort((a,b)=>a.name.localeCompare(b.name,'de'));
- const campaign=character.campaign?.active;
- const items=catalog.sort((a,b)=>groupOf(a)-groupOf(b)||a.name.localeCompare(b.name,'de'));
- const groupHeading=(drug,index)=>index===0||groupOf(items[index-1])!==groupOf(drug)?`<h3 class="drug-group-heading">${groupNames[groupOf(drug)]} <small>(${items.filter(d=>groupOf(d)===groupOf(drug)).length}${items.length!==catalog.length?' von '+catalog.filter(d=>groupOf(d)===groupOf(drug)).length:''})</small></h3>`:'';
- const inventory=character.equipment.items.filter(i=>catalog.some(d=>d.id===i.catalogId));
- const injector=rules.equipmentRules.items.find(i=>i.id==='airhypo'),injectors=character.equipment.items.find(i=>i.catalogId==='airhypo')?.quantity??0;
- const injectorPurchase=injector?`<p>Airhypo: <strong>${injector.cost} eb</strong> · ${injectors} im Inventar.${!campaign?` <button class="secondary" data-buy-equipment="airhypo" ${evaluated.funds.remaining<injector.cost||injectors>=99?'disabled':''}>Airhypo kaufen + · ${injector.cost} eb</button>`:''}</p>`:'';
- return `<section class="equipment-section street-drugs"><div class="section-heading"><div><h2>Straßendrogen</h2><p>${catalog.length} Drogen · Preis je Dosis. Kaufen, mitnehmen und am Spieltisch einsetzen. Wirkungen, Widerstandsproben und Abhängigkeit übernimmt die Spielleitung.</p></div></div>
- <details class="drug-application" id="drug-application"><summary>Bei dir selbst oder gegen Gegner einsetzen</summary><p><strong>Selbst verwenden:</strong> Eine Dosis aus dem Vorrat streichen. Primärwirkung, Wirkungsdauer und spätere Widerstandsprobe stehen auf der jeweiligen Karte.</p><p><strong>Gegnern verabreichen:</strong> Mit einem Airhypo gegen ein unwilliges Ziel: Nahkampfangriff als Aktion. Bei einem Treffer wird eine Dosis verabreicht, statt Waffenschaden zu verursachen. Ein Airhypo muss separat vorhanden sein. Weitere Verabreichungswege richten sich nach der jeweiligen Ausrüstung und der Spielleitung.</p><p><strong>„1 Dosis verwendet“</strong> zieht nur eine Einheit aus deinem Inventar ab – unabhängig davon, wer sie erhält. Dein Geld und deine Charakterwerte ändern sich dabei nicht. Quelle: Cyberpunk RED Grundregelwerk, S. 227 (engl.).</p></details>
- ${injectorPurchase}<div class="shop-owned-layout"><section class="shop-inventory" aria-label="Dein Drogenvorrat"><h3>Dein Vorrat</h3><div class="inventory">${inventory.map(i=>{const d=catalog.find(d=>d.id===i.catalogId);return `<article><div><strong>${i.quantity} × ${e(d.name)}</strong><small>${d.cost} eb je Dosis</small></div><button class="secondary" data-use-drug="${d.id}">1 Dosis verwendet</button>${!campaign?`<button class="text-button" data-remove-equipment="${d.id}">Kauf rückgängig −</button>`:''}</article>`;}).join('')||'<p class="empty-results">Noch keine Straßendrogen im Inventar.</p>'}</div>
- </section>${armorSelection(character,rules,evaluated)}</div><div class="shop-catalog"><h3>Zum Kaufen</h3><p role="status">${items.length} von ${catalog.length} · innerhalb der Gruppen alphabetisch sortiert</p>
- <div class="equipment-grid">${items.map((d,index)=>`${groupHeading(d,index)}<article class="equipment-card drug-card" data-drug-card="${d.id}"><span class="eyebrow">Straßendrogen · ${e(d.drug.effectType)}</span><h3>${e(d.name)}</h3><p>${e(d.description)}</p><p><strong>${d.cost} eb</strong> · ${duration(d.drug.duration)} · Widerstands-SG ${d.drug.dv}</p><details id="drug-details-${d.id}"><summary>Wirkungen & Regeln</summary><dl><dt>Primärwirkung</dt><dd>${e(d.drug.primary)}</dd><dt>Sekundärwirkung bei misslungener Probe</dt><dd>${e(d.drug.secondary)}</dd><dt>Bestehende Abhängigkeit</dt><dd>${e(d.drug.addiction)}</dd><dt>Dauer / Widerstand</dt><dd>${duration(d.drug.duration)} · WIL + Folter/Drogen widerstehen + 1W10 gegen SG ${d.drug.dv}; das Ergebnis muss höher sein.</dd><dt>Preis / Gewicht</dt><dd>${d.cost} eb je Dosis · Gewicht nicht festgelegt</dd><dt>Quelle</dt><dd><a href="${e(d.drug.url)}" target="_blank" rel="noopener noreferrer">${e(d.drug.source)} ↗</a></dd></dl></details>${!campaign?`<button class="secondary" data-buy-equipment="${d.id}" ${evaluated.funds.remaining<d.cost||inventory.find(i=>i.catalogId===d.id)?.quantity>=99?'disabled':''}>Kaufen + · ${d.cost} eb</button>`:'<p class="inline-note">Nachkäufe im After Session Report unter Ausrüstung erfassen.</p>'}</article>`).join('')}</div><p class="inline-note">Weitere Dosen derselben Droge verlängern laut Grundregelwerk die Primärwirkung um die volle Dauer. Die Spielleitung verwaltet die Effekte.</p></div></section>`;
+export function renderStreetDrugs(character,rules,evaluated){
+  const {items}=rules.equipmentRules;
+  const owned=new Map(character.equipment.items.map(entry=>[entry.catalogId,entry.quantity]));
+  const campaign=character.campaign?.active;
+  const catalog=items.filter(item=>item.kind==='drug').sort((a,b)=>a.name.localeCompare(b.name,'de'));
+  const injector=items.find(item=>item.id==='airhypo');
+  const injectorQuantity=owned.get('airhypo')??0;
+  const buy=(item,quantity)=>`<button type="button" class="secondary" id="buy-equipment-${item.id}" data-buy-equipment="${item.id}" ${evaluated.funds.remaining<item.cost||quantity>=99?'disabled':''}>Kaufen · ${item.cost} eb</button>`;
+  const remove=item=>`<button type="button" class="text-button" id="remove-equipment-${item.id}" data-remove-equipment="${item.id}">Entfernen −</button>`;
+  const airhypo=injector?`<article class="equipment-card shop-card"><h3>Airhypo · Druckinjektor</h3>
+    <p>Verabreicht eine Dosis. Gegen ein unwilliges Ziel würfelst du einen Nahkampfangriff. Bei einem Treffer injizierst du die Droge anstelle von Waffenschaden.</p>
+    ${injectorQuantity?`<p class="shop-quantity">${injectorQuantity} × vorhanden</p>`:''}
+    ${campaign?'':`<div class="weapon-buy-actions">${buy(injector,injectorQuantity)}${injectorQuantity?remove(injector):''}</div>`}
+  </article>`:'';
+  const groups=[
+    ['consumption','Konsum- und Leistungsdrogen',catalog.filter(item=>!combatChemicals.has(item.id))],
+    ['chemicals','Kampfchemikalien und Neurotoxine',catalog.filter(item=>combatChemicals.has(item.id))]
+  ];
+  return `<section class="equipment-section compact-shop street-drugs"><div class="section-heading"><h2>Straßendrogen</h2></div>
+    ${airhypo}
+    ${groups.map(([id,label,drugs])=>`<details class="weapon-catalog-group" id="drug-group-${id}"><summary>${label} <small>${drugs.length} Optionen</small></summary><div class="equipment-grid">
+    ${drugs.map(d=>{
+      const quantity=owned.get(d.id)??0;
+      return `<article class="equipment-card shop-card drug-card" data-drug-card="${d.id}">
+        <details id="drug-details-${d.id}"><summary><h3>${e(d.name)}</h3></summary>
+          <dl><dt>Primärwirkung</dt><dd>${e(d.drug.primary)}</dd><dt>Sekundärwirkung bei misslungener Probe</dt><dd>${e(d.drug.secondary)}</dd><dt>Bestehende Abhängigkeit</dt><dd>${e(d.drug.addiction)}</dd>
+          <dt>Dauer und Widerstand</dt><dd>${duration(d.drug.duration)} · WIL + Folter/Drogen widerstehen + 1W10 gegen SG ${d.drug.dv}. Das Ergebnis muss höher sein.</dd>
+          <dt>Quelle</dt><dd><a href="${e(d.drug.url)}" target="_blank" rel="noopener noreferrer">${e(d.drug.source)} ↗</a></dd></dl>
+        </details>
+        ${quantity?`<p class="shop-quantity">${quantity} ${quantity===1?'Dosis':'Dosen'} vorhanden</p>`:''}
+        <div class="weapon-buy-actions">${campaign?'':buy(d,quantity)}${quantity?`<button type="button" class="secondary" data-use-drug="${d.id}">1 Dosis verwendet</button>${campaign?'':remove(d)}`:''}</div>
+      </article>`;
+    }).join('')}</div></details>`).join('')}
+  </section>`;
 }

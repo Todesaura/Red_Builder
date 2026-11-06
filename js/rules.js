@@ -1,4 +1,4 @@
-import { evaluateLifepath } from './lifepath.js?v=shopping1';
+import { evaluateLifepath } from './lifepath.js?v=finance1';
 import { evaluateRolePoints } from './role-points.js?v=shopping1';
 import { evaluateSkills, skillValidation } from './skills.js?v=shopping1';
 import { deriveValues } from './derived.js?v=shopping1';

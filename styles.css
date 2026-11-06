@@ -1137,8 +1137,7 @@ input::placeholder {
 /* Separate armor slots and purchases */
 .armor-loadout { padding: 24px; border: 1px solid var(--border); background: #11151b; margin: 20px 0; }
 .armor-slots { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
-.armor-slots label { display: grid; gap: 8px; min-width: 0; }
-.armor-slots select { width: 100%; min-width: 0; }
+.armor-slots > div { display: grid; gap: 4px; min-width: 0; }
 .equipment-card .armor-purchases { display: grid; gap: 12px; }
 .armor-purchases > div { display: grid; gap: 8px; }
 .equipment-tabs { flex-wrap: wrap; }
@@ -1223,6 +1222,7 @@ input::placeholder {
 .catalog-recommendation-note h3, .compact-implant.role-recommended .implant-name h3, .equipment-card.role-recommended > h3 { color:#8fe0aa; }
 .catalog-recommendation-note p { font-size:12px; line-height:1.7; color:#aeb6c6; margin-top:6px; }
 .role-recommendation-label, .equipment-card small.role-recommendation-label { display:block; font-size:10px; line-height:1.6; color:#8fe0aa; margin:4px 0; }
+.compact-shop .shop-card small.role-recommendation-label { font-size:12px; font-weight:700; }
 
 .batch-installation > p, .batch-installation > small, .removal-panel p { color:#aeb6c6; font-size:12px; line-height:1.7; }
 .batch-installation > small { display:block; margin-top:12px; }
@@ -1271,8 +1271,6 @@ input::placeholder {
 @media(max-width:700px) { .skill-reset-actions { flex-direction:column;align-items:stretch;gap:10px; } .equipment-wallet-dock { top:6px;grid-template-columns:repeat(2,minmax(0,1fr));padding:10px 12px;gap:8px; } .equipment-wallet-dock strong { font-size:18px; } .topbar-right { flex-wrap:wrap;justify-content:flex-end;gap:8px; } .new-character-button { white-space:normal; } }
 @media(max-width:700px) { .topbar { height:auto;min-height:88px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px;gap:12px; } .topbar-right { width:100%;justify-content:space-between; } .new-character-button { max-width:70%; } }
 .equipment-wallet-dock { background:#14221d; }
-.weapon-option-tags { display:flex;flex-wrap:wrap;gap:6px;margin:12px 0; }
-.weapon-option-tags span { font-size:10px;line-height:1.6;color:#9fdbb6;background:#1c3027;padding:3px 7px;border:1px solid #3d5b49;border-radius:3px; }
 .weapon-option-help { margin:12px 0;border-top:1px solid #3c414c;padding-top:10px;font-size:12px; }
 .weapon-option-help summary { cursor:pointer;color:#c9d5cc; }
 .weapon-option-help dl,.owned-weapon-options dl { margin:14px 0; }
@@ -1346,7 +1344,6 @@ input::placeholder {
 .weapon-catalog-group { margin:14px 0; border:1px solid var(--line); border-radius:5px; }
 .weapon-catalog-group > summary { cursor:pointer; padding:18px; font-weight:700; }
 .weapon-catalog-group > summary small { float:right; color:var(--muted); font-weight:400; }
-.weapon-catalog-group > summary .weapon-recommendation-preview { display:block; clear:both; margin-top:8px; color:#8fe0aa; font-size:13px; line-height:1.6; font-weight:400; overflow-wrap:anywhere; }
 .weapon-catalog-group > .equipment-grid { padding:0 16px 16px; }
 .weapon-catalog-group .inline-note { grid-column:1/-1; }
 .inventory article { flex-wrap:wrap; }
@@ -1449,13 +1446,9 @@ input::placeholder {
 .living-costs .monthly-income dd{color:#8ee4b1}
 .living-budget-total{border-top:2px solid #739681;padding-top:18px;margin-top:20px}
 @media(max-width:650px){.lifepath-sections,.living-costs .living-budget-items{grid-template-columns:1fr}}
-.drug-application{padding:16px;border:1px solid var(--line);margin:16px 0}
 .drug-card details{margin:12px 0}.drug-card dl{margin:12px 0}
 .drug-card dt{font-weight:700;color:var(--mint);margin-top:12px}
 .drug-card dd{margin:3px 0;line-height:1.5;overflow-wrap:anywhere}
-.drug-card summary,.drug-application summary{cursor:pointer}
-.drug-group-heading{grid-column:1/-1;margin:20px 0 0}
-.drug-group-heading small{color:var(--muted);font-size:.85em;font-weight:400}
 .skill-allocation h2{font-size:18px;margin-bottom:16px}
 .skill-allocation-options{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .skill-allocation-options .method-card{display:block;min-width:0}
@@ -1489,6 +1482,10 @@ input::placeholder {
 .completion-link{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;text-align:left;border:1px solid var(--line);background:#14171c;border-radius:4px;color:var(--text);padding:9px 12px;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
 .completion-link:hover{border-color:var(--mint);background:#1a2922}.completion-link:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
 .completion-note{font-size:12px;color:var(--muted);line-height:1.6}.completion-panel>.completion-link{margin-top:12px}
+.completion-actions > .completion-panel { flex:1; min-width:0; margin:0; }
+.completion-actions > button { flex-shrink:0; }
+.character-sheet-export .export-actions { margin:16px 0 0; }
+.character-sheet-export .export-actions button { margin-top:0; }
 @media(max-width:750px){.completion-panel{padding:14px}.nav-step small.nav-step-status{font-size:9px}.nav-step>span:nth-child(2){min-width:0}.completion-heading{gap:6px}}
 .equipment-shopping-dock{display:block;padding:12px 16px}
 .shopping-metrics{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:12px}
@@ -1515,17 +1512,11 @@ input::placeholder {
 .attribute-risk{padding:12px;margin:14px 0;border-left:3px solid #e4b65f;border-radius:4px;background:#332b1e;color:#f1d9a8}.attribute-risk strong{font-size:12px;line-height:1.5;display:block}.attribute-risk p{font-size:12px;line-height:1.65;margin:7px 0 0}.shopping-installed{display:block;width:100%;min-height:44px;margin-top:9px;padding:8px 12px;border:1px solid #537264;border-radius:5px;color:#d8f0df;background:#1d3628;text-align:left;font-size:12px}.shopping-installed:focus-visible{outline:2px solid var(--mint);outline-offset:2px}.installed-instructions{max-width:720px;font-size:13px!important}.installed-main{min-width:0}.installed-main>strong{font-size:15px;line-height:1.5;overflow-wrap:anywhere}.installed-entry .installed-location{font-size:12px;line-height:1.6;color:#c9d8d0}.installed-info{margin-top:9px;font-size:12px;line-height:1.6}.installed-info summary{cursor:pointer;color:var(--mint);padding:5px 0}.installed-entry .installed-info small{font-size:12px;line-height:1.7;overflow-wrap:anywhere}.installed-remove{min-height:44px!important;font-size:12px!important;white-space:normal;line-height:1.5}.installed-cyberware{scroll-margin-top:260px}.removal-panel{overflow-wrap:anywhere}.removal-panel form button{min-height:44px}
 @media(max-width:700px){.installed-heading{display:block}.installed-heading h2{font-size:19px;line-height:1.5}.installed-heading>small{display:block;font-size:12px;line-height:1.6}.installed-entry{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;border:1px solid #3b4c45;border-radius:8px;margin:12px 0;padding:14px;background:#151d19;min-width:0;max-width:100%}.installed-entry>div{min-width:0;max-width:100%}.installed-entry>ul{min-width:0;max-width:100%;padding-left:10px}.installed-entry>button{width:100%;text-align:center}.installed-child{background:#1b2520;padding:11px}.installed-main>strong{font-size:16px}.shopping-hints{display:none}.shopping-installed{font-size:12px}.removal-panel form{display:grid;grid-template-columns:minmax(0,1fr)}.removal-panel input{width:100%;max-width:none}.removal-panel form button{width:100%}.installed-info summary{min-height:36px;display:flex;align-items:center}}
 @media(max-width:650px){.attribute-card.attribute-low{grid-column:1/-1}.attribute-risk p{font-size:13px;line-height:1.65}.installed-info summary{display:list-item;min-height:44px;padding-top:10px}}
-/* Keep owned items separate from shopping; use desktop width for both panels. */
-.shop-owned-layout { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:24px; align-items:start; margin:24px 0; }
-.shop-owned-layout > * { min-width:0; margin:0; padding:22px; border:1px solid var(--border); background:#11151b; }
-.shop-owned-layout h3 { margin-top:0; }
-.shop-owned-layout .inventory { margin-bottom:0; }
-.shop-owned-layout .inventory article { align-items:flex-start; }
-.shop-owned-layout .inventory article > div { min-width:0; overflow-wrap:anywhere; }
-.shop-owned-layout .inventory article > button { flex-shrink:0; }
-.shop-owned-layout .armor-slots { grid-template-columns:1fr; gap:14px; }
-.shop-owned-layout .armor-loadout p { font-size:13px; line-height:1.6; }
-.shop-catalog { border-top:2px solid #444c59; padding-top:24px; margin-top:28px; }
+/* Mobile follows the document order: installed implants, shop, then body view. */
+.cyber-shop { display:grid; grid-template-columns:minmax(0,1fr); gap:24px; align-items:start; margin:24px 0; }
+.cyber-shop > :is(.installed-cyberware,.shop-body) { min-width:0; margin:0; padding:16px; border:1px solid var(--border); background:#11151b; }
+.cyber-shop > :is(.installed-cyberware,.shop-body) h3 { margin-top:0; }
+.shop-catalog { min-width:0; border-top:2px solid #444c59; padding-top:24px; }
 .shop-catalog > h3:first-child { margin-top:0; font-size:21px; }
 .shop-budget-help { margin:14px 0 20px; padding:12px 16px; border:1px solid var(--border); }
 .shop-budget-help > summary { cursor:pointer; font-size:13px; }
@@ -1537,9 +1528,11 @@ input::placeholder {
 .character-file-actions button { min-height:44px; }
 .character-files p:empty { display:none; }
 .shop-body .body-editor { position:static; width:100%; max-width:none; max-height:none; border:0; padding:0; margin:0; }
-@media(max-width:800px) {
- .shop-owned-layout { grid-template-columns:1fr; gap:16px; }
- .shop-owned-layout > * { padding:16px; }
+@media(min-width:801px) {
+ .cyber-shop { grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); }
+ .cyber-shop > .shop-body { grid-area:1 / 2; }
+ .cyber-shop > .shop-catalog { grid-column:1/-1; }
+ .cyber-shop > :is(.installed-cyberware,.shop-body) { padding:22px; }
 }
 .play-heading { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
 .play-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:24px 0; }
@@ -1599,3 +1592,41 @@ input::placeholder {
 .dm-character > details { margin:8px 0; }
 .dm-character > button.text-button { display:block; min-height:32px; padding:4px 0; margin:4px 0; }
 .dm-character > small { margin-top:4px; font-size:11px; }
+.compact-shop .equipment-grid { align-items:start; gap:10px; }
+.compact-shop .shop-card { padding:14px; }
+.compact-shop .shop-card h3 { margin:0 0 6px; font-size:16px; }
+.compact-shop .shop-card p { min-height:0; margin:5px 0; }
+.compact-shop .shop-card .weapon-buy-actions { margin:8px 0 0; align-items:center; }
+.compact-shop .bundle-info { margin:0; }
+.compact-shop .shop-quantity { color:var(--mint); font-weight:600; }
+.compact-shop .shop-card .weapon-option-help,.compact-shop .drug-card > details { padding:0; border:0; margin:0; }
+.compact-shop .shop-card > .shop-weapon-details:not([hidden]) { display:block; }
+.compact-shop .shop-weapon-details[hidden] { display:none; }
+.compact-shop .shop-card summary { cursor:pointer; }
+.compact-shop .shop-card summary h3 { display:inline; }
+.shop-weapon-heading { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+.shop-weapon-heading h3 { min-width:0; overflow-wrap:anywhere; }
+.shop-weapon-heading .secondary { flex-shrink:0; padding:4px 8px; font-size:11px; }
+.compact-shop .role-recommended .shop-weapon-heading h3 { color:#8fe0aa; }
+.recommendation-badge.is-seen { background:transparent; }
+.compact-shop .shop-group-help { grid-column:1/-1; margin:0 0 6px; font-size:13px; }
+.compact-shop .shop-group-help summary { cursor:pointer; color:var(--muted); }
+.compact-shop .shop-limits { color:var(--muted); font-size:13px; }
+.shop-bought-weapons { margin:16px 0; }
+.shop-bought-weapons > h3 { margin:0 0 8px; font-size:16px; }
+.stock-weapon-name { min-width:0; flex:1; }
+.stock-weapon-name > small { color:var(--muted); }
+.stock-weapon-name .weapon-option-help { margin:0 0 4px; padding:0; border:0; }
+.stock-weapon-name h3 { margin:0; font-size:14px; }
+.shop-ammo-stock { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 16px; margin:10px 0; }
+.shop-ammo-stock h4 { margin:0; font-size:13px; }
+.shop-ammo-stock ul { display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none; }
+.shop-ammo-stock li { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; padding:5px 8px; border:1px solid var(--line); border-radius:4px; font-size:12px; }
+.compact-shop .shop-custom { margin:0 0 14px; }
+.compact-shop .shop-custom > summary { display:inline-flex; align-items:center; gap:8px; cursor:pointer; }
+.compact-shop .shop-custom > summary::before { content:'▸'; }
+.compact-shop .shop-custom[open] > summary::before { content:'▾'; }
+.compact-shop .shop-custom .custom-equipment { margin:10px 0; }
+.compact-shop .armor-loadout { padding:14px; margin:0 0 14px; }
+.compact-shop .armor-loadout p { margin:8px 0; }
+.compact-shop .shop-card .armor-purchases { margin:10px 0 0; }

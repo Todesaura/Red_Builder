@@ -72,7 +72,8 @@ test('Ein Kleidungsstück wird nur einmal gekauft, als vorhanden markiert und na
  assert.equal(funds.remaining,2550);assert.equal(funds.fashionRemaining,750);
  assert.equal(buyEquipment(c,rules,id).ok,false);assert.deepEqual(c,before);
  const html=renderClothing(c,rules,evaluateCharacter(c,rules));
- assert.match(html,/data-buy-equipment="clothing-generic-coat" disabled>Bereits im Kleiderschrank/);
+ assert.doesNotMatch(html,/data-buy-equipment="clothing-generic-coat"|Dein Kleiderschrank/);
+ assert.match(html,/Gekauft<\/p><button[^>]*data-remove-equipment="clothing-generic-coat"/);
  removeEquipment(c,id);assert.equal(evaluateFunds(c,rules).fashionRemaining,800);
  assert.ok(buyEquipment(c,rules,id).ok);assert.equal(c.equipment.items.find(i=>i.catalogId===id).quantity,1);
 });

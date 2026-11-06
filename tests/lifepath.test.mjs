@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createCharacter, validateCharacter } from '../js/model.js';
-import { createLifepath, chooseLifepath, editLifepath, evaluateLifepath, validateLifepath, MAX_LIFEPATH_TEXT } from '../js/lifepath.js';
+import { createLifepath, chooseLifepath, editLifepath, evaluateLifepath, validateLifepath, LIFEPATH_CHOICES, MAX_LIFEPATH_TEXT } from '../js/lifepath.js';
 import { LIFEPATH_QUESTIONS } from '../js/lifepath-data.js';
 import { renderLifepath, renderLifepathSummary } from '../js/ui-lifepath.js';
 import { evaluateCharacter } from '../js/rules.js';
@@ -13,7 +13,7 @@ const fresh=()=>{const c=createCharacter(rules);c.name='Test';c.role='solo';retu
 test('Lebensweg bietet eindeutige Vorschläge mit unterschiedlichen Antwortzahlen und wirkt nicht auf Spielwerte',()=>{
  const c=fresh(),before=evaluateCharacter(c,rules);
  assert.equal(LIFEPATH_QUESTIONS.length,21);
- for(const question of LIFEPATH_QUESTIONS){assert.ok(question.options.length>=4&&question.options.length<=9);if(question.group!=='daily')assert.equal(question.options.length,4);assert.equal(new Set(question.options).size,question.options.length);assert.ok(chooseLifepath(c,question.id,'first').ok);}
+ for(const question of LIFEPATH_QUESTIONS){assert.ok(question.options.length>=4&&question.options.length<=LIFEPATH_CHOICES.length);if(question.group!=='daily')assert.equal(question.options.length,4);assert.equal(new Set(question.options).size,question.options.length);assert.ok(chooseLifepath(c,question.id,'first').ok);}
  const after=evaluateCharacter(c,rules);assert.equal(after.lifepath.answered,21);
  for(const key of ['attributes','skills','funds','roleAbilities','derived'])assert.deepEqual(after[key],before[key]);
 });

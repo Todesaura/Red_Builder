@@ -6,7 +6,7 @@ import {completionProgress} from '../js/completion-progress.js';
 import {renderCompletion} from '../js/ui-completion.js';
 import {characterSheetReadiness} from '../js/pdf-character-data.js';
 import {resetSkillPoints} from '../js/skills.js';
-import {createLifepath,chooseLifepath,editLifepath} from '../js/lifepath.js';
+import {createLifepath} from '../js/lifepath.js';
 const find=(p,id)=>p.steps.find(step=>step.id===id);
 
 test('Alle zehn vollständigen Rollen zeigen denselben Abschluss wie die PDF-Freigabe',()=>{
@@ -30,7 +30,7 @@ test('Offene Attribute, Rollenpunkte und Medtech-Präparate bleiben echte Pflich
 });
 test('Offene Lebenswegfragen und fehlende eigene Monatsbeträge bekommen direkte Ziele',()=>{
  const c=completeCharacter();c.lifepath=createLifepath();let p=completionProgress(c,rules);assert.equal(find(p,'lifepath').complete,false);assert.ok(find(p,'lifepath').issues[0].label.includes('21'));assert.equal(find(p,'lifepath').issues[0].life,'personality');
- const filled=completeCharacter();chooseLifepath(filled,'housing','custom');editLifepath(filled,'housing','Mein eigenes Zuhause');p=completionProgress(filled,rules);assert.ok(find(p,'lifepath').issues.some(i=>i.focus==='life-cost-housing'));assert.equal(find(p,'lifepath').complete,false);assert.equal(p.ready,false);
+ const filled=completeCharacter();filled.lifepath.housing={choice:'custom',custom:'Mein eigenes Zuhause',revision:2};p=completionProgress(filled,rules);assert.ok(find(p,'lifepath').issues.some(i=>i.focus==='life-card-housing'));assert.equal(find(p,'lifepath').complete,false);assert.equal(p.ready,false);
 });
 test('Fehlende optionale Ausrüstung ist ein Hinweis und blockiert niemals das PDF',()=>{
  const c=completeCharacter('netrunner'),p=completionProgress(c,rules),gear=find(p,'cyberware');assert.equal(gear.complete,true);assert.equal(gear.status,'warning');assert.ok(gear.notes.length>0);assert.ok(gear.notes.some(note=>note.tab==='netrunner'));assert.equal(p.ready,true);assert.match(renderCompletion(p,'cyberware'),/verhindern den PDF-Abschluss nicht/);
@@ -43,6 +43,6 @@ test('Offene Ausrüstungsentwürfe blockieren Anzeige und PDF gemeinsam ohne Än
  assert.deepEqual(c,before);
 });
 test('Abschlussanzeige ist lesbar, klickbar und gibt keine ungeschützten Eingaben aus',()=>{
- const c=completeCharacter();chooseLifepath(c,'housing','custom');editLifepath(c,'housing','<script>bad</script>');const p=completionProgress(c,rules),html=renderCompletion(p,'review');
- assert.match(html,/data-progress-step="lifepath"/);assert.match(html,/data-progress-life="housing"/);assert.match(html,/data-progress-focus="life-cost-housing"/);assert.doesNotMatch(html,/<script>/);assert.equal(renderCompletion(p,'session'),'');
+ const c=completeCharacter();c.lifepath.housing={choice:'custom',custom:'<script>bad</script>',revision:2};const p=completionProgress(c,rules),html=renderCompletion(p,'review');
+ assert.match(html,/data-progress-step="lifepath"/);assert.match(html,/data-progress-life="housing"/);assert.match(html,/data-progress-focus="life-card-housing"/);assert.doesNotMatch(html,/<script>/);assert.equal(renderCompletion(p,'session'),'');
 });

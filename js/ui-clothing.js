@@ -1,10 +1,17 @@
-import {armorSelection} from './ui-armor-loadout.js';
 import {fundingPrice} from './ui-funding.js?v=inline1';
-import { escapeHtml as e } from './html.js';
+import {escapeHtml as e} from './html.js';
 
 export function renderClothing(character,rules,evaluated){
- const all=rules.equipmentRules.items.filter(i=>i.category==='clothing');
- const eb=n=>n.toLocaleString('de-DE')+' eb';
- const owned=character.equipment.items.filter(entry=>all.some(i=>i.id===entry.catalogId));
- return `<section class="equipment-section clothing-shop"><h2>Normale Kleidung</h2><p>Stelle deinen Look aus einzelnen Teilen zusammen. <strong>Der Fashion-Zuschuss wird automatisch genutzt.</strong> Kleidung schützt nicht wie Rüstung und gibt keine festen Fertigkeitsboni. Farben, Schnitt und persönliche Details erzählen etwas über deinen Charakter. Jedes Teil lässt sich nur einmal kaufen.</p><div class="shop-owned-layout"><section class="shop-inventory" aria-label="Dein Kleiderschrank"><h3>Dein Kleiderschrank</h3><div class="inventory">${owned.map(entry=>{const item=all.find(i=>i.id===entry.catalogId);return `<article><div><strong>${entry.quantity} × ${e(item.name)}</strong><small>${e(item.description)}</small></div><button class="text-button" data-remove-equipment="${item.id}">Eins entfernen −</button></article>`;}).join('')||'<p>Noch keine Kleidung ausgewählt.</p>'}</div></section>${armorSelection(character,rules,evaluated)}</div><div class="shop-catalog"><h3>Zum Kaufen</h3><p class="inline-note">Grundteile und zusätzliche eigene Rollenspiel-Varianten sind nach Stil sortiert. Zusatzteile haben passende eigene Preise; sämtliche Kleidung hat keine zusätzlichen Spielboni.</p>${[...new Set(all.map(i=>i.style))].map(style=>`<details class="clothing-style" id="clothing-${all.find(i=>i.style===style).styleId}"><summary>${e(style)} <small>${all.filter(i=>i.style===style).length} Teile</small></summary><div class="equipment-grid">${all.filter(i=>i.style===style).map(item=>`<article class="equipment-card ${owned.some(i=>i.catalogId===item.id)?'clothing-owned':''}"><h3>${e(item.name)}</h3><p>${e(item.description)}</p><small>Fashion-Zuschuss nutzbar · keine Rüstung</small><button class="secondary" data-buy-equipment="${item.id}" ${evaluated.funds.remaining+evaluated.funds.fashionRemaining<item.cost||owned.some(i=>i.catalogId===item.id)?'disabled':''}>${owned.some(i=>i.catalogId===item.id)?'Bereits im Kleiderschrank':'Kaufen + · '+fundingPrice([item],evaluated.funds)}</button></article>`).join('')}</div></details>`).join('')}<p class="inline-note">Entfernen korrigiert deinen Startkauf. Kleidung und Mode-Cyberware teilen sich 800 eb Zuschuss; erst Mehrkosten belasten das Hauptbudget.</p><a href="${e(rules.equipmentRules.source)}" target="_blank" rel="noopener noreferrer">Preisorientierung für Grundteile: RTG Night Market Index / Grundregelwerk S. 356 ↗</a></div></section>`;
+  const all=rules.equipmentRules.items.filter(item=>item.category==='clothing');
+  const owned=new Set(character.equipment.items.map(entry=>entry.catalogId));
+  return `<section class="equipment-section compact-shop clothing-shop"><div class="section-heading"><div><h2>Normale Kleidung</h2><p>Der Fashion-Zuschuss wird automatisch genutzt.</p></div></div>
+  ${[...new Set(all.map(item=>item.style))].map(style=>{
+    const entries=all.filter(item=>item.style===style);
+    return `<details class="clothing-style" id="clothing-${entries[0].styleId}"><summary>${e(style)} <small>${entries.length} Teile</small></summary><div class="equipment-grid">${entries.map(item=>{
+      const bought=owned.has(item.id);
+      return `<article class="equipment-card shop-card ${bought?'clothing-owned':''}"><h3>${e(item.name)}</h3><p>${e(item.description)}</p>
+        ${bought?`<p class="shop-quantity">Gekauft</p><button type="button" class="text-button" id="remove-equipment-${item.id}" data-remove-equipment="${item.id}">Entfernen −</button>`:`<button type="button" class="secondary" id="buy-equipment-${item.id}" data-buy-equipment="${item.id}" ${evaluated.funds.remaining+evaluated.funds.fashionRemaining<item.cost?'disabled':''}>Kaufen · ${fundingPrice([item],evaluated.funds)}</button>`}
+      </article>`;
+    }).join('')}</div></details>`;
+  }).join('')}</section>`;
 }

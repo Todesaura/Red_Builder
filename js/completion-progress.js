@@ -18,8 +18,12 @@ export function completionProgress(character,rules,state={},evaluated=evaluateCh
   }):[issue('Zuerst Rolle wählen','identity',{focus:'identity-roles'})];
   const roles=role?v.roleAbilities.errors.map(error=>issue(error,'role-abilities',{focus:/Pharmazeutikum/.test(error)?'role-pharmaceuticals':'role-points'})):[issue('Zuerst Rolle wählen','identity',{focus:'identity-roles'})];
   const missing=v.lifepath.entries.filter(q=>!q.complete),life=[];
-  if(missing.length)life.push(issue(`Noch ${missing.length} ${missing.length===1?'Lebensweg-Frage':'Lebensweg-Fragen'} beantworten`,'lifepath',{life:missing[0].id,focus:character.lifepath[missing[0].id]?.choice==='custom'?`life-${missing[0].answer?'cost':'text'}-${missing[0].id}`:'lifepath-step'}));
-  for(const q of missing.filter(q=>q.answer&&q.monthlyCosts&&character.lifepath[q.id]?.choice==='custom'))life.push(issue(`Monatsbetrag fehlt: ${q.budgetLabel}`,'lifepath',{life:q.id,focus:'life-cost-'+q.id}));
+  if(missing.length){
+    const first=missing[0];
+    const focus=first.group==='daily'?'life-card-'+first.id:character.lifepath[first.id]?.choice==='custom'?'life-text-'+first.id:'lifepath-step';
+    life.push(issue(`Noch ${missing.length} ${missing.length===1?'Lebensweg-Frage':'Lebensweg-Fragen'} beantworten`,'lifepath',{life:first.id,focus}));
+  }
+  for(const q of missing.filter(q=>q.monthlyCosts&&character.lifepath[q.id]?.choice==='custom'))life.push(issue(`Finanzantwort wählen: ${q.budgetLabel}`,'lifepath',{life:q.id,focus:'life-card-'+q.id}));
   const equipment=v.cyberwareErrors.filter(error=>!character.campaign?.active||!v.cyberware.warnings.includes(error)).map(error=>issue(error,'cyberware',{tab:'cyberware',focus:'cyber-status'}));
   for(const error of characterSheetDraftErrors(state))equipment.push(issue(error,'cyberware',{tab:error.includes('Ausrüstungsentwurf')?'misc':'cyberware',focus:error.includes('Ausrüstungsentwurf')?'custom-equipment-form':state.removingCyberware?'removal-panel':'cyber-status'}));
   const notes=equipmentWarnings(character,rules,v).map(note=>issue(note.title,'cyberware',{tab:note.tab}));

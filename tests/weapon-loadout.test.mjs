@@ -35,7 +35,12 @@ test('Kombikauf bleibt bei zu wenig Geld oder überschrittenem Munitionslimit vo
 test('Nachkäufe zeigen nur kompatible Munition; Restbestände bleiben nach Waffenentfernung sichtbar',()=>{
  const c=fresh();assert.doesNotMatch(render(c),/data-buy-equipment="ammo-/);
  buyEquipment(c,rules,'smg');let html=render(c);assert.match(html,/data-buy-equipment="ammo-medium-pistol"/);assert.doesNotMatch(html,/data-buy-equipment="ammo-heavy-pistol"/);
+ const owned=html.slice(html.indexOf('id="shop-bought-title"'),html.indexOf('data-weapon-section="melee"'));
+ assert.match(owned,/id="stock-weapon-smg"/);assert.match(owned,/data-remove-equipment="smg"/);
+ assert.doesNotMatch(owned,/data-buy-equipment="smg"/);
+ assert.match(html,/data-buy-equipment="smg"/);
+ assert.equal((html.match(/id="shop-weapon-smg"/g)??[]).length,1);
  buyEquipment(c,rules,'ammo-medium-pistol');removeEquipment(c,'smg');html=render(c);
- assert.doesNotMatch(html,/data-buy-equipment="ammo-/);assert.match(html,/data-remove-equipment="ammo-medium-pistol"/);assert.doesNotMatch(html,/undefined|Basismunition, Packung/);
+ assert.doesNotMatch(html,/data-buy-equipment="ammo-/);assert.match(html,/class="shop-ammo-stock"/);assert.match(html,/data-remove-equipment="ammo-medium-pistol"/);assert.doesNotMatch(html,/undefined|Basismunition, Packung/);
  buyEquipment(c,rules,'shotgun');html=render(c);assert.match(html,/data-buy-equipment="ammo-slug"/);assert.match(html,/data-buy-equipment="ammo-shell"/);
 });

@@ -54,7 +54,9 @@ LIFEPATH_QUESTIONS.push(...[
       50,
       100,
       150,
-      250
+      250,
+      75,
+      400
     ],
     "options": [
       "Ich verlasse mich auf meine Instinkte und passe selbst auf mich auf. 0 eb/Monat.",
@@ -62,7 +64,9 @@ LIFEPATH_QUESTIONS.push(...[
       "Ich bezahle lokale Kontakte für Warnungen und Informationen. 50 eb/Monat.",
       "Ich nutze einfache Überwachungs- und Sicherheitssysteme. 100 eb/Monat.",
       "Ich zahle einer lokalen Gang für Schutz und Ruhe. 150 eb/Monat.",
-      "Ich bezahle einen privaten Sicherheitsdienst für regelmäßige Kontrollen. 250 eb/Monat."
+      "Ich bezahle einen privaten Sicherheitsdienst für regelmäßige Kontrollen. 250 eb/Monat.",
+      "Ich miete einen gesicherten Spind für meine Wertsachen. 75 eb/Monat.",
+      "Ich halte einen geheimen Rückzugsort für den Notfall bereit. 400 eb/Monat."
     ]
   },
   {
@@ -79,7 +83,9 @@ LIFEPATH_QUESTIONS.push(...[
       1000,
       1500,
       2500,
-      0
+      0,
+      350,
+      3000
     ],
     "options": [
       "Ich lebe auf der Straße. 0 eb/Monat.",
@@ -90,7 +96,9 @@ LIFEPATH_QUESTIONS.push(...[
       "Ich wohne in einem Mietcontainer. 1.000 eb/Monat.",
       "Ich habe ein Studio-Apartment. 1.500 eb/Monat.",
       "Ich wohne in einer Zweizimmerwohnung. 2.500 eb/Monat.",
-      "Meine Unterkunft wird von einer Organisation oder einem Arbeitgeber bezahlt. 0 eb/Monat."
+      "Meine Unterkunft wird von einer Organisation oder einem Arbeitgeber bezahlt. 0 eb/Monat.",
+      "Ich miete eine Schlafnische in einer umgebauten Werkstatt. 350 eb/Monat.",
+      "Ich wohne mit meiner Familie in einer größeren Wohnung. 3.000 eb/Monat."
     ]
   },
   {
@@ -102,13 +110,17 @@ LIFEPATH_QUESTIONS.push(...[
       0,
       50,
       100,
-      150
+      150,
+      25,
+      80
     ],
     "options": [
       "Ich kenne die Straßen und brauche keine bezahlte Hilfe. 0 eb/Monat.",
       "Ich beteilige mich an einer Nachbarschaftsgemeinschaft. 50 eb/Monat.",
       "Ich nutze regelmäßig sichere Transportmöglichkeiten. 100 eb/Monat.",
-      "Ich bezahle für zusätzlichen Schutz und Sicherheit. 150 eb/Monat."
+      "Ich bezahle für zusätzlichen Schutz und Sicherheit. 150 eb/Monat.",
+      "Ich zahle einen kleinen Beitrag zur Gemeinschaftswerkstatt. 25 eb/Monat.",
+      "Ich lasse Einkäufe und wichtige Sendungen über einen Kurier zustellen. 80 eb/Monat."
     ]
   },
   {
@@ -120,13 +132,17 @@ LIFEPATH_QUESTIONS.push(...[
       100,
       300,
       600,
-      1500
+      1500,
+      200,
+      900
     ],
     "options": [
       "Kibble – billige, industriell hergestellte Nahrung. 100 eb/Monat.",
       "Einfache Fertigkost – zweckmäßig und einigermaßen genießbar. 300 eb/Monat.",
       "Gute Fertigkost – abwechslungsreicher und angenehmer. 600 eb/Monat.",
-      "Frische Lebensmittel – hochwertiges Essen und gehobener Alltag. 1.500 eb/Monat."
+      "Frische Lebensmittel – hochwertiges Essen und gehobener Alltag. 1.500 eb/Monat.",
+      "Gemeinschaftsküche – ich kaufe mit anderen ein und wir kochen abwechselnd. 200 eb/Monat.",
+      "Stammküche – ich esse meistens frisch bei einem lokalen Imbiss und lasse selten liefern. 900 eb/Monat."
     ],
     "note": "Die Beträge repräsentieren den gesamten Lebensstil und nicht ausschließlich Lebensmittel."
   },
@@ -141,7 +157,9 @@ LIFEPATH_QUESTIONS.push(...[
       100,
       150,
       250,
-      400
+      400,
+      75,
+      500
     ],
     "options": [
       "Ich bin nur für mich selbst verantwortlich. 0 eb/Monat.",
@@ -149,7 +167,9 @@ LIFEPATH_QUESTIONS.push(...[
       "Ich unterstütze meine Wahlfamilie. 100 eb/Monat.",
       "Ich unterstütze eine frühere Partnerperson. 150 eb/Monat.",
       "Ich komme für ein Kind auf. 250 eb/Monat.",
-      "Ich unterstütze ein pflegebedürftiges Familienmitglied. 400 eb/Monat."
+      "Ich unterstütze ein pflegebedürftiges Familienmitglied. 400 eb/Monat.",
+      "Ich übernehme Futter und Versorgung für ein Haustier. 75 eb/Monat.",
+      "Ich zahle für die Ausbildung meiner jüngeren Geschwister. 500 eb/Monat."
     ],
     "allowIncome": true
   },
@@ -164,7 +184,9 @@ LIFEPATH_QUESTIONS.push(...[
       250,
       200,
       -200,
-      -100
+      -100,
+      100,
+      -150
     ],
     "options": [
       "Ich habe keine alten finanziellen Verpflichtungen. 0 eb/Monat.",
@@ -172,7 +194,9 @@ LIFEPATH_QUESTIONS.push(...[
       "Ich begleiche eine frühere medizinische Rechnung. 250 eb/Monat.",
       "Ich bezahle jemanden, damit ein Geheimnis verborgen bleibt. 200 eb/Monat.",
       "Ich erhalte regelmäßige Zahlungen aus einer früheren Tätigkeit. −200 eb/Monat (Einnahme).",
-      "Ein alter Kontakt lässt mir regelmäßig etwas Geld zukommen. −100 eb/Monat (Einnahme)."
+      "Ein alter Kontakt lässt mir regelmäßig etwas Geld zukommen. −100 eb/Monat (Einnahme).",
+      "Ich zahle Wiedergutmachung für einen früheren Auftrag. 100 eb/Monat.",
+      "Ich bekomme noch Lizenzzahlungen für einen alten Song oder Entwurf. −150 eb/Monat (Einnahme)."
     ],
     "allowIncome": true,
     "note": "Negative Werte sind Einnahmen und reduzieren die monatlichen Gesamtkosten."
@@ -188,7 +212,9 @@ LIFEPATH_QUESTIONS.push(...[
       50,
       100,
       150,
-      200
+      200,
+      75,
+      300
     ],
     "options": [
       "Ich lebe sparsam und verzichte auf unnötige Ausgaben. 0 eb/Monat.",
@@ -196,7 +222,9 @@ LIFEPATH_QUESTIONS.push(...[
       "Ich investiere in meine sozialen Kontakte. 50 eb/Monat.",
       "Ich pflege ein Hobby, das regelmäßig Geld kostet. 100 eb/Monat.",
       "Ich lege besonderen Wert auf Kleidung, Pflege und Auftreten. 150 eb/Monat.",
-      "Ich gönne mir regelmäßig besondere Annehmlichkeiten. 200 eb/Monat."
+      "Ich gönne mir regelmäßig besondere Annehmlichkeiten. 200 eb/Monat.",
+      "Ich kaufe Material für meine eigenen Kunst- oder Musikprojekte. 75 eb/Monat.",
+      "Ich miete regelmäßig Proberaum oder Trainingsfläche. 300 eb/Monat."
     ],
     "allowIncome": true
   }

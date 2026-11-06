@@ -24,3 +24,11 @@ export function evaluateArmor(character, rules, cyberware = null) {
   result.bodySP = Math.max(result.body?.sp ?? 0, result.cyberBodySP);
   return result;
 }
+export function armorPurchaseError(character, rules, item) {
+  if (item.category !== 'armor') return null;
+  const occupied = rules.equipmentRules.items.some(part =>
+    part.category === 'armor' && part.slot === item.slot &&
+    character.equipment.items.some(entry => entry.catalogId === part.id && entry.quantity > 0)
+  );
+  return occupied ? `Du hast bereits ${item.slot === 'head' ? 'einen Kopfschutz' : 'eine Körperrüstung'}. Entferne das bisherige Teil, um es zu wechseln.` : null;
+}

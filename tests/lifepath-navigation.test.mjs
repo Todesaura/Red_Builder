@@ -13,7 +13,7 @@ test('Lore-Antworten öffnen niemals automatisch die Geldfragen',()=>{
     assert.notEqual(activeLifepathQuestion(c,state)?.group,'daily');
   }
   assert.equal(activeLifepathQuestion(c,state),null);assert.equal(activeLifepathQuestion(c),null);
-  const html=renderLifepath(c,state);assert.match(html,/Lore abgeschlossen/);assert.match(html,/Monatsbudget bewusst öffnen/);
+  const html=renderLifepath(c,state);assert.match(html,/Lore abgeschlossen/);assert.match(html,/>Finanzen →<\/button>/);
   assert.doesNotMatch(html,/data-lifepath-choice="security"/);assert.deepEqual(livingCosts(c),budget);
 });
 test('Geldfrage bleibt nach einer Auswahl stehen und geht erst nach ausdrücklichem Weiter zur nächsten',()=>{

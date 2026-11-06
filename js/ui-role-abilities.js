@@ -10,7 +10,7 @@ export function renderRoleAbilitySummary(character, rules) {
   return `<section class="review-role"><h3>Rollenfähigkeit</h3><p><strong>${e(ability.name)} · Rang ${roleRank(character)}</strong></p><p>${e(ability.description)}</p>${rolePointsSummary(character)}<button class="text-button" data-view="role-abilities">Erklärung und aktuelle Beispiele ansehen →</button></section>`;
 }
 
-export function renderRoleAbilities(character, rules, evaluated) {
+export function renderRoleAbilities(character, rules, evaluated, completion='') {
   const ability = ROLE_ABILITIES[character.role];
   if (!ability) return '<section class="panel"><p>Wähle zuerst deine Rolle unter Identität.</p><button class="primary" data-view="identity">Zur Identität →</button></section>';
   const role = rules.roles.find(item => item.id === character.role);
@@ -23,5 +23,5 @@ export function renderRoleAbilities(character, rules, evaluated) {
   <section class="panel role-related-skills"><h2>Passende Fertigkeiten · deine aktuellen Werte</h2><p>Diese Fertigkeiten unterstützen deine Rolle. Sie ersetzen die Rollenfähigkeit nicht.</p><div class="role-skill-list">${related.map(skill => `<div class="role-skill-row"><div><strong>${e(skill.name)}</strong><small>${attributeLabel(skill.attribute)} ${skill.attributeValue ?? '—'} + Fertigkeitsrang ${skill.level}${skill.modifiers.length ? ' + feste Boni' : ''}</small></div><span>Rang ${skill.level}</span><strong>Basis ${skill.base ?? '—'}</strong></div>`).join('')}</div><button class="secondary" data-view="skills">Fertigkeiten anpassen →</button></section>
   `:''}
   <details class="role-source" id="role-ability-source"><summary>Regelquelle und Einordnung</summary><p>${e(ability.reference)} (englische Ausgabe). Deutsche Erklärungen sind eigene Zusammenfassungen. Deine Verteilung wird gespeichert und zentral geprüft. Situative Effekte wie der erste Treffer pro Runde werden im Spiel angewendet. Es werden keine Würfel geworfen oder Gegenstände gekauft.</p><a href="${e(ability.source)}" target="_blank" rel="noopener noreferrer">Regelreferenz zu ${e(ability.original)} ↗</a></details>
-  <div class="bottom-bar"><button class="secondary" data-view="skills">← Zurück zu den Fertigkeiten</button><button class="primary" data-view="lifepath">Weiter zum Lebensweg →</button></div>`;
+  <div class="bottom-bar completion-actions"><button class="secondary" data-view="skills">← Zurück zu den Fertigkeiten</button>${completion}<button class="primary" data-view="lifepath">Weiter zum Lebensweg →</button></div>`;
 }

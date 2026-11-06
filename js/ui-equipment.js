@@ -1,85 +1,123 @@
-import {armorSelection} from './ui-armor-loadout.js';
+import {renderWornArmor} from './ui-armor-loadout.js?v=shoplabels1';
+import {armorPurchaseError} from './armor.js?v=shopcompact1';
 import {fundingPrice} from './ui-funding.js?v=inline1';
-import {renderClothing} from './ui-clothing.js?v=shoplayout1';
-import {renderStreetDrugs} from './ui-street-drugs.js?v=shoplayout1';
+import {renderClothing} from './ui-clothing.js?v=shopcompact1';
+import {renderStreetDrugs} from './ui-street-drugs.js?v=shopcompact1';
 import {evaluateLoadout,purchaseLoadoutError} from './loadout-limits.js?v=shopping1';
-import {attachmentList,secondaryWeapons} from './weapon-attachments.js?v=shopping1';
+import {attachmentList,secondaryWeapons,weaponConfiguration} from './weapon-attachments.js?v=shopping1';
 import {renderWeaponAttachments} from './ui-weapon-attachments.js?v=shopping1';
-import { netrunnerStats, NETRUNNER_GROUPS } from './netrunner.js';
-import { renderNetrunnerHelp } from './ui-netrunner.js';
-import { renderWeaponOptionCard,renderOwnedWeaponOptions } from './ui-weapon-options.js?v=shopping1';
-import { isRecommended, recommendationPriority } from './equipment-recommendations.js';
-import { renderCustomEquipment } from './ui-custom-equipment.js';
-import { escapeHtml as e } from './html.js';
-import { weaponAmmoBundle } from './economy.js?v=shopping1';
-const eb = value => `${value.toLocaleString('de-DE')} eb`;
-const names = { weapons: 'Waffen', armor: 'Rüstung', misc: 'Sonstiges', clothing: 'Normale Kleidung', netrunner: 'Netrunner-Waffen' };
-function meleeHelp(evaluated) {
-  const melee = evaluated.skills.find(skill => skill.id === 'melee-weapon');
-  return `<aside class="melee-help"><h3>Nahkampfwaffen · so funktioniert’s</h3><p><strong>Treffen:</strong> ${evaluated.attributes.DEX.effective ?? '—'} (GES) + ${melee?.level ?? 0} (Nahkampfwaffen)${evaluated.roleAbilities?.bonuses.attack ? ` + ${evaluated.roleAbilities.bonuses.attack} (Solo-Präzision)` : ''} + 1W10 gegen GES + Ausweichen + 1W10 des Ziels. Dein Ergebnis muss höher sein; bei Gleichstand gewinnt die Verteidigung. Reichweite: 2 m.</p><p><strong>Schaden:</strong> Waffenschaden würfeln − aufgerundet(SP ÷ 2), mindestens 0. Kommt Schaden durch, sinkt der ursprüngliche SP des getroffenen Bereichs um 1. Dieser Verlust bleibt bis zur Reparatur bestehen.</p><p class="inline-note">Hausregel für diesen Katalog: Kampfmesser und Tomahawk sind einhändig. Ab Mittel steht links die einhändige Waffe mit 50 % Aufpreis, rechts die zweihändige. ROF gibt die möglichen Angriffe pro Angriffsaktion an.</p></aside>`;
+import {netrunnerStats,NETRUNNER_GROUPS} from './netrunner.js';
+import {renderNetrunnerHelp} from './ui-netrunner.js';
+import {renderWeaponOptionCard} from './ui-weapon-options.js?v=weaponhelp1';
+import {isRecommended,recommendationPriority} from './equipment-recommendations.js';
+import {renderCustomEquipment} from './ui-custom-equipment.js?v=shopcompact1';
+import {escapeHtml as e} from './html.js';
+import {weaponAmmoBundle} from './economy.js?v=shopcompact1';
+
+const names={weapons:'Waffen',armor:'Rüstung',misc:'Sonstiges',netrunner:'Netrunner-Waffen'};
+const recommendationLabel='<small class="role-recommendation-label">Empfehlung</small>';
+const groupOf=item=>item.skill==='melee-weapon'?'melee':item.kind==='weapon'?'ranged':item.kind==='grenade'?'grenades':'ammo';
+const grenadeGroups=['Normale Granaten','Militärische Granaten','Spezialgranaten'];
+const grenadeGroup=item=>item.grenadeEffect?(item.grenadeEffect.military?1:0):2;
+const weaponGroups={
+  melee:['Nahkampfwaffen','Gegen GES + Ausweichen + 1W10 des Ziels würfeln. Gleichstand verteidigt. Reichweite 2 m. Vom Schaden den halben SP (aufgerundet) abziehen. Bei Durchdringung verliert der getroffene Bereich 1 SP.'],
+  ranged:['Fernkampfwaffen','Gegen die Schwierigkeit der Entfernung würfeln. Ziele ab REF 8 können vorher Ausweichen ansagen. Ihr Wurf aus GES + Ausweichen + 1W10 ersetzt die Schwierigkeit. Bei normalen Treffern vollen SP abziehen.'],
+  grenades:['Handgranaten','Mit Athletik bis zu 25 m werfen. Kein Werfer nötig.'],
+  ammo:['Munition','Passende Sorten erscheinen beim Waffenkauf. Im Magazin nur eine Sorte laden.']
+};
+
+function remove(item){
+  const label=item.kind==='ammo'?'Packung entfernen':'Entfernen';
+  return `<button type="button" class="text-button" id="remove-equipment-${item.id}" data-remove-equipment="${item.id}" aria-label="${label}: ${e(item.name)}">${label} −</button>`;
 }
-function rangedHelp(evaluated) {
-  const skills = ['handgun', 'shoulder-arms', 'archery', 'heavy-weapons'].map(id => evaluated.skills.find(skill => skill.id === id)).filter(Boolean);
-  return `<aside class="melee-help ranged-help"><h3>Fernkampfangriffe · so funktioniert’s</h3><p><strong>Treffen:</strong> ${evaluated.attributes.REF.effective ?? '—'} (REF) + passende Waffenfertigkeit${evaluated.roleAbilities?.bonuses.attack ? ` + ${evaluated.roleAbilities.bonuses.attack} (Solo-Präzision)` : ''} + 1W10 gegen den Schwierigkeitswert (DV) für Waffentyp und Entfernung. Dein Ergebnis muss höher sein; Gleichstand verfehlt. Auch Gegner mit REF 8 oder mehr können stattdessen mit GES + Ausweichen + 1W10 ausweichen. Sie sagen das vor deinem Angriff an und würfeln zuerst; ihr Ergebnis ersetzt die Entfernungs-DV.</p><p><strong>Deine Fertigkeitsränge:</strong> ${skills.map(skill => `${e(skill.name)} ${skill.level}`).join(' · ')}. Die Karte nennt die passende Fertigkeit; deine Angriffsbasis ist REF + Fertigkeitsrang.</p><p><strong>Schaden:</strong> Bei normalen Einzelschüssen Waffenschaden würfeln − voller SP des getroffenen Bereichs, mindestens 0. Dringt Schaden durch, sinkt dessen SP um 1 bis zur Reparatur. Panzerbrechende Munition senkt ihn dabei um 2. Explosivwaffen, Schrot, Autofeuer und Unterdrückungsfeuer haben zusätzliche Regeln.</p><p class="inline-note">„Kaufen + Munition“ enthält die Waffe und einen Startvorrat: bis zu zwei Magazinfüllungen, auf volle Packungen aufgerundet und bei Granaten auf das verbleibende Limit begrenzt; beim Bogen 20 Pfeile/Bolzen. Das ist eine Einkaufshilfe, keine vorgeschriebene Einsatzmenge. Weitere passende Munition erscheint nach dem Waffenkauf.</p></aside>`;
+
+const unitCost=(character,item)=>item.cost+attachmentList(character,item.id).reduce((sum,attachment)=>sum+attachment.cost,0);
+
+function controls(item,character,rules,evaluated,quantity,{allowRemove=true,bundle=null}={}){
+  const cost=unitCost(character,item);
+  const armorError=armorPurchaseError(character,rules,item);
+  const limit=purchaseLoadoutError(character,rules,item.id);
+  const available=evaluated.funds.remaining+(item.funding==='fashion'?evaluated.funds.fashionRemaining:0);
+  const reason=armorError??limit;
+  const wear=item.category==='armor';
+  const buy=!(wear&&quantity)?`<button type="button" class="secondary" id="buy-equipment-${item.id}" data-buy-equipment="${item.id}" ${wear?`data-wear-armor="${item.slot}"`:''} ${reason||available<cost||quantity>=99?'disabled':''} ${reason?`title="${e(reason)}"`:''}>${armorError?'Platz belegt':limit?'Limit erreicht':wear?'Kaufen & anlegen':'Kaufen'} · ${fundingPrice([{cost,funding:item.funding}],evaluated.funds)}</button>`:'';
+  const ammoQuantity=bundle?character.equipment.items.find(entry=>entry.catalogId===bundle.ammo.id)?.quantity??0:0;
+  const packageButton=bundle?`<button type="button" class="secondary" id="buy-ammo-bundle-${item.id}" data-buy-ammo-bundle="${item.id}" ${limit||available<bundle.cost||quantity>=99||ammoQuantity+bundle.quantity>99?'disabled':''} aria-describedby="bundle-info-${item.id}">Kaufen + Munition · ${fundingPrice([{cost:bundle.cost}],evaluated.funds)}</button><small class="bundle-info" id="bundle-info-${item.id}">${bundle.units} × ${e(bundle.ammo.name)}</small>`:'';
+  return `<div class="weapon-buy-actions">${buy}${packageButton}${allowRemove&&quantity?remove(item):''}</div>`;
 }
-function grenadeHelp(evaluated) {
-  const base=(evaluated.skills.find(s=>s.id==='athletics')?.base??0)+(evaluated.roleAbilities?.bonuses.attack??0);
-  return `<aside class="melee-help"><h3>Handgranaten · ohne Granatwerfer</h3><p><strong>Werfen: ${base} + 1W10 (Athletik)</strong> gegen Entfernungs-Schwierigkeit: 0–6 m: 16 · 7–12 m: 15 · 13–25 m: 15. Maximal 25 m, eine Aktion, eine Granate verbraucht. Wirkung im 10 × 10 m-Bereich. Bei Fehlschlag Abweichung nach Explosionsregeln; Deckung und zulässiges Ausweichen berücksichtigen. Keine gezielten Schüsse.</p><p>Splitter-/Brandgranaten würfeln Flächenschaden; Gas, EMP und Blendgranaten verwenden die beschriebenen Widerstandsproben. Granatwerfermunition bleibt ein eigener Kauf.</p></aside>`;
-}
-function buyBundle(item, character, rules, evaluated) {
-  const bundle = weaponAmmoBundle(rules, item.id,character);
-  if (!bundle) return '';
-  const owned = id => character.equipment.items.find(entry => entry.catalogId === id)?.quantity ?? 0;
-  const limitError=purchaseLoadoutError(character,rules,item.id);
-  const disabled = !!limitError || evaluated.funds.remaining < bundle.cost || owned(item.id) >= 99 || owned(bundle.ammo.id) + bundle.quantity > 99;
-  return `<button class="secondary" id="buy-ammo-bundle-${item.id}" data-buy-ammo-bundle="${item.id}" ${disabled ? 'disabled' : ''} aria-describedby="bundle-info-${item.id}" ${limitError?`title="${e(limitError)}"`:""}>${limitError?'Limit erreicht':'Kaufen + Munition'} · ${fundingPrice([{cost:bundle.cost}],evaluated.funds)}</button>`;
-}
-function buy(item, character, rules, evaluated, wear = false) {
-  const totalCost=item.cost+attachmentList(character,item.id).reduce((sum,a)=>sum+a.cost,0);
-  const limitError=purchaseLoadoutError(character,rules,item.id);
-  const disabled = !!limitError || evaluated.funds.remaining + (item.funding==='fashion'?evaluated.funds.fashionRemaining:0) < totalCost || (character.equipment.items.find(entry => entry.catalogId === item.id)?.quantity ?? 0) >= 99;
-  return `<button class="secondary" id="buy-equipment-${item.id}" data-buy-equipment="${item.id}" ${wear ? `data-wear-armor="${item.slot}"` : ''} ${disabled ? 'disabled' : ''} ${limitError?`title="${e(limitError)}"`:''}>${limitError?'Limit erreicht':wear ? 'Kaufen & anlegen' : 'Kaufen +'} · ${fundingPrice([{cost:totalCost,funding:item.funding}],evaluated.funds)}</button>`;
-}
-function loadoutSummary(character,rules) {
-  const loadout=evaluateLoadout(character,rules),labels={grenades:'Granaten',oneHanded:'Einhandwaffen',twoHanded:'Zweihandwaffen'};
-  return `<aside class="loadout-limits" aria-label="Ausrüstungsgrenzen"><h3>Deine mitgeführten Waffen</h3><div>${Object.entries(labels).map(([id,label])=>`<span class="${loadout.counts[id]>loadout.limits[id]?'limit-error':''}">${label}: <strong>${loadout.counts[id]} / ${loadout.limits[id]}</strong></span>`).join('')}</div><p>Höchstens 3 Granaten und entweder 3 Einhandwaffen oder 2 Einhandwaffen plus 1 Zweihandwaffe. Stückzahlen zählen; Werfergranaten sind eingeschlossen. Montierte Zusatzläufe sind Teil ihrer Trägerwaffe. Ein Anschlagschaft kann die Handführung ändern.</p>${loadout.errors.length?`<p class="limit-error">${loadout.errors.map(e).join(' ')}</p>`:''}</aside>`;
-}
-export function renderEquipment(character, rules, evaluated, category, state = {}) {
-  if(category==='drugs')return renderStreetDrugs(character,rules,evaluated,state);
+
+export function renderEquipment(character,rules,evaluated,category,state={}){
+  if(category==='drugs')return renderStreetDrugs(character,rules,evaluated);
   if(category==='clothing')return renderClothing(character,rules,evaluated);
   if(category==='netrunner'&&character.role!=='netrunner')return '';
-  const allItems = rules.equipmentRules.items.filter(item => item.category === category);
-  const ownedWeapons = allItems.filter(item => item.kind === 'weapon' && character.equipment.items.some(entry => entry.catalogId === item.id));
-  const compatibleAmmo = new Set([...ownedWeapons,...secondaryWeapons(character,rules).map(e=>e.item)].flatMap(item => item.ammoIds ?? []));
-  const items = allItems.filter(item => item.kind !== 'ammo' || compatibleAmmo.has(item.id));
-  const grenadeGroup=item=>item.grenadeEffect?(item.grenadeEffect.military?1:0):2;
-  const group = item => item.skill === 'melee-weapon' ? 0 : item.kind === 'weapon' ? 1 : item.kind === 'grenade' ? 2 : 3;
-  if (category === 'weapons') items.sort((a,b) => group(a)-group(b) || (a.kind==='grenade'&&b.kind==='grenade'?grenadeGroup(a)-grenadeGroup(b):0) || recommendationPriority(character.role)(a,b) || (a.skill === 'melee-weapon' ? parseInt(a.damage)-parseInt(b.damage) || a.hands-b.hands : 0));
-  else if(category==='netrunner') items.sort((a,b)=>Object.keys(NETRUNNER_GROUPS).indexOf(a.netrunner.group)-Object.keys(NETRUNNER_GROUPS).indexOf(b.netrunner.group)||recommendationPriority(character.role)(a,b)||a.cost-b.cost||a.name.localeCompare(b.name,'de'));
-  else items.sort(recommendationPriority(character.role));
-  const inventory = character.equipment.items.filter(entry => allItems.some(item => item.id === entry.catalogId));
-  const cards = category === 'armor' ? items.filter(item => item.slot === 'head').map(item => {
-    const pair = items.filter(entry => entry.armorType === item.armorType);
-    const recommended = pair.some(part=>isRecommended(character.role,part.id));
-    return `<article class="equipment-card ${recommended?'role-recommended':''}"><span class="eyebrow">SP ${item.sp} · ${item.penalty ? '−' + item.penalty : '0'} REF / GES / BEW</span><h3>${e(item.armorName)}</h3>${recommended?'<small class="role-recommendation-label">Empfehlung</small>':''}<p>${e(item.description)}</p><div class="armor-purchases">${pair.map(part => `<div><strong>${part.slot === 'head' ? 'Kopfschutz' : 'Körperrüstung'}</strong>${buy(part, character, rules, evaluated, !character.equipment.armor?.[part.slot])}</div>`).join('')}</div><small>${e(item.reference)} · Preis je Bereich</small></article>`;
-  }).join('') : items.map((item, index) => {
-    const skill = item.skill && evaluated.skills.find(skill => skill.id === item.skill);
-    const melee = item.skill === 'melee-weapon';
-    const heading = category==='netrunner'?(index===0||items[index-1].netrunner.group!==item.netrunner.group?`<h3 class="weapon-group-heading">${NETRUNNER_GROUPS[item.netrunner.group]}</h3>`:''):category !== 'weapons' || (index > 0 && group(items[index-1]) === group(item)) ? '' : group(item) === 0 ? meleeHelp(evaluated) : group(item) === 1 ? rangedHelp(evaluated) : group(item)===2 ? grenadeHelp(evaluated) : '<p class="inline-note">Nur Munition für bereits gekaufte Waffen. Eine Packung enthält die angegebene Stückzahl. Munitionssorte beim Laden wählen; Magazin nicht mischen.</p>';
-    const grenadeHeading=category==='weapons'&&item.kind==='grenade'&&(items[index-1]?.kind!=='grenade'||grenadeGroup(items[index-1])!==grenadeGroup(item))?`<h3 class="weapon-group-heading">${['Normale Granaten','Militärische Granaten','Spezialgranaten'][grenadeGroup(item)]}</h3>`:'';
-    const ranged = item.kind === 'weapon' && !melee;
-    const start=category==='weapons'&&(index===0||group(items[index-1])!==group(item));
-    const end=category==='weapons'&&(index===items.length-1||group(items[index+1])!==group(item));
-    const key=['melee','ranged','grenades','ammo'][group(item)];
-    const label=['Nahkampfwaffen','Fernkampfwaffen','Handgranaten','Passende Munition'][group(item)];
-    const recommended = isRecommended(character.role,item.id);
-    const groupRecommendations = start ? items.filter(candidate=>group(candidate)===group(item)&&isRecommended(character.role,candidate.id)) : [];
-    const bundle = ranged ? weaponAmmoBundle(rules, item.id,character) : null;
-    return `${start?`<details class="weapon-catalog-group" data-weapon-section="${key}" ${state.weaponSections?.includes(key)?'open':''}><summary>${label} <small>${items.filter(i=>group(i)===group(item)).length} Optionen</small>${groupRecommendations.length?`<span class="weapon-recommendation-preview">Empfohlen: ${groupRecommendations.map(candidate=>e(candidate.name)).join(' · ')}</span>`:''}</summary><div class="equipment-grid">`:''}${heading}${grenadeHeading}<article class="equipment-card ${recommended?'role-recommended':''}"><span class="eyebrow">${item.netrunner?NETRUNNER_GROUPS[item.netrunner.group]:item.kind === 'ammo' ? `MUNITION · ${item.units} STÜCK` : item.kind === 'weapon' ? 'STANDARDQUALITÄT' : item.kind==='grenade'?'HANDGRANATE · 1 STÜCK':'ALLTAG & WERKZEUG'}</span><h3>${e(item.name)}</h3>${recommended?'<small class="role-recommendation-label">Empfehlung</small>':''}${melee ? `<small class="weapon-classification">(${e(item.classification)})</small>` : ''}${item.kind === 'weapon' ? `<p class="weapon-stats"><strong>${item.damage}</strong> Schaden · ROF ${item.rof} · ${item.concealable ? 'Verdeckbar' : 'Nicht verdeckbar'}${item.magazine ? ` · Magazin ${item.magazine}` : ''} · ${item.hands}-händig</p>${ranged ? `<small class="weapon-skill">${e(skill?.name ?? '')}</small>` : ''}` : ''}${item.kind==='grenade'?`<p class="weapon-stats"><strong>${item.damage==='—'?'Wirkungsgranate':item.damage+' Schaden'}</strong> · Handwurf · 1 Aktion · 1 Stück</p>`:''}${(['misc','netrunner','clothing'].includes(category)||item.kind==='grenade'||item.ammoType) ? `<p>${e(item.description)}</p>` : ''}${item.netrunner?`<p class="netrunner-stats">${e(netrunnerStats(item))}</p>`:''}${item.kind==='weapon'||item.kind==='grenade'?renderWeaponOptionCard(item,evaluated):''}<div class="weapon-buy-actions">${buy(item, character, rules, evaluated)}${ranged ? buyBundle(item, character, rules, evaluated) : ''}</div>${bundle ? `<small class="bundle-info" id="bundle-info-${item.id}">Mit Munition: ${bundle.units} × ${e(bundle.ammo.name)}</small>` : ''}<small>${e(item.reference)}${item.houseRule ? ' · Handführung/Preis: Hausregel' : ''}</small></article>${end?'</div></details>':''}`;
-  }).join('');
-  return `<section class="equipment-section"><div class="section-heading"><span class="section-index">↗</span><div><h2>${names[category]}</h2><p>${category === 'armor' ? 'Kopf und Körper einzeln schützen. Wähle deine gekaufte Rüstung zum Anlegen aus.' : category === 'weapons' ? 'Waffen und passende Munition. ROF = Angriffe je Angriffsaktion.' : category==='netrunner'?'Cyberdecks, Programme, Black ICE und Hardware für deinen Netrun.':'Kommunikation, Werkzeug und nützliche Begleiter für deinen Alltag.'}</p></div></div>${category==='weapons'?loadoutSummary(character,rules):''}${category==='netrunner'?renderNetrunnerHelp(character,rules,evaluated):''}${category === 'misc' ? renderCustomEquipment(character, state.customEquipmentDraft) : ''}<div class="shop-owned-layout"><section class="shop-inventory" aria-label="Inventar dieser Kategorie"><h3>Im Inventar</h3><div class="inventory">${inventory.map(entry => {
-    const item = allItems.find(item => item.id === entry.catalogId);
-    const worn = Object.values(character.equipment.armor ?? {}).includes(item.id);
-    return `<article><div><strong>${entry.quantity} × ${e(item.name)}${worn ? ' · angelegt' : ''}</strong><small>${eb((item.cost+attachmentList(character,item.id).reduce((sum,a)=>sum+a.cost,0)) * entry.quantity)}${item.units ? ` · ${entry.quantity * item.units} Stück` : ''}</small></div><button class="text-button" id="remove-equipment-${item.id}" data-remove-equipment="${item.id}" aria-label="Ein ${e(item.name)} entfernen">Eins entfernen −</button>${category==='weapons'?renderWeaponAttachments(character,item,rules,evaluated,state):''}</article>`;
-  }).join('') || '<p class="empty-results">Hier ist dein Inventar noch leer.</p>'}</div>${category==='weapons'?renderOwnedWeaponOptions(character,rules,evaluated):''}</section>${armorSelection(character,rules,evaluated)}</div><div class="shop-catalog"><h3>Zum Kaufen</h3><div class="${category==='weapons'?'weapon-catalog':'equipment-grid'}">${cards}</div><p class="inline-note">Entfernen erstattet den Kaufpreis und legt entfernte Rüstung automatisch ab.</p><a class="chrome-source" href="${e(rules.equipmentRules.source)}" target="_blank" rel="noopener noreferrer">Preise: offizieller RTG Night Market Index ↗</a></div></section>`;
+  const owned=new Map(character.equipment.items.map(entry=>[entry.catalogId,entry.quantity]));
+  const priority=recommendationPriority(character.role);
+  const all=rules.equipmentRules.items.filter(item=>item.category===category).sort(priority);
+  const extras=category==='weapons'?secondaryWeapons(character,rules):[];
+  const compatibleAmmo=new Set([...all.filter(item=>item.kind==='weapon'&&owned.has(item.id)),...extras.map(entry=>entry.item)].flatMap(item=>item.ammoIds??[]));
+  const items=all.filter(item=>item.kind!=='ammo'||compatibleAmmo.has(item.id));
+  const weaponStock=category==='weapons'?all.filter(item=>owned.has(item.id)):[];
+  const extrasFor=item=>extras.filter(entry=>entry.item.parentWeaponId===item.id);
+  const grid=content=>`<div class="equipment-grid">${content}</div>`;
+
+  function card(item){
+    const quantity=owned.get(item.id)??0;
+    const recommended=isRecommended(character.role,item.id);
+    const weapon=item.kind==='weapon',grenade=item.kind==='grenade',ammo=item.kind==='ammo';
+    const configured=weapon?weaponConfiguration(character,item):item;
+    const bundle=weapon&&item.skill!=='melee-weapon'?weaponAmmoBundle(rules,item.id,character):null;
+    const heading=weapon||grenade?renderWeaponOptionCard(configured,evaluated,extrasFor(item),null,state.weaponSections):`<h3>${e(item.name)}</h3>`;
+    const stats=weapon?[`<strong>${e(configured.damage)}</strong>`,`ROF ${configured.rof}`,`${configured.hands}-händig`,configured.concealable?'verdeckbar':null,configured.magazine?`Magazin ${configured.magazine}`:null].filter(Boolean).join(' · '):
+      grenade?(item.damage==='—'?'Wirkungsgranate':`${e(item.damage)} Schaden`):ammo?`${item.units} pro Packung`:item.netrunner?e(netrunnerStats(item)):'';
+    return `<article class="equipment-card shop-card ${recommended?'role-recommended':''}">
+      ${heading}${recommended?recommendationLabel:''}${weapon&&item.classification?`<small>${e(item.classification)}</small>`:''}
+      ${stats?`<p class="weapon-stats">${stats}</p>`:''}${(!weapon&&!grenade&&!ammo||ammo&&item.ammoType&&item.ammoType!=='basic')?`<p>${e(item.description)}</p>`:''}
+      ${quantity&&category!=='weapons'?`<p class="shop-quantity">${quantity} × vorhanden</p>`:''}
+      ${controls(item,character,rules,evaluated,quantity,{allowRemove:category!=='weapons',bundle})}
+    </article>`;
+  }
+
+  function armorCard(item){
+    const parts=items.filter(part=>part.armorType===item.armorType);
+    const recommended=parts.some(part=>isRecommended(character.role,part.id));
+    return `<article class="equipment-card shop-card ${recommended?'role-recommended':''}">
+      <h3>${e(item.armorName)}</h3>${recommended?recommendationLabel:''}<p>SP ${item.sp}${item.penalty?` · −${item.penalty} REF / GES / BEW`:''}</p>
+      <div class="armor-purchases">${parts.map(part=>{
+        const quantity=owned.get(part.id)??0;
+        const worn=character.equipment.armor?.[part.slot]===part.id;
+        const wear=quantity&&!worn?`<button type="button" class="secondary" data-equip-armor="${part.id}" data-wear-armor="${part.slot}">Anlegen</button>`:'';
+        return `<div><strong>${part.slot==='head'?'Kopf':'Körper'}${quantity?` · ${worn?'angelegt':'gekauft'}${quantity>1?` (${quantity} ×)`:''}`:''}</strong>${wear}${controls(part,character,rules,evaluated,quantity)}</div>`;
+      }).join('')}</div></article>`;
+  }
+
+  function weaponGroup(key,label,help){
+    const entries=items.filter(item=>groupOf(item)===key);
+    if(!entries.length)return '';
+    if(key==='melee')entries.sort((a,b)=>priority(a,b)||parseInt(a.damage)-parseInt(b.damage)||a.hands-b.hands);
+    const content=key==='grenades'?grenadeGroups.map((name,index)=>{
+      const grenades=entries.filter(item=>grenadeGroup(item)===index);
+      return grenades.length?`<h3 class="weapon-group-heading">${name}</h3>${grenades.map(card).join('')}`:'';
+    }).join(''):entries.map(card).join('');
+    return `<details class="weapon-catalog-group" data-weapon-section="${key}" ${state.weaponSections?.includes(key)?'open':''}><summary>${label} <small>${entries.length} Optionen</small></summary>${grid(`<details class="shop-group-help" id="shop-help-${key}"><summary>Regeln kurz erklärt</summary><p>${help}</p></details>${content}`)}</details>`;
+  }
+
+  const loadout=category==='weapons'?evaluateLoadout(character,rules):null;
+  const limits=loadout?`<p class="shop-limits">Einhandwaffen: <strong>${loadout.counts.oneHanded} / ${loadout.limits.oneHanded}</strong> · Zweihandwaffen: <strong>${loadout.counts.twoHanded} / ${loadout.limits.twoHanded}</strong> · Granaten: <strong>${loadout.counts.grenades} / ${loadout.limits.grenades}</strong></p>${loadout.errors.length?`<p class="limit-error">${loadout.errors.map(e).join(' ')}</p>`:''}`:'';
+  const custom=category==='misc'?`<details class="shop-custom" id="shop-custom-equipment"><summary class="secondary">Eigene Ausrüstung${character.equipment.custom?.length?` (${character.equipment.custom.length})`:''}</summary>${renderCustomEquipment(character,state.customEquipmentDraft)}</details>`:'';
+  const netrunner=category==='netrunner'?`<details class="shop-group-help" id="shop-net-help"><summary>Netzregeln nachschlagen</summary>${renderNetrunnerHelp(character,rules,evaluated)}</details>`:'';
+  const purchases=weaponStock.length?`<section class="shop-bought-weapons" aria-labelledby="shop-bought-title">
+    <h3 id="shop-bought-title">Im Inventar</h3>
+    <div class="inventory">${weaponStock.filter(item=>item.kind!=='ammo').map(item=>`<article>
+      <div class="stock-weapon-name">${renderWeaponOptionCard(item.kind==='weapon'?weaponConfiguration(character,item):item,evaluated,extrasFor(item),owned.get(item.id),state.weaponSections)}
+        <small>${(unitCost(character,item)*owned.get(item.id)).toLocaleString('de-DE')} eb</small></div>
+      ${remove(item)}${renderWeaponAttachments(character,item,rules,evaluated,state)}
+    </article>`).join('')}</div>
+    ${weaponStock.some(item=>item.kind==='ammo')?`<div class="shop-ammo-stock"><h4>Munition</h4><ul>
+      ${weaponStock.filter(item=>item.kind==='ammo').map(item=>`<li><span>${e(item.name)} <strong>${owned.get(item.id)*item.units-(character.campaign?.ammoSpent?.[item.id]??0)} Stück</strong></span>${remove(item)}</li>`).join('')}
+    </ul></div>`:''}
+  </section>`:'';
+  const cards=category==='weapons'?Object.entries(weaponGroups).map(([key,[label,help]])=>weaponGroup(key,label,help)).join(''):
+    category==='armor'?grid(items.filter(item=>item.slot==='head').map(armorCard).join('')):
+    category==='netrunner'?Object.entries(NETRUNNER_GROUPS).map(([key,label])=>`<details class="weapon-catalog-group" id="shop-net-${key}"><summary>${e(label)}</summary>${grid(items.filter(item=>item.netrunner.group===key).map(card).join(''))}</details>`).join(''):grid(items.map(card).join(''));
+  return `<section class="equipment-section compact-shop"><div class="section-heading"><div><h2>${names[category]}</h2>${category==='armor'?'<p>Ein Kopfschutz und eine Körperpanzerung pro Charakter.</p>':''}</div></div>${limits}${category==='armor'?renderWornArmor(evaluated):''}${custom}${netrunner}${purchases}${cards}</section>`;
 }

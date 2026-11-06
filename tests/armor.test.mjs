@@ -35,9 +35,25 @@ test('Falscher Bereich, fehlender Besitz und manipulierte Ausrüstung werden abg
  c.equipment.armor.body='armor-light-jack-head';assert.throws(()=>validateCharacter(c,rules));
 });
 test('Letztes Exemplar entfernen legt ab und erstattet; Ersatzexemplar erhält Auswahl',()=>{
- const c=fresh();buy(c,'armor-heavy-jack-body');buy(c,'armor-heavy-jack-body');wear(c,'body','armor-heavy-jack-body');
+ const c=fresh();buy(c,'armor-heavy-jack-body');wear(c,'body','armor-heavy-jack-body');
+ // Ein früherer Speicherstand kann noch zwei Exemplare enthalten.
+ c.equipment.items[0].quantity=2;
+ assert.deepEqual(validateCharacter(c,rules),c);
  removeEquipment(c,'armor-heavy-jack-body');assert.equal(evaluateCharacter(c,rules).armor.penalty,2);
  removeEquipment(c,'armor-heavy-jack-body');assert.equal(evaluateCharacter(c,rules).armor.penalty,0);assert.equal(evaluateFunds(c,rules).remaining,2550);
+});
+test('Ein Rüstungskauf pro Bereich; nach Entfernen ist ein Wechsel möglich',()=>{
+ const c=fresh();buy(c,'armor-kevlar-body');buy(c,'armor-kevlar-head');
+ const before=structuredClone(c);
+ assert.match(buyEquipment(c,rules,'armor-kevlar-body').error,/bereits eine Körperrüstung/);
+ assert.match(buyEquipment(c,rules,'armor-flak-head').error,/bereits einen Kopfschutz/);
+ assert.deepEqual(c,before);
+ const html=renderEquipment(c,rules,evaluateCharacter(c,rules),'armor');
+ assert.match(html,/data-buy-equipment="armor-flak-head"[^>]*disabled/);
+ assert.match(html,/data-remove-equipment="armor-kevlar-head"/);
+ assert.match(html,/data-equip-armor="armor-kevlar-head" data-wear-armor="head">Anlegen/);
+ assert.doesNotMatch(html,/Im Inventar/);
+ removeEquipment(c,'armor-kevlar-head');buy(c,'armor-flak-head');
 });
 test('Format 5 migriert verlustfrei und Format 6 speichert getragene Rüstung',()=>{
  const c=fresh();buy(c,'agent');buy(c,'armor-kevlar-body');const old=structuredClone(c);old.version=5;delete old.equipment.armor;
@@ -47,8 +63,14 @@ test('Format 5 migriert verlustfrei und Format 6 speichert getragene Rüstung',(
 test('Alle neuen Bereiche rendern Katalog, Preise und passende Kaufaktionen',()=>{
  const c=fresh(),ev=evaluateCharacter(c,rules);
  for(const category of ['weapons','armor','misc']){const html=renderEquipment(c,rules,ev,category);assert.match(html,/data-buy-equipment/);assert.doesNotMatch(html,/undefined|NaN/);}
- assert.match(renderEquipment(c,rules,ev,'armor'),/data-armor-slot="head"/);
+ buy(c,'armor-light-jack-head');
+ wear(c,'head','armor-light-jack-head');
+ const armor=renderEquipment(c,rules,evaluateCharacter(c,rules),'armor');
+ assert.match(armor,/<strong>Kopf<\/strong><span>[^<]+ · SP 11<\/span>/);
+ assert.match(armor,/<strong>Körper<\/strong><span>Keine Rüstung<\/span>/);
+ assert.doesNotMatch(armor,/<select|data-equip-armor="armor-light-jack-head"/);
  assert.match(renderEquipment(c,rules,ev,'weapons'),/Angriffsbasis/);
+ assert.match(renderEquipment(c,rules,ev,'misc'),/id="shop-custom-equipment"><summary class="secondary">Eigene Ausrüstung/);
 });
 
 test('Einhändige Nahkampfvarianten kosten 50 Prozent mehr und nutzen das gemeinsame Budget',()=>{

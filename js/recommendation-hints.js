@@ -1,5 +1,4 @@
 import {isRecommended} from './equipment-recommendations.js';
-import {escapeHtml as e} from './html.js';
 
 const KEY='red-builder.ui.recommendations-seen.v1';
 function scope(character,storage){return `${storage?.getItem('red-builder.character.activeArchive')||'draft'}:${character.role}`;}
@@ -22,5 +21,5 @@ export function remainingRecommendations(character,rules,kind,category){
 }
 export function recommendationBadge(character,rules,key,kind,category){
   const count=remainingRecommendations(character,rules,kind,category);
-  return count&&unreadRecommendations(character,key)?`<span class="recommendation-badge" title="Noch nicht ${kind==='cyberware'?'installiert':'gekauft'} · unverbindliche Empfehlungen" aria-label="${count} offene Empfehlung${count===1?'':'en'}">${e(String(count))} ${count===1?'Tipp':'Tipps'}</span>`:'';
+  return count?`<span class="recommendation-badge${unreadRecommendations(character,key)?'':' is-seen'}" title="Noch nicht ${kind==='cyberware'?'installiert':'gekauft'} · unverbindliche Empfehlungen" aria-label="${count} offene Empfehlung${count===1?'':'en'}">${count} ${count===1?'Tipp':'Tipps'}</span>`:'';
 }
