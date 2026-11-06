@@ -18,7 +18,9 @@ export function evaluateArmor(character, rules, cyberware = null) {
   }
   if (result.penalty) result.effects = ['REF', 'DEX', 'MOVE'].map(target => ({ type: 'equipment', target, value: -result.penalty, min: 0, label: 'Getragene Rüstung', source: 'Grundregelwerk S. 96–97' }));
   result.cyberSP = Math.max(0, ...(cyberware?.effects ?? []).filter(effect => effect.type === 'armor' && effect.target === 'both').map(effect => effect.value));
-  result.headSP = Math.max(result.head?.sp ?? 0, result.cyberSP);
-  result.bodySP = Math.max(result.body?.sp ?? 0, result.cyberSP);
+  result.cyberHeadSP=Math.max(0,result.cyberSP-(character.campaign?.cyberArmorLoss?.head??0));
+  result.cyberBodySP=Math.max(0,result.cyberSP-(character.campaign?.cyberArmorLoss?.body??0));
+  result.headSP = Math.max(result.head?.sp ?? 0, result.cyberHeadSP);
+  result.bodySP = Math.max(result.body?.sp ?? 0, result.cyberBodySP);
   return result;
 }

@@ -1,6 +1,6 @@
-import {evaluateCharacter} from './rules.js?v=shopping1';
+import {evaluateCharacter} from './rules.js?v=group1';
 import {livingCosts} from './lifepath.js';
-import {roleRank} from './campaign-state.js?v=shopping1';
+import {roleRank} from './campaign-state.js?v=magazines1';
 
 const integer=(value,label,max=365)=>{
   if(value===''||value==null||!Number.isSafeInteger(Number(value))||Number(value)<0||Number(value)>max)throw Error(`${label}: Gib eine ganze Zahl von 0 bis ${max} ein.`);

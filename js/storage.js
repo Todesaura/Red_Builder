@@ -1,4 +1,4 @@
-import { migrateCharacter, MAX_PORTRAIT_LENGTH } from './model.js?v=shopping1';
+import { migrateCharacter, MAX_PORTRAIT_LENGTH } from './model.js?v=group1';
 
 export const STORAGE_KEY = 'red-builder.character.v1';
 export const BACKUP_KEY = 'red-builder.character.v1.backup';
@@ -24,6 +24,7 @@ export function loadCharacter(rules, storage) {
 export function saveCharacter(character, storage) {
   try {
     (storage ?? globalThis.localStorage).setItem(STORAGE_KEY, JSON.stringify(character));
+    if(!storage&&typeof window!=='undefined')window.dispatchEvent(new Event('red-builder-saved'));
     return { ok: true };
   } catch {
     return { ok: false, error: 'Speichern nicht möglich. Prüfe den Browserspeicher oder den privaten Modus. Dein aktueller Stand bleibt in diesem Tab erhalten.' };

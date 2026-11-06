@@ -1,8 +1,33 @@
 import {INJURY_STATUS} from './campaign-rules.js?v=shopping1';
 // Coordinates measured on the supplied, unmodified 1500 x 1165 rendering.
-import {CYBERWARE_PRINT_SUMMARIES,CYBERWARE_PRINT_NAMES} from './pdf-cyberware-summary.js?v=shopping1';
+import {CYBERWARE_PRINT_SUMMARIES,CYBERWARE_PRINT_NAMES} from './pdf-cyberware-summary.js?v=freedlc1';
 // Each rectangle is inside the printed cell, below its printed label.
 export const TEMPLATE_SHA256 = '4d5ed61178ef9c927178d0236f596642098af73bf5baff9d3d5046e5b55e4b4c';
+
+export function fitTemplatePageToA4(page, reservePawnMargin, {
+  PageSizes, pushGraphicsState, popGraphicsState, translate, scale
+}) {
+  const [height,width]=PageSizes.A4;
+  const sheetScale=reservePawnMargin?0.9:0.94;
+  const originalWidth=page.getWidth(), originalHeight=page.getHeight();
+  const x=reservePawnMargin?0:(width-originalWidth*sheetScale)/2;
+  const y=(height-originalHeight*sheetScale)/2;
+  // Transform only the template stream. Widgets and the pawn use final A4 coordinates.
+  const {context}=page.doc;
+  page.node.normalize();
+  const start=context.register(context.contentStream([
+    pushGraphicsState(),translate(x,y),scale(sheetScale,sheetScale)
+  ]));
+  const end=context.register(context.contentStream([popGraphicsState()]));
+  page.node.wrapContentStreams(start,end);
+  page.setSize(width,height);
+  page.setCropBox(0,0,width,height);
+  page.setBleedBox(0,0,width,height);
+  page.setTrimBox(0,0,width,height);
+  page.setArtBox(0,0,width,height);
+  return {x,top:y+originalHeight*sheetScale,unit:originalWidth/1500,fontScale:sheetScale};
+}
+
 export function characterSheetFields(data) {
   const fields = [];
   const add = (name,page,x,y,w,h,value,size=8,options={}) => fields.push({name,page,x,y,w,h,value:String(value ?? ''),size,...options});

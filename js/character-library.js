@@ -1,5 +1,5 @@
-import { createCharacter, migrateCharacter, validateCharacter, MAX_PORTRAIT_LENGTH } from './model.js?v=shopping1';
-import { STORAGE_KEY } from './storage.js?v=shopping1';
+import { createCharacter, migrateCharacter, validateCharacter, MAX_PORTRAIT_LENGTH } from './model.js?v=group1';
+import { STORAGE_KEY } from './storage.js?v=group1';
 const PREFIX = 'red-builder.character.archive.';
 export const ACTIVE_ARCHIVE_KEY = 'red-builder.character.activeArchive';
 
@@ -50,7 +50,7 @@ export function switchCharacter(current,next,rules,storage,options={}) {
     };
     const previousBinding=storage.getItem(ACTIVE_ARCHIVE_KEY)??'';
     const currentKey=readArchivedCharacter(previousBinding,rules,storage)?previousBinding:matchingKey(safeCurrent);
-    let nextKey=options.nextKey??matchingKey(safeNext);
+    let nextKey=options.importAsCopy?null:options.nextKey??matchingKey(safeNext);
     if(options.nextKey){
       const storedNext=readArchivedCharacter(options.nextKey,rules,storage);
       if(!storedNext||JSON.stringify(storedNext)!==JSON.stringify(safeNext))throw new Error('Das Zielprofil ist nicht mehr verfügbar oder wurde geändert.');
@@ -76,6 +76,6 @@ export function switchCharacter(current,next,rules,storage,options={}) {
 }
 
 export function resetCharacterUi(state, character) {
-  state.pendingArchiveDeletion=null;state.sessionSaved=null;state.sessionPage='info';state.sessionTask='';state.sessionFields=null;state.sessionDraft=null;state.sessionCyber=null;state.sessionEditing=null;state.sessionCorrection=null;
+  state.groupRemote=null;state.groupSyncMessage='';state.playCriticalSlot=null;state.playUndo=null;state.pendingArchiveDeletion=null;state.sessionSaved=null;state.sessionPage='info';state.sessionTask='';state.sessionFields=null;state.sessionDraft=null;state.sessionCyber=null;state.sessionEditing=null;state.sessionCorrection=null;
   Object.assign(state,{character,drugFilters:{},lifepathSection:null,lifepathQuestion:null,error:'',pdfExportMessage:'',skillSearch:'',skillCategory:'all',customSkillFields:[],cyberSearch:'',cyberCategory:'accessories',cyberSort:'foundation',onlyInstallable:false,cyberPlacement:null,selectedCyberware:null,pendingLocation:null,inspectedLocation:null,installationOpen:false,equipmentTab:'cyberware',cyberDraft:[],removingCyberware:null,removalFee:'',customEquipmentDraft:{id:null,name:'',cost:'',quantity:'1',notes:''}});
 }

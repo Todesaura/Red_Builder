@@ -3,7 +3,7 @@ import { evaluateRolePoints } from './role-points.js?v=shopping1';
 import { evaluateSkills, skillValidation } from './skills.js?v=shopping1';
 import { deriveValues } from './derived.js?v=shopping1';
 import { evaluateCyberware } from './cyberware.js?v=shopping1';
-import { evaluateArmor } from './armor.js?v=shopping1';
+import { evaluateArmor } from './armor.js?v=magazines1';
 import { evaluateFunds } from './economy.js?v=shopping1';
 import {evaluateLoadout} from './loadout-limits.js?v=shopping1';
 

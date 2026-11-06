@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import {rules,completeCharacter} from './helpers/pdf-fixture.mjs';
 import {renderSessionReport,sessionCyberState} from '../js/ui-session-report.js';
 import {SESSION_PAGES,setSessionRewards,sessionActionPage} from '../js/session-guide.js';
-import {createSessionDraft,previewSession,completeSession} from '../js/session-report.js';
+import {createSessionDraft,previewSession,completeSession,sessionHandoff} from '../js/session-report.js';
+import {applyPlayAction} from '../js/play-tracking.js';
+import {buyEquipment} from '../js/economy.js';
+import {equipArmor} from '../js/armor.js';
 import {quickAddCyberware} from '../js/cyberware-quick-add.js';
 const character=()=>completeCharacter('rockerboy');
 function setup(page='info',task=''){const c=character();return {c,state:{sessionDraft:createSessionDraft(c),sessionPage:page,sessionTask:task,sessionCyber:sessionCyberState()}};}
@@ -46,4 +49,40 @@ test('Bearbeiten einer Steigerung verwendet den Rang vor dieser Buchung',()=>{
 test('Alle Vorgänge bleiben ihrer Station zugeordnet; Regel- und Speicherlogik bleiben wirksam',()=>{
   for(const [type,page] of [['skill','rewards'],['role','rewards'],['health','health'],['injury','health'],['gear','inventory'],['armor','inventory'],['cyber-install','cyber'],['therapy','cyber'],['story','story']])assert.equal(sessionActionPage({type}),page);
   const {c,state}=setup('review');state.sessionDraft=setSessionRewards(state.sessionDraft,100,20);state.sessionDraft.actions.push({type:'skill',id:'cybertech',to:1,actionId:'skill'});const result=completeSession(c,rules,state.sessionDraft);assert.ok(result.ok,result.error);assert.equal(result.character.campaign.ip,0);assert.equal(result.character.campaign.history.length,1);assert.equal(c.campaign.history.length,0);
+});
+
+test('Session-Abschluss übernimmt Trackingwerte einmal und exportiert den gespeicherten Stand',()=>{
+  let c=character();c.playerName='Max';c.campaign.sessionUnlocked=true;
+  assert.ok(buyEquipment(c,rules,'armor-kevlar-body').ok);
+  assert.ok(equipArmor(c,rules,'body','armor-kevlar-body').ok);
+  assert.ok(buyEquipment(c,rules,'ammo-rifle').ok);
+  const remaining=rules.equipmentRules.items.find(i=>i.id==='ammo-rifle').units-3;
+  for(const action of [
+    {type:'armor',slot:'body',amount:2},
+    {type:'ammo',id:'ammo-rifle',amount:3},
+    {type:'critical',slot:'body',injury:'broken-leg',addBonus:true,notes:'Behandlung offen'}
+  ]){
+    const result=applyPlayAction(c,rules,action);assert.ok(result.ok,result.error);c=result.character;
+  }
+  const draft=createSessionDraft(c);
+  // A local synchronization acknowledgement does not change the game state.
+  c.groupRevision++;
+  const info=renderSessionReport(c,rules,{sessionDraft:draft,sessionPage:'info'});
+  assert.match(info,/Stand nach dem Einsatz/);
+  assert.match(info,/Gebrochenes Bein/);
+  assert.ok(info.includes(`${remaining} Stück`));
+  const result=completeSession(c,rules,draft);
+  assert.ok(result.ok,result.error);
+  assert.equal(result.character.campaign.hp,c.campaign.hp);
+  assert.deepEqual(result.character.campaign.ammoSpent,c.campaign.ammoSpent);
+  assert.deepEqual(result.character.campaign.injuries,c.campaign.injuries);
+  const handoff=sessionHandoff(result.character,result.report);
+  assert.equal(handoff.player,'Max');
+  assert.equal(handoff.report.endStatus.hp,c.campaign.hp);
+  assert.equal(handoff.report.endStatus.armor.body,5);
+  assert.equal(handoff.report.endStatus.ammo[0].remaining,remaining);
+  assert.equal(handoff.report.endStatus.injuries[0].notes,'Behandlung offen');
+  assert.equal('changes' in handoff.report,false);
+  assert.match(renderSessionReport(result.character,rules,{sessionSaved:1}),/Session-Bericht herunterladen \(JSON\)/);
+  assert.equal(completeSession(result.character,rules,draft).ok,false);
 });

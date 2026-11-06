@@ -1,12 +1,12 @@
-import {renderSessionWelcome,renderSessionGuide} from './session-guide.js?v=mobile1';
+import {renderSessionWelcome,renderSessionGuide} from './session-guide.js?v=sessionend1';
 import {ATTACHMENTS} from './weapon-attachments.js?v=shopping1';
 import {escapeHtml as e} from './html.js';
-import {previewSession,sessionSnapshot} from './session-report.js?v=recovery1';
+import {previewSession,sessionSnapshot,sessionEndStatus} from './session-report.js?v=sessionend1';
 import {THERAPIES,TRANSACTION_TYPES,SESSION_SOURCES,INJURY_STATUS} from './campaign-rules.js?v=shopping1';
-import {evaluateCharacter} from './rules.js?v=shopping1';
+import {evaluateCharacter} from './rules.js?v=group1';
 import {ROLE_POOLS,PHARMACEUTICALS} from './role-points.js?v=shopping1';
 import {renderCyberware} from './ui-cyberware.js?v=mobile1';
-import {characterSheetReadiness} from './pdf-character-data.js?v=shopping1';
+import {characterSheetReadiness} from './pdf-character-data.js?v=group1';
 
 const options=(entries,selected='')=>entries.map(([value,label])=>`<option value="${e(String(value))}" ${String(value)===String(selected)?'selected':''}>${e(String(label))}</option>`).join('');
 const input=(name,label,type='text',attrs='')=>`<label>${e(label)}<input name="${name}" type="${type}" ${attrs}></label>`;
@@ -18,6 +18,13 @@ const sessionForm=(type,body,label)=>`<form data-session-form="${type}" class="s
 const group=(id,title,body,open=false)=>`<details id="session-${id}" class="session-group" ${open?'open':''}><summary>${title}</summary><div>${body}</div></details>`;
 const grid=items=>`<div class="session-metrics">${items.map(([label,value])=>`<div><small>${e(label)}</small><strong>${e(String(value??'–'))}</strong></div>`).join('')}</div>`;
 function metrics(snapshot){return grid([['Eurobucks',snapshot.cash+' eb'],['Verbesserungspunkte',snapshot.ip+' IP'],['Trefferpunkte',snapshot.hp+' / '+snapshot.maxHp],['Menschlichkeit',snapshot.humanity+' / '+snapshot.maxHumanity],['Empathie',snapshot.empathy],['Rollenrang',snapshot.roleRank]]);}
+function renderEndStatus(status){
+  const {hp,maxHp,armor,injuries,ammo}=status;
+  return `<section aria-label="Stand nach dem Einsatz"><h3>Stand nach dem Einsatz</h3>
+    ${grid([['Trefferpunkte',`${hp} / ${maxHp}`],['Rüstung Kopf',`${armor.head} SP`],['Rüstung Körper',`${armor.body} SP`]])}
+    <h4>Kritische Verletzungen</h4>${injuries.length?`<ul>${injuries.map(i=>`<li>${e(i.name)} · ${e(INJURY_STATUS[i.status])}${i.notes?` · ${e(i.notes)}`:''}</li>`).join('')}</ul>`:'<p>Keine eingetragen.</p>'}
+    ${ammo.length?`<details class="session-more" id="session-end-ammo"><summary>Verbleibende Munition (inkl. geladener Schüsse)</summary><ul>${ammo.map(a=>`<li>${e(a.name)} · ${a.remaining} Stück</li>`).join('')}</ul></details>`:''}</section>`;
+}
 function changeSummary(p){
   if(!p.before)return '';
   return `<dl class="session-diff">${[['Geld','cash','eb'],['Verbesserungspunkte','ip','IP'],['Trefferpunkte','hp',''],['Menschlichkeit','humanity',''],['Max. Menschlichkeit','maxHumanity',''],['Empathie','empathy',''],['Rollenrang','roleRank',''],['Ruf','reputation','']].map(([label,key,unit])=>`<div><dt>${label}</dt><dd class="${p.after&&p.before[key]!==p.after[key]?'session-changed':''}">${p.before[key]} → <strong>${p.after?.[key]??'–'}</strong> ${unit}</dd></div>`).join('')}</dl>`;
@@ -30,7 +37,7 @@ export function renderSessionReport(character,rules,state){
   const initial=sessionSnapshot(character,rules),draft=state.sessionDraft,forms={};
   const form=(type,body,label)=>{const markup=sessionForm(type,body,label);forms[type]=markup;return markup;};
   const exports=`<section class="panel session-export"><h3>Charakter sichern</h3><button class="secondary" data-session-export-character>Aktuellen Charakter als JSON exportieren</button><button class="primary" data-action="generate-character-sheet" ${!characterSheetReadiness(character,rules).ready||state.pdfExportBusy?'disabled':''}>Aktualisierten Charakterbogen exportieren</button><p role="status">${e(state.pdfExportMessage??'')}</p><small>Charakter und Berichte bleiben lokal in diesem Browser. Sichere wichtige Stände als JSON.</small></section>`;
-  if(!draft)return renderSessionWelcome({recovery:character.campaign.history.at(-1)?.recoveryPlan,character,initial,savedSession:state.sessionSaved,canExport:characterSheetReadiness(character,rules).ready&&!state.pdfExportBusy,metrics:metrics(initial),history:history(character),exports,correction:state.sessionCorrection?form('correction',input('reason','Grund der Korrektur','text','required maxlength="1000"')+'<p>Der letzte Bericht bleibt erhalten. Seine Änderungen werden in einem neuen Bericht zurückgebucht.</p>','Korrekturvorschau erstellen'):''});
+  if(!draft)return renderSessionWelcome({recovery:character.campaign.history.at(-1)?.recoveryPlan,character,initial,savedSession:character.campaign.history.find(h=>h.number===state.sessionSaved),canExport:characterSheetReadiness(character,rules).ready&&!state.pdfExportBusy,metrics:metrics(initial),history:history(character),exports,correction:state.sessionCorrection?form('correction',input('reason','Grund der Korrektur','text','required maxlength="1000"')+'<p>Der letzte Bericht bleibt erhalten. Seine Änderungen werden in einem neuen Bericht zurückgebucht.</p>','Korrekturvorschau erstellen'):''});
   const p=previewSession(character,rules,draft),context=state.sessionEditing!=null?previewSession(character,rules,{...draft,actions:draft.actions.slice(0,state.sessionEditing)}):p,projected=context.after?context.character:character,v=evaluateCharacter(projected,rules),c=projected.campaign;
   const warning=p.errors.length?`<div class="notice" role="alert"><strong>Vor dem Abschluss korrigieren</strong><ul>${p.errors.map(s=>`<li>${e(s)}</li>`).join('')}</ul></div>`:'';
   const meta=`<section class="panel"><h3>Session-Übersicht</h3><div class="session-form">${input('number','Session-Nummer','number',`id="session-number" data-session-meta="number" min="1" max="99999" value="${draft.number}"`)}${input('date','Datum','date',`id="session-date" data-session-meta="date" value="${e(draft.date)}"`)}${input('name','Session-Name (optional)','text',`id="session-name" data-session-meta="name" maxlength="120" value="${e(draft.name)}"`)}<label class="session-wide">Was ist passiert?<textarea id="session-notes" data-session-meta="notes" maxlength="2000">${e(draft.notes)}</textarea></label></div></section>`;
@@ -51,5 +58,6 @@ export function renderSessionReport(character,rules,state){
   const humanityChanged=p.after&&(p.before.humanity!==p.after.humanity||p.before.maxHumanity!==p.after.maxHumanity);
   const summary=`<section class="session-review" aria-label="Änderungsübersicht">${draft.ipAward?`<p>Erhalten: <strong>${draft.ipAward} Verbesserungspunkte (IP)</strong>.</p>`:''}<dl class="session-diff">${changed.map(([label,key,unit])=>`<div><dt>${label}</dt><dd class="session-changed">${p.before[key]} → <strong>${p.after[key]}</strong>${unit}</dd></div>`).join('')}${humanityChanged?`<div><dt>Menschlichkeit</dt><dd class="session-changed">${p.before.humanity}/${p.before.maxHumanity} → <strong>${p.after.humanity}/${p.after.maxHumanity}</strong></dd></div>`:''}</dl><ol class="session-log">${draft.actions.map((a,i)=>a.wizardReward&&!a.amount?'':`<li><span>${e(p.log[i+(draft.ipAward?1:0)]??'Diesen Eintrag bitte prüfen.')}</span><button type="button" class="text-button" data-session-edit="${i}">Bearbeiten</button><button type="button" class="session-remove" data-session-remove="${i}" aria-label="Änderung ${i+1} entfernen">×</button></li>`).join('')||'<li>Keine weiteren Änderungen eingetragen.</li>'}</ol>${warning}${p.warnings.length?`<div class="notice">${p.warnings.map(s=>`<p>${e(s)}</p>`).join('')}</div>`:''}<details id="session-all-values"><summary>Gesamten Charakterstand ansehen</summary>${p.after?metrics(p.after):'Korrigiere zuerst die markierten Einträge.'}</details><div class="session-guide-footer">${draft.actions[0]?.type==='correction'?'':'<button class="secondary" data-session-page="story">← Zurück</button>'}<button class="primary" data-session-complete ${!p.ok||state.storageBlocked||state.sessionCyber?.cyberDraft.length?'disabled':''}>Session abschließen und speichern</button></div></section>`;
   const correction=draft.actions[0]?.type==='correction';
-  return renderSessionGuide({character,rules,state,initial,p,forms,meta,summary,cyberState:state.sessionCyber??sessionCyberState(),evaluated:v,projected,contextSnapshot:context.after??initial});
+  const endSummary=['info','review'].includes(state.sessionPage??'info')&&p.after?renderEndStatus(sessionEndStatus(p.character,rules)): '';
+  return renderSessionGuide({character,rules,state,initial,p,forms,meta,summary,endSummary,cyberState:state.sessionCyber??sessionCyberState(),evaluated:v,projected,contextSnapshot:context.after??initial});
 }

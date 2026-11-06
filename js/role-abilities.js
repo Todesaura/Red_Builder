@@ -1,4 +1,4 @@
-import {roleRank} from './campaign-state.js?v=shopping1';
+import {roleRank} from './campaign-state.js?v=magazines1';
 import { evaluateRolePoints } from './role-points.js?v=shopping1';
 // Explanations use the same saved allocations and effects as the central rules engine.
 export const STARTING_ROLE_RANK = 4;

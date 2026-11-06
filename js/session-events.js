@@ -1,12 +1,12 @@
 import {needsCyberwareSide} from './cyberware-placement.js?v=shopping1';
 import {SESSION_PAGES,sessionActionPage,sessionActionTask,setSessionRewards} from './session-guide.js?v=mobile1';
-import {createSessionDraft,previewSession,completeSession} from './session-report.js?v=recovery1';
-import {sessionCyberState} from './ui-session-report.js?v=mobile1';
+import {createSessionDraft,previewSession,completeSession,sessionHandoff} from './session-report.js?v=sessionend1';
+import {sessionCyberState} from './ui-session-report.js?v=sessionend1';
 import {quickAddCyberware} from './cyberware-quick-add.js?v=shopping1';
 import {addToCyberwareDraft,removeFromCyberwareDraft} from './cyberware-draft.js?v=shopping1';
 import {initialInstallationLocation} from './cyberware-ui-model.js?v=shopping1';
-import {saveCharacter,loadCharacter} from './storage.js?v=shopping1';
-import {evaluateCharacter} from './rules.js?v=shopping1';
+import {saveCharacter,loadCharacter} from './storage.js?v=group1';
+import {evaluateCharacter} from './rules.js?v=group1';
 import {ROLE_POOLS} from './role-points.js?v=shopping1';
 import {recoveryPlan} from './recovery-plan.js?v=recovery1';
 import {recoveryInput} from './ui-recovery-plan.js?v=recovery1';
@@ -14,6 +14,12 @@ import {acknowledgeRecommendations} from './recommendation-hints.js?v=hints1';
 
 function downloadJson(value,name){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name.replace(/[<>:"/\\|?*]/g,'');a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 export function bindSessionEvents(root,state,rules,refresh){
+  function startSession(){
+    if(state.sessionDraft)return;
+    Object.assign(state,{sessionSaved:null,sessionDraft:createSessionDraft(state.character),sessionPage:'info',
+      sessionRecoveryStage:'medical',sessionTask:'',sessionFields:null,sessionEditing:null,sessionReturn:null,
+      sessionCyber:sessionCyberState(),sessionCorrection:null,sessionToast:'',sessionFormError:'',error:''});
+  }
   const cyber=()=>state.sessionCyber??=sessionCyberState();
   const preview=()=>previewSession(state.character,rules,state.sessionDraft);
   const current=()=>{const p=state.sessionEditing!=null?previewSession(state.character,rules,{...state.sessionDraft,actions:state.sessionDraft.actions.slice(0,state.sessionEditing)}):preview();return p.after?p.character:state.character;};
@@ -79,7 +85,7 @@ export function bindSessionEvents(root,state,rules,refresh){
     if(button.dataset.sessionPage){state.sessionPage=button.dataset.sessionPage;state.sessionTask='';state.sessionFields=null;state.sessionEditing=null;state.sessionToast='';state.sessionFormError='';refresh();document.getElementById('session-question')?.focus();return;}
     if(button.hasAttribute('data-session-task')){state.sessionTask=button.dataset.sessionTask;state.sessionFields=null;state.sessionEditing=null;state.sessionToast='';state.sessionFormError='';refresh();document.getElementById('session-question')?.focus();return;}
     if(button.hasAttribute('data-session-cancel-edit')){state.sessionEditing=null;state.error='';refresh();return;}
-    if(button.hasAttribute('data-session-start')){state.sessionSaved=null;state.sessionDraft=createSessionDraft(state.character);state.sessionPage='info';state.sessionRecoveryStage='medical';state.sessionTask='';state.sessionFields=null;state.sessionCyber=sessionCyberState();state.error='';refresh();return;}
+    if(button.hasAttribute('data-session-start')){startSession();refresh();return;}
     if(button.hasAttribute('data-session-discard')){state.sessionDraft=null;state.sessionCyber=null;state.sessionEditing=null;state.error='';refresh();return;}
     if(button.dataset.sessionRemove!=null){state.sessionDraft.actions.splice(Number(button.dataset.sessionRemove),1);state.sessionEditing=null;state.error='';refresh();return;}
     if(button.dataset.sessionEdit!=null){
@@ -106,7 +112,7 @@ export function bindSessionEvents(root,state,rules,refresh){
       state.character=result.character;state.sessionSaved=result.report.number;state.sessionPage='info';state.sessionTask='';state.sessionFields=null;state.sessionDraft=null;state.sessionCyber=null;state.sessionEditing=null;state.storageStatus='saved';state.error='';state.pdfExportMessage=`Session ${result.report.number} abgeschlossen. Charakter und Historie sind aktualisiert.`;refresh();return;
     }
     if(button.hasAttribute('data-session-export-character')){downloadJson(state.character,`RED-${state.character.name}-Kampagne.json`);return;}
-    if(button.dataset.sessionExport){const report=state.character.campaign.history.find(h=>h.id===button.dataset.sessionExport);if(report)downloadJson({character:state.character.name,report},`RED-Session-${report.number}.json`);return;}
+    if(button.dataset.sessionExport){const report=state.character.campaign.history.find(h=>h.id===button.dataset.sessionExport);if(report)downloadJson(sessionHandoff(state.character,report),`RED-${state.character.name}-Session-${report.number}.json`);return;}
     if(button.dataset.sessionCorrect){if(state.sessionDraft){error('Verwirf oder schließe zuerst den offenen Report ab.');return;}state.sessionCorrection=button.dataset.sessionCorrect;refresh();return;}
   },true);
   const update=(event)=>{
@@ -176,5 +182,5 @@ export function bindSessionEvents(root,state,rules,refresh){
     queue(a);
   },true);
   window.addEventListener('beforeunload',event=>{if(state.sessionDraft){event.preventDefault();event.returnValue='';}});
-  return {queueCyber,removeCyberDraft};
+  return {queueCyber,removeCyberDraft,startSession};
 }

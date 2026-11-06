@@ -1,9 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { PDFDocument, PDFName } from '../vendor/pdf-lib/pdf-lib.esm.min.js';
+import { readFile } from 'node:fs/promises';
+import { degrees, PDFDocument, PDFName, rgb, StandardFonts } from '../vendor/pdf-lib/pdf-lib.esm.min.js';
 import { characterSheetReadiness, characterSheetData, characterSheetFilename } from '../js/pdf-character-data.js';
 import { characterSheetFields } from '../js/pdf-character-layout.js';
 import { generateCharacterSheet, wrapPdfText, loadPdfAsset } from '../js/pdf-character.js';
+import { drawPawn, standardPawnPortrait } from '../js/pdf-pawn.js';
 import { evaluateCharacter } from '../js/rules.js';
 import { createCharacter } from '../js/model.js';
 import { buyWeaponWithAmmo, buyEquipment } from '../js/economy.js';
@@ -82,4 +84,65 @@ test('PNG-Porträt wird eingebettet und numerische Formularwerte bleiben exakt',
   const result=await generateCharacterSheet(c,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(result.bytes),v=evaluateCharacter(c,rules);
   for(const entry of v.skills)for(const [suffix,value] of [['rank',entry.level],['attribute',entry.attributeValue],['base',entry.base]])assert.equal(pdf.getForm().getTextField(`skills.${entry.id}.${suffix}`).getText(),String(value));
   const original=await PDFDocument.load(templateBytes);assert.ok(pdf.getPage(0).node.Resources().lookup(PDFName.of('XObject')).keys().length>original.getPage(0).node.Resources().lookup(PDFName.of('XObject')).keys().length);
+});
+
+test('Papierfigur auf A4-Seite 3 nutzt das Galerieporträt oder ein eigenes Standardbild',async()=>{
+  for (const role of rules.roles) {
+    for (const gender of ['M','W']) assert.ok(standardPawnPortrait(role.id,gender)?.thumbnail);
+  }
+  const c=completeCharacter();
+  const gallery=standardPawnPortrait(c.role,'M');
+  const assets=entry=>readFile(new URL('../'+entry.thumbnail,import.meta.url));
+  c.portrait='data:image/jpeg;base64,'+(await assets(gallery)).toString('base64');
+  const fallback=await assets(standardPawnPortrait(c.role,'W'));
+  const template=await PDFDocument.load(templateBytes);
+  const images=page=>page.node.Resources().lookup(PDFName.of('XObject'));
+  const newImage=(pdf,index)=>{
+    const original=images(template.getPage(index)), current=images(pdf.getPage(index));
+    const additions=current.keys().filter(key=>!original.has(key));
+    assert.equal(additions.length,index===2?2:1);
+    const refs=additions.map(key=>current.get(key).toString());
+    assert.equal(new Set(refs).size,1);
+    return refs[0];
+  };
+  for (const gallerySelected of [true,false]) {
+    c.portraitSource=gallerySelected?gallery.id:null;
+    const {bytes}=await generateCharacterSheet(c,rules,{templateBytes,fontBytes,pawnPortraitBytes:fallback});
+    const pdf=await PDFDocument.load(bytes);
+    assert.equal(pdf.getPageCount(),4);
+    for (const page of pdf.getPages()) {
+      const {width,height}=page.getSize();
+      assert.ok(Math.abs(width*25.4/72-297)<0.01 && Math.abs(height*25.4/72-210)<0.01);
+      assert.deepEqual(page.getCropBox(),page.getMediaBox());
+    }
+    assert.equal(newImage(pdf,0)===newImage(pdf,2),gallerySelected);
+  }
+});
+
+test('Papierfigur begrenzt lange Namen auf zwei gespiegelte Zeilen innerhalb der Schnittkante',async()=>{
+  const pdf=await PDFDocument.create(), font=await pdf.embedFont(StandardFonts.Helvetica);
+  const width=297*72/25.4;
+  const right=width-5*72/25.4, left=right-22*72/25.4;
+  const drawn=[];
+  const page={getWidth:()=>width,drawLine:()=>{},drawText:(text,options)=>drawn.push({text,...options})};
+  for (const [name, expectedLines, truncated] of [
+    ['Nyx Müller',1,false],
+    ['Nyx Morgan von Hohenfels',2,false],
+    ['W'.repeat(60),2,true],
+    ['Alexandra „Stahlauge“ von Hohenfels-Winter',2,true]
+  ]) {
+    drawn.length=0;
+    drawPawn(page,null,name,{font,rgb,degrees,wrap:wrapPdfText});
+    const front=drawn.slice(1).filter(line=>!line.rotate);
+    const back=drawn.slice(1).filter(line=>line.rotate?.angle===180);
+    assert.equal(front.length,expectedLines,name);
+    assert.deepEqual(front.map(line=>line.text),back.map(line=>line.text));
+    assert.equal(front.at(-1).text.endsWith('…'),truncated,name);
+    if (!truncated) assert.equal(front.map(line=>line.text).join(' '),name);
+    for (const line of [...front,...back]) {
+      const measured=font.widthOfTextAtSize(line.text,line.size);
+      assert.ok((line.rotate ? line.x-measured : line.x)>=left);
+      assert.ok((line.rotate ? line.x : line.x+measured)<=right);
+    }
+  }
 });

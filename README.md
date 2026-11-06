@@ -1,6 +1,6 @@
 # RED//BUILDER
 
-Kostenloser, inoffizieller, deutschsprachiger Charaktergenerator für Cyberpunk RED. **v0.9 / Phase 4**. HTML, CSS und Vanilla JavaScript mit ES-Modulen, ohne Framework, npm oder Build-Schritt. Alle Charakterdaten bleiben im Browser.
+Kostenloser, inoffizieller, deutschsprachiger Charaktergenerator für Cyberpunk RED. **v0.9 / Phase 4**. HTML, CSS und Vanilla JavaScript mit ES-Modulen, ohne Framework, npm oder Build-Schritt. Charaktere werden im Browser gespeichert und können als JSON gesichert werden. Mit Spielernamen synchronisiert der lokale Testserver zusätzlich in die SL-Gruppe.
 
 ## Lokal starten
 
@@ -10,7 +10,7 @@ Node.js 22.7 oder neuer im Projektordner:
 node serve.mjs
 ```
 
-Dann http://127.0.0.1:8080/ öffnen. Ein statischer HTTP-Server genügt. `file://` unterstützt die verwendeten Module und JSON-Dateien nicht zuverlässig.
+Dann http://127.0.0.1:8080/ öffnen. Für den Editor genügt ein statischer HTTP-Server; die automatische SL-Testgruppe benötigt `node serve.mjs`. `file://` unterstützt die verwendeten Module und JSON-Dateien nicht zuverlässig.
 
 ## Charakter erstellen
 
@@ -294,7 +294,7 @@ TP, Stabilisierung, Ruhe und kritische Verletzungen werden getrennt geführt. Ke
 
 Kontakte, Feinde, Ereignisse und Ziele liegen einmal in den Kampagnennotizen und werden im bestehenden Lebensweg abgeleitet ergänzt. Abgeschlossene Reports enthalten Datum/Nummer, Ausgangs- und Endwerte, kontrollierte Feldänderungen und Protokoll. Öffnen bucht nichts. Der letzte unveränderte Report kann mit Begründung durch einen neuen Korrekturbericht zurückgebucht werden; der Originalbericht bleibt erhalten. Pro Report und für den gesamten Charakter gibt es JSON-Export. Der bestehende vierseitige PDF-Export enthält die aktuellen Werte, IP/Ruf, Verletzungshinweise, Munition und den dynamischen Rollenrang.
 
-Format 11 ergänzt Kampagnendaten; Format 10 und ältere Versionen werden mit bestehenden Backups übernommen. Alles bleibt lokal im Browser, ohne Serverkonto oder Speicherung in GitHub. Historien sind zum Schutz des Browsers begrenzt (200 Reports und 1,5 MB); bei Überschreitung oder Speicherknappheit gibt es einen Fehler statt stillen Datenverlusts. Wichtige Charaktere und Reports als JSON sichern.
+Format 11 ergänzt Kampagnendaten; Format 10 und ältere Versionen werden mit bestehenden Backups übernommen. Ohne Spielerzuordnung bleiben Daten im Browser. Die lokale SL-Testgruppe speichert zusätzlich auf deinem Rechner; es gibt kein Serverkonto und keine Speicherung in GitHub. Historien sind zum Schutz des Browsers begrenzt (200 Reports und 1,5 MB); bei Überschreitung oder Speicherknappheit gibt es einen Fehler statt stillen Datenverlusts. Wichtige Charaktere und Reports als JSON sichern.
 
 
 ### Alltag, Kleidung und vereinfachte Erstellung
@@ -366,3 +366,16 @@ Die Statusberechnung verändert keine Charakterdaten und verwendet die vorhanden
 Die angeheftete Leiste ist auf jedem Ausstattungsreiter identisch. Sie zeigt Restgeld, Fashion-Zuschuss, aktuelle/maximale Menschlichkeit und EMP sowie vorhandene reale Waffen einschließlich gültiger Cyberwaffen und getrennt gezählte Granaten. Kopf- und Körperpanzerung verwenden die tatsächlich angelegten bzw. implantierten effektiven SP. Gekaufte, nicht angelegte Rüstung und aufgebrauchte Schutzwerte werden korrekt unterschieden; vorhandene Rüstungsabzüge bleiben sichtbar. Kacheln öffnen Waffen- bzw. passende Kopf-/Körperverwaltung. Netrunner sehen zusätzlich den Kaufbestand an Cyberdeck und NET-Waffen.
 
 Kurze optionale Ausstattungshinweise führen zur passenden Kategorie; weitere Hinweise zur Überprüfung. Ein offener Cyberware-Plan wird separat vom tatsächlichen Stand angezeigt. Keine neuen Berechnungsregeln oder automatischen Änderungen an Charakterdaten.
+
+
+## SL-Testgruppe ohne Anmeldung
+
+`node serve.mjs` starten, im Editor unter **Identität → Spielername** einen eindeutigen Namen eintragen. Der Charakter wird automatisch in die gemeinsame lokale Gruppe übertragen. **Spielleitung** oben öffnet `dm.html`. Mehrere Charaktere werden unter demselben Spielernamen zusammengefasst; pro Abrechnung ist nur ein lebender, vollständig erstellter Charakter je Spieler auswählbar. Als verstorben markierte Charaktere bleiben durchgestrichen im Archiv; der Status ist rückgängig machbar.
+
+Die SL kann Charakterdaten und Verletzungen ansehen, Erholungspläne mit den bestehenden Regeln berechnen und einen gemeinsamen Einsatztermin vergleichen. Klinik- und Lebenshaltungskosten sind Schätzungen nach den eingegebenen Behandlungsdaten, keine automatischen Abbuchungen oder Heilungen. Gruppenverdienst minus gemeinsame Ausgaben wird nach einer Vorschau auf Teilnehmer verteilt; Rest-eb gehen alphabetisch an die ersten ausgewählten Spieler. Jede Abrechnung hat eine eindeutige ID und wird bei Wiederholung nicht nochmals gebucht. Die Anteile stehen anschließend in der Charakter-/Session-Historie.
+
+Aktuelle Charaktere werden nach Änderungen und etwa alle zehn Sekunden synchronisiert. Neuere SL-Stände werden bei unverändertem lokalem Stand automatisch übernommen. Bei konkurrierenden Änderungen gibt es eine Meldung; „SL-Änderungen übernehmen“ erhält den bisherigen Charakter als lokales Archiv. JSON bleibt als unabhängiges Backup verfügbar.
+
+**Grenze dieser Testversion:** Der Server lauscht ausschließlich auf `127.0.0.1`; getestet wird auf demselben Rechner, z. B. mit mehreren Browserprofilen. Es gibt absichtlich keine Anmeldung und keine Rechteverwaltung innerhalb dieser lokalen Gruppe. Gemeinsames automatisches Spielen über das Internet/GitHub Pages ist damit noch nicht eingerichtet. Dafür ist später ein gemeinsamer Speicherdienst nötig. Ein freier Spielername ersetzt dort keinen sicheren Zugang.
+
+Die Gruppe liegt in `.local/group-8080.json` (abweichende Ports haben getrennte Dateien). `.local/` wird weder von Git erfasst noch als statische Datei ausgeliefert. Abrechnungen und Charakterstände werden gemeinsam atomar gespeichert; alte Spielerstände dürfen neuere SL-Buchungen nicht überschreiben. Die Datei lässt sich bei gestopptem Server als lokale Gesamtsicherung kopieren.

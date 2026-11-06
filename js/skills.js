@@ -1,4 +1,4 @@
-import {campaignSkillConfig} from './campaign-state.js?v=shopping1';
+import {campaignSkillConfig} from './campaign-state.js?v=magazines1';
 export function createSkills(config) {
   return {
     ranks: Object.fromEntries(config.skills.filter(skill => !skill.specialized).map(skill => [skill.id, skill.min])),

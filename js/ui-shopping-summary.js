@@ -15,7 +15,7 @@ export function renderShoppingSummary(character,rules,evaluated,state={},project
   const protection=slot=>{
     const sp=evaluated.armor[slot+'SP'],worn=evaluated.armor[slot];
     const owned=inventory.some(entry=>entry.item.category==='armor'&&entry.item.slot===slot);
-    const source=sp>0?(evaluated.armor.cyberSP>=sp?'Implantierter Schutz':worn?.armorName??worn?.name??'Angelegt'):worn?'Angelegt, Schutz aufgebraucht':owned?'Gekauft, nicht angelegt':'Kein Schutz';
+    const source=sp>0?(evaluated.armor[slot==='head'?'cyberHeadSP':'cyberBodySP']>=sp?'Implantierter Schutz':worn?.armorName??worn?.name??'Angelegt'):worn?'Angelegt, Schutz aufgebraucht':owned?'Gekauft, nicht angelegt':'Kein Schutz';
     const title=`${slot==='head'?'Kopf':'Körper'}: SP ${sp}. ${source}${worn?` · getragen: ${worn.name}, SP ${worn.sp}`:''}`;
     return `<button type="button" class="shopping-protection ${sp===0?'shopping-missing':''}" data-progress-step="cyberware" data-progress-tab="armor" data-progress-focus="armor-${slot}" aria-label="${e(title)}" title="${e(title)}"><span class="shopping-label">${slot==='head'?'Kopfschutz':'Körperpanzerung'}</span><strong>SP ${sp}</strong><small>${e(source)}</small></button>`;
   };

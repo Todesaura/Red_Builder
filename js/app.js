@@ -1,23 +1,27 @@
+import {bindGroupSync} from './group-client.js?v=group1';
+import {applyPlayAction} from './play-tracking.js?v=freedlc1';
+import {canOpenPlay} from './ui-play.js?v=sessionend1';
+import {characterJson, characterJsonFilename, readCharacterFile} from './character-files.js?v=group1';
 import {acknowledgeRecommendations,resetDraftRecommendationHints} from './recommendation-hints.js?v=hints1';
 import {needsCyberwareSide} from './cyberware-placement.js?v=shopping1';
-import {bindSessionEvents} from './session-events.js?v=mobile1';
+import {bindSessionEvents} from './session-events.js?v=sessionend1';
 import { quickAddCyberware } from './cyberware-quick-add.js?v=shopping1';
 import { emptyCustomEquipmentDraft } from './ui-custom-equipment.js';
-import { characterSheetReadiness } from './pdf-character-data.js?v=shopping1';
-import { archivedCharacters, readArchivedCharacter, switchCharacter, resetCharacterUi, deleteArchivedCharacter } from './character-library.js?v=shopping1';
+import { characterSheetReadiness } from './pdf-character-data.js?v=group1';
+import { archivedCharacters, readArchivedCharacter, switchCharacter, resetCharacterUi, deleteArchivedCharacter } from './character-library.js?v=group1';
 import { removeCustomEquipment } from './custom-equipment.js';
 import { lifepathChoiceNavigation, chooseLifepath, editLifepath, editLifepathCost, evaluateLifepath } from './lifepath.js?v=lifesplit1';
 import { assignRolePoint, choosePharmaceutical } from './role-points.js?v=shopping1';
-import { equipArmor } from './armor.js?v=shopping1';
-import { createCharacter } from './model.js?v=shopping1';
-import { assignAttribute, applyRecommendation, pointsRemaining, evaluateCharacter } from './rules.js?v=shopping1';
+import { equipArmor } from './armor.js?v=magazines1';
+import { createCharacter } from './model.js?v=group1';
+import { assignAttribute, applyRecommendation, pointsRemaining, evaluateCharacter } from './rules.js?v=group1';
 import { removeCyberware, canUndoCyberwarePurchase, cyberwareRemovalItems } from './cyberware.js?v=shopping1';
 import { addToCyberwareDraft, removeFromCyberwareDraft, commitCyberwareDraft } from './cyberware-draft.js?v=shopping1';
 import { baseStats, bindBodyDrag } from './ui-body.js?v=shopping1';
 import { initialInstallationLocation } from './cyberware-ui-model.js?v=shopping1';
 import { buyEquipment, removeEquipment, useStreetDrug, buyWeaponWithAmmo, saveCustomEquipment, addWeaponAttachment, removeWeaponAttachment } from './economy.js?v=shopping1';
-import { loadCharacter, saveCharacter, STORAGE_KEY } from './storage.js?v=shopping1';
-import { render } from './ui.js?v=emprisk1';
+import { loadCharacter, saveCharacter, STORAGE_KEY } from './storage.js?v=group1';
+import { render } from './ui.js?v=sessionend1';
 import { readPortrait, readGalleryPortrait } from './portraits.js?v=shopping1';
 import { assignSkill, addSpecialty, skillPointsRemaining, markSkillsEdited, resetSkillPoints, restoreRequiredSkills } from './skills.js?v=shopping1';
 import { applySkillRecommendation, automaticallyRecommendSkills, isInitialSkillAllocation } from './skill-recommendations.js?v=shopping1';
@@ -26,14 +30,14 @@ const root = document.getElementById('app');
 
 async function start() {
   let portraitRequest = 0;
-  const responses = await Promise.all(['rules.json', 'skills.json', 'cyberware.json', 'equipment.json'].map(file => fetch(new URL(`../data/${file}?v=shopping1`, import.meta.url))));
+  const responses = await Promise.all(['rules.json', 'skills.json', 'cyberware.json', 'equipment.json'].map(file => fetch(new URL(`../data/${file}?v=${file==='cyberware.json'?'freedlc1':'shopping1'}`, import.meta.url))));
   if (responses.some(response => !response.ok)) throw new Error('Die Regelkonfiguration konnte nicht geladen werden.');
   const [rules, skillRules, cyberwareRules, equipmentRules] = await Promise.all(responses.map(response => response.json()));
   rules.skillRules = skillRules;
   rules.cyberwareRules = cyberwareRules;
   rules.equipmentRules = equipmentRules;
   const loaded = loadCharacter(rules);
-  const views = ['identity', 'attributes', 'skills', 'role-abilities', 'lifepath', 'cyberware', 'review', 'session'];
+  const views = ['identity', 'attributes', 'skills', 'role-abilities', 'lifepath', 'cyberware', 'review', 'session', 'play'];
   const state = {
     character: loaded.character ?? createCharacter(rules),
     view: 'identity',
@@ -45,7 +49,17 @@ async function start() {
     cyberSearch: '', cyberCategory: 'accessories', cyberSort: 'foundation', onlyInstallable: false, selectedCyberware: null, pendingLocation: null, inspectedLocation: null, installationOpen: false, equipmentTab: 'cyberware', customEquipmentDraft: emptyCustomEquipmentDraft()
   };
   const refresh = () => render(root, state, rules);
+  const groupSync=bindGroupSync(state,c=>saveCharacter(c),refresh,c=>activateCharacter(c,null,true));
+  if(state.character.playerName?.trim()&&!state.character.groupId){state.character.groupId=crypto.randomUUID();saveCharacter(state.character);}
   const sessionEvents=bindSessionEvents(root,state,rules,refresh);
+  function trackPlay(action) {
+    if(state.view!=='play'||!canOpenPlay(state.character,rules,state))return;
+    if(state.sessionDraft){state.error='Schließe zuerst den offenen Session-Bericht ab oder verwirf ihn.';refresh();return;}
+    const result=applyPlayAction(state.character,rules,action);
+    if(result.ok){state.playCriticalSlot=null;state.playUndo=structuredClone(state.character);state.character=result.character;state.error='';persist();}
+    else state.error=result.error;
+    refresh();
+  }
   function announceBudget() {
     const cyber = state.view === 'cyberware' ? evaluateCharacter(state.character, rules).cyberware : null;
     document.getElementById('announcement').textContent = state.error || (state.view === 'lifepath' ? `${evaluateLifepath(state.character).answered} Lebensweg-Fragen beantwortet.` : '') || (state.view === 'role-abilities' ? `Rollenfähigkeit Rang ${evaluateCharacter(state.character,rules).roleAbilities.rank}. ${evaluateCharacter(state.character, rules).roleAbilities.remaining} Rollenpunkte übrig.` : '') || (cyber ? `${cyber.entries.length} Komponenten eingebaut. Kosten ${cyber.cost} Eurobucks. Menschlichkeit ${cyber.current}, Maximum ${cyber.maximum}.` : state.view === 'skills' ? `${skillPointsRemaining(state.character, rules)} Fertigkeitspunkte übrig.` : state.character.method === 'recommendation'
@@ -59,6 +73,7 @@ async function start() {
   function persist() {
     state.pdfExportMessage = '';
     if (state.storageBlocked) return;
+    if(state.character.playerName?.trim()&&!state.character.groupId)state.character.groupId=crypto.randomUUID();
     const result = saveCharacter(state.character);
     state.storageStatus = result.ok ? 'saved' : 'error';
     state.storageMessage = result.ok ? '' : result.error;
@@ -70,6 +85,7 @@ async function start() {
   }
   function navigate(view) {
     if (!views.includes(view)) return;
+    if(view==='play'&&!canOpenPlay(state.character,rules,state))view='review';
     if(view==='session'&&!state.character.campaign.sessionUnlocked)view='review';
     if (view !== 'identity' && (!state.character.name.trim() || !state.character.role)) {
       state.view = 'identity';
@@ -83,6 +99,7 @@ async function start() {
       applySkillRecommendation(state.character, rules);
       persist();
     }
+    if(view!=='play'){state.playUndo=null;state.playCriticalSlot=null;}
     state.view = view;
     state.error = '';
     if (location.hash !== `#${view}`) history.replaceState(null, '', `#${view}`);
@@ -96,20 +113,23 @@ async function start() {
     [...root.querySelectorAll('[data-delete-character]')].find(button=>button.dataset.deleteCharacter===key)?.focus({preventScroll:true});
   }
   root.addEventListener('cancel',event=>{
+    if(event.target.id==='play-critical-dialog'){event.preventDefault();state.playCriticalSlot=null;refresh();return;}
     if(event.target.id!=='delete-character-dialog')return;
     event.preventDefault();cancelArchiveDeletion();
   },true);
-  function activateCharacter(character, archiveKey=null) {
+  function activateCharacter(character, archiveKey=null, importAsCopy=false) {
     if(state.sessionDraft&&!window.confirm('Der offene Session-Entwurf ist noch nicht übernommen. Verwerfen und Charakter wechseln?'))return;
     if (state.pdfExportBusy) return;
     if (state.storageBlocked) { state.error='Das Speichern ist pausiert. Löse zuerst den Speicherkonflikt, damit dein aktueller Charakter gesichert werden kann.';refresh();return; }
-    const result=switchCharacter(state.character,character,rules,undefined,{nextKey:archiveKey});
+    const result=switchCharacter(state.character,character,rules,undefined,{nextKey:archiveKey,importAsCopy});
     if(!result.ok) {state.error=result.error;refresh();return;}
     resetCharacterUi(state,result.character);
     state.storageStatus='saved';state.storageMessage='';state.archivedCharacters=archivedCharacters(rules);
     navigate('identity');
     document.getElementById('announcement').textContent='Charakter geöffnet. Der vorherige Stand bleibt unter Gespeicherte Charaktere erhalten.';
     document.getElementById('character-name')?.focus();
+    groupSync.schedule();
+    return true;
   }
   function updateSkillName(id, text) {
     const value = text.slice(0, 60);
@@ -147,6 +167,7 @@ async function start() {
   }
   bindBodyDrag(root,state,(id,location)=>state.view==='session'?sessionEvents.queueCyber(id,location):chooseInstallation(id,location),id=>state.view==='session'?sessionEvents.removeCyberDraft(id):removeDraft(id));
   root.addEventListener('input', event => {
+    if(event.target.id==='player-name'){state.character.playerName=event.target.value.slice(0,60);persist();refresh();return;}
     if (event.target.id === 'removal-fee') { state.removalFee = event.target.value; return; }
     if (event.target.dataset.customField && ['name','cost','quantity','notes'].includes(event.target.dataset.customField)) { state.customEquipmentDraft[event.target.dataset.customField] = event.target.value; return; }
     if(event.target.dataset.lifepathCost){if(event.target.validity.badInput)return;const result=editLifepathCost(state.character,event.target.dataset.lifepathCost,event.target.value===''?undefined:Number(event.target.value));state.error=result.ok?'':result.error;if(result.ok)persist();refresh();return;}
@@ -166,6 +187,7 @@ async function start() {
     refresh();
   });
   root.addEventListener('submit', event => {
+    if(event.target.dataset.playForm){event.preventDefault();trackPlay({type:event.target.dataset.playForm,slot:event.target.dataset.playSlot,injury:new FormData(event.target).get('injury'),notes:new FormData(event.target).get('notes')??'',addBonus:new FormData(event.target).has('addBonus'),id:event.target.dataset.playAmmo,weapon:event.target.dataset.playWeapon,ammoId:new FormData(event.target).get('ammoId'),amount:Number(new FormData(event.target).get('amount'))});return;}
     if(state.character.campaign?.active&&state.view!=='session'){event.preventDefault();state.error='Änderungen am Kampagnencharakter bitte in Schritt 8 erfassen.';refresh();return;}
     if (event.target.id === 'cyberware-removal-form') {
       event.preventDefault();
@@ -185,7 +207,24 @@ async function start() {
     refresh(); announceBudget();
   });
   root.addEventListener('change', async event => {
-    if(event.target.dataset.drugFilter){state.drugFilters={...state.drugFilters,[event.target.dataset.drugFilter]:event.target.value};refresh();return;}
+    if (event.target.id === 'pdf-pawn-portrait') {
+      state.pdfPawnGender=event.target.value;
+      return;
+    }
+    if (event.target.id === 'character-json-file') {
+      const file = event.target.files?.[0];
+      if (!file || state.characterFileBusy || state.pdfExportBusy) return;
+      state.characterFileBusy = true;
+      refresh();
+      try {
+        const character = await readCharacterFile(file, rules);
+        if (activateCharacter(character, null, true)) {
+          document.getElementById('character-file-status').textContent = 'Charakter aus JSON geladen. Dein vorheriger Stand bleibt gespeichert.';
+        }
+      } catch (error) { state.error = `JSON konnte nicht geladen werden: ${error.message}`; refresh(); }
+      finally { state.characterFileBusy = false; root.querySelectorAll('[data-action$="-character-json"], #character-json-file').forEach(control => { control.disabled = Boolean(state.pdfExportBusy); }); }
+      return;
+    }
     if (event.target.dataset.lifepathChoice) {
       const id = event.target.dataset.lifepathChoice;
       const result = chooseLifepath(state.character, id, event.target.value);
@@ -234,6 +273,46 @@ async function start() {
   root.addEventListener('click', async event => {
     const button = event.target.closest('button');
     if (!button) return;
+    if(button.dataset.action==='end-session'){
+      if(state.view!=='play'||!canOpenPlay(state.character,rules,state)||state.storageBlocked)return;
+      if(!state.character.campaign.sessionUnlocked){
+        const stored=loadCharacter(rules);
+        if(stored.blocked||stored.character&&JSON.stringify(stored.character)!==JSON.stringify(state.character)){
+          state.error='Der gespeicherte Charakter wurde geändert. Lade zuerst den aktuellen Stand.';
+          refresh();return;
+        }
+        const character={...state.character,campaign:{...state.character.campaign,sessionUnlocked:true}};
+        const saved=saveCharacter(character);
+        if(!saved.ok){state.error=saved.error;refresh();return;}
+        state.character=character;
+        state.storageStatus='saved';
+        state.storageMessage='';
+      }
+      sessionEvents.startSession();
+      return navigate('session');
+    }
+    if(button.dataset.action==='accept-group-remote'){await groupSync.acceptRemote();return;}
+    if(button.dataset.playCritical){if(state.view==='play'){state.playCriticalSlot=button.dataset.playCritical;refresh();}return;}
+    if(button.dataset.playCriticalCancel){state.playCriticalSlot=null;refresh();return;}
+    if(button.dataset.playType){trackPlay({type:button.dataset.playType,weapon:button.dataset.playWeapon,mode:button.dataset.playMode,slot:button.dataset.playSlot,id:button.dataset.playId,implant:button.dataset.playImplant==='true',amount:Number(button.dataset.playAmount)});return;}
+    if(button.dataset.playUndo){if(state.view==='play'&&state.playUndo&&!state.sessionDraft){state.character=state.playUndo;state.playUndo=null;state.error='';persist();refresh();}return;}
+    if (button.dataset.action === 'import-character-json') {
+      if (!state.pdfExportBusy && !state.characterFileBusy) document.getElementById('character-json-file')?.click();
+      return;
+    }
+    if (button.dataset.action === 'export-character-json') {
+      if (state.pdfExportBusy || state.characterFileBusy) return;
+      try {
+        const text = characterJson(state.character, rules);
+        const url = URL.createObjectURL(new Blob([text], {type:'application/json;charset=utf-8'}));
+        const link = document.createElement('a');
+        link.href = url; link.download = characterJsonFilename(state.character);
+        document.body.append(link); link.click(); link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        document.getElementById('character-file-status').textContent = 'JSON-Datei zum Speichern bereitgestellt.';
+      } catch (error) { state.error = `JSON konnte nicht gespeichert werden: ${error.message}`; refresh(); }
+      return;
+    }
     if(button.dataset.progressStep){
       if(!views.includes(button.dataset.progressStep))return;
       if(button.dataset.progressLife&&evaluateLifepath(state.character).entries.some(q=>q.id===button.dataset.progressLife))Object.assign(state,lifepathChoiceNavigation(button.dataset.progressLife,'custom'));
@@ -313,11 +392,11 @@ async function start() {
       if (state.pdfExportBusy) return;
       const readiness = characterSheetReadiness(state.character,rules,state);
       if (!readiness.ready) { state.error=readiness.errors.join(' '); refresh(); return; }
-      const snapshot=structuredClone(state.character);
+      const snapshot=structuredClone(state.character), pawnGender=state.pdfPawnGender;
       state.pdfExportBusy=true;state.pdfExportMessage='';state.error='';refresh();
       try {
-        const { downloadCharacterSheet } = await import('./pdf-character.js?v=critical1');
-        const filename=await downloadCharacterSheet(snapshot,rules);
+        const { downloadCharacterSheet } = await import('./pdf-character.js?v=freedlc1');
+        const filename=await downloadCharacterSheet(snapshot,rules,{},pawnGender);
         state.pdfExportMessage=`PDF erstellt: ${filename}. Der Download wurde gestartet.`;
       } catch (error) { state.error=`Charactersheet konnte nicht erstellt werden: ${error.message}`; }
       finally { state.pdfExportBusy=false;refresh(); }

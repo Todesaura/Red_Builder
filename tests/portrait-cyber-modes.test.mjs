@@ -48,10 +48,12 @@ test('Sturmgewehr zeigt Normal, Gezielt, Dauerfeuer und Unterdrücken in Reihenf
   assert.equal(rows[3].base,data.skills.find(s=>s.id==='autofire').base);assert.deepEqual(c,before);
 });
 
-test('Glück nennt mehrere Punkte pro Probe und Waffenmodi bleiben auf einer A4-Seite',async()=>{
+test('Glück nennt Vorrat und Reihenfolge der Hausregel; Waffenmodi bleiben auf einer A4-Seite',async()=>{
   const c=completeCharacter();assert.ok(buyEquipment(c,rules,'smg').ok);assert.ok(buyEquipment(c,rules,'shotgun').ok);
   const data=characterSheetData(c,rules),text=JSON.stringify(cheatsheetColumns(data));
-  assert.match(text,/mehrere Punkte zugleich/);assert.match(text,/je \+1/);assert.match(text,/keine Todesrettung/);
+  assert.ok(text.includes(`**${data.derived.luck} Punkte pro Sitzung**`));
+  assert.match(text,/Hausregel: \*\*Vor dem Wurf ankündigen\*\*, \*\*nach dem Wurf\*\* entscheiden/);
+  assert.match(text,/Mehrere Punkte zugleich/);assert.match(text,/je \+1/);assert.match(text,/Kein Glück bei Todesrettungen/);
   const pdf=await PDFDocument.create();pdf.registerFontkit(fontkit);const font=await pdf.embedFont(fontBytes);
   const result=drawCheatsheet(pdf,data,{font,rgb,text:String});
   assert.equal(pdf.getPageCount(),1);assert.equal(result.layout.compactModes,false);assert.equal(result.layout.tableRows,7);

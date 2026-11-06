@@ -1,6 +1,6 @@
 import { installationErrors, installCyberware } from './cyberware.js?v=shopping1';
 import { evaluateFunds } from './economy.js?v=shopping1';
-import { evaluateCharacter } from './rules.js?v=shopping1';
+import { evaluateCharacter } from './rules.js?v=group1';
 import { baseStats, cyberwareCandidate } from './cyberware-ui-model.js?v=shopping1';
 
 // Only additions live in the draft. Installed components cannot be undone by dragging.

@@ -13,8 +13,8 @@ const stats = c => Object.fromEntries(Object.entries(evaluateCharacter(c,rules).
 const install = (c,id,location) => installCyberware(c,rules,id,location,null,stats(c));
 
 test('Cyberware-Katalog enthält Quellen und explizite Verluste für alle Katalogeinträge',()=>{
-  assert.equal(rules.cyberwareRules.items.length,49);
-  assert.equal(rules.cyberwareRules.items.filter(i=>!i.unavailable).length,49);
+  assert.equal(rules.cyberwareRules.items.length,61);
+  assert.equal(rules.cyberwareRules.items.filter(i=>!i.unavailable).length,61);
   for(const item of rules.cyberwareRules.items) {
     assert.ok(rules.cyberwareRules.sources[item.sourceId].url.startsWith('https://rtalsoriangames.com/'));
     assert.ok(Number.isInteger(item.cost) && item.cost>=0);

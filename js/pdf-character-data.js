@@ -4,8 +4,8 @@ import {weaponConfiguration,attachmentList,secondaryWeapons} from './weapon-atta
 import { netrunnerStats } from './netrunner.js';
 import { netIntegrityWeapons } from './netrunner-german.js';
 import { ownedWeaponOptions } from './weapon-options.js?v=shopping1';
-import { validateCharacter } from './model.js?v=shopping1';
-import { evaluateCharacter } from './rules.js?v=shopping1';
+import { validateCharacter } from './model.js?v=group1';
+import { evaluateCharacter } from './rules.js?v=group1';
 import { ROLE_ABILITIES, roleAbilityExamples } from './role-abilities.js?v=shopping1';
 import { ROLE_POOLS, PHARMACEUTICALS } from './role-points.js?v=shopping1';
 

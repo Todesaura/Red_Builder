@@ -1,6 +1,6 @@
 import { localizeAttributeText } from './attribute-labels.js';
 import {germanNetText} from './netrunner-german.js';
-import {quickReferenceColumns} from './pdf-cheatsheet-content.js?v=critical1';
+import {quickReferenceColumns} from './pdf-cheatsheet-content.js?v=luck1';
 import { WEAPON_PROFILES,weaponProfile } from './weapon-options.js?v=shopping1';
 
 // Cyberpunk RED core, p. 173: single-shot and Autofire are separate tables.

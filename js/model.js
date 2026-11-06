@@ -1,4 +1,4 @@
-import {createCampaign,validateCampaign,campaignSkillConfig,roleRank} from './campaign-state.js?v=shopping1';
+import {createCampaign,validateCampaign,campaignSkillConfig,roleRank} from './campaign-state.js?v=magazines1';
 import { createLifepath, validateLifepath } from './lifepath.js?v=shopping1';
 import { PORTRAITS } from './portrait-catalog.js?v=shopping1';
 import { createRolePoints, validateRolePoints } from './role-points.js?v=shopping1';
@@ -11,7 +11,7 @@ export const MAX_PORTRAIT_LENGTH = 400000;
 
 export function createCharacter(rules) {
   return {
-    version: FORMAT_VERSION, name: '', role: '', portrait: null, portraitSource: null, method: 'recommendation',
+    version: FORMAT_VERSION, name: '', playerName:'', groupId:null, groupRevision:0, role: '', portrait: null, portraitSource: null, method: 'recommendation',
     allocations: { points: Object.fromEntries(rules.attributes.map(({ id }) => [id, rules.pointBuy.min])) },
     campaign:createCampaign(), lifepath: createLifepath(), rolePoints: createRolePoints(), skills: createSkills(rules.skillRules), cyberware: createCyberware(), equipment: createEquipment()
   };
@@ -34,6 +34,10 @@ export function validateCharacter(input, rules) {
   if (!['recommendation', 'points'].includes(input.method)) throw new Error('Die Erstellungsmethode ist unbekannt.');
   const character = createCharacter(rules);
   character.name = input.name;
+  if(input.playerName!==undefined&&(typeof input.playerName!=='string'||input.playerName.length>60))throw Error('Ungültiger Spielername.');
+  if(input.groupId!=null&&(typeof input.groupId!=='string'||!/^[a-f0-9-]{36}$/i.test(input.groupId)))throw Error('Ungültige Gruppen-ID.');
+  if(input.groupRevision!==undefined&&(!Number.isSafeInteger(input.groupRevision)||input.groupRevision<0))throw Error('Ungültiger Gruppenstand.');
+  character.playerName=input.playerName??'';character.groupId=input.groupId??null;character.groupRevision=input.groupRevision??0;
   character.role = input.role;
   character.method = input.method;
   character.portrait = validatePortrait(input.portrait);

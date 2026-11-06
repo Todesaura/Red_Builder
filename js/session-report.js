@@ -1,11 +1,13 @@
+import {reconcileMagazines} from './play-magazines.js?v=magazines1';
+import {ammunitionRemaining} from './play-tracking.js?v=critical1';
 import {ATTACHMENTS,attachmentList} from './weapon-attachments.js?v=shopping1';
-import {createCampaign,roleRank} from './campaign-state.js?v=shopping1';
-import {validateCharacter} from './model.js?v=shopping1';
-import {evaluateCharacter} from './rules.js?v=shopping1';
+import {createCampaign,roleRank} from './campaign-state.js?v=magazines1';
+import {validateCharacter} from './model.js?v=group1';
+import {evaluateCharacter} from './rules.js?v=group1';
 import {evaluateFunds,buyEquipment,removeEquipment,saveCustomEquipment,addWeaponAttachment,removeWeaponAttachment} from './economy.js?v=shopping1';
 import {commitCyberwareDraft} from './cyberware-draft.js?v=shopping1';
 import {removeCyberware} from './cyberware.js?v=shopping1';
-import {equipArmor} from './armor.js?v=shopping1';
+import {equipArmor} from './armor.js?v=magazines1';
 import {rolePool,validateRolePoints,PHARMACEUTICALS} from './role-points.js?v=shopping1';
 import {improvementCost,THERAPIES,TRANSACTION_TYPES,humanityRollBounds} from './campaign-rules.js?v=shopping1';
 import {evaluateLifepath} from './lifepath.js?v=shopping1';
@@ -19,8 +21,31 @@ export function sessionSnapshot(character,rules){
   const v=evaluateCharacter(character,rules),maxHp=v.derived.find(d=>d.id==='hp')?.value??0,c=character.campaign??createCampaign();
   return {cash:v.funds.remaining,ip:c.ip,hp:c.hp??maxHp,maxHp,humanity:v.cyberware.current,maxHumanity:v.cyberware.maximum,empathy:v.cyberware.empathy,roleRank:roleRank(character),reputation:c.reputation,stabilized:c.stabilized};
 }
-export function sessionBase(character){return JSON.stringify(character);}
+export function sessionBase(character){
+  const {groupRevision,...gameState}=character;
+  return JSON.stringify(gameState);
+}
 export function createSessionDraft(character){return {id:uuid(),number:Math.max(0,...(character.campaign?.history??[]).map(h=>h.number))+1,date:new Date().toLocaleDateString('en-CA'),name:'',notes:'',ipAward:0,actions:[],base:sessionBase(character)};}
+
+export function sessionEndStatus(character,rules,evaluated=evaluateCharacter(character,rules)){
+  const {health,armor}=evaluated;
+  const ammo=rules.equipmentRules.items
+    .filter(item=>item.kind==='ammo'&&character.equipment.items.some(owned=>owned.catalogId===item.id))
+    .map(item=>({id:item.id,name:item.name,remaining:ammunitionRemaining(character,item)}));
+  return {
+    hp:health.current,maxHp:health.maximum,stabilized:character.campaign.stabilized,
+    armor:{head:armor.headSP,body:armor.bodySP},
+    injuries:character.campaign.injuries.filter(i=>i.status!=='resolved').map(({name,status,notes})=>({name,status,notes})),
+    ammo
+  };
+}
+
+export function sessionHandoff(character,report){
+  if(!report.endStatus)return {character:character.name,report};
+  const {id,number,date,name,notes,endStatus,recoveryPlan}=report;
+  return {format:'red-builder-session',version:1,character:character.name,player:character.playerName??'',
+    report:{id,number,date,name,notes,endStatus,...(recoveryPlan?{recoveryPlan}:{})}};
+}
 // Cancel the creation-bookkeeping drift, then apply the actual agreed cash movement once.
 // Existing purchase/install functions still enforce slots, ownership and dependencies.
 function transact(c,rules,mutation,cashDelta){
@@ -218,6 +243,7 @@ export function previewSession(character,rules,draft){
       if(h.maximum!==null&&raw>h.maximum)c.campaign.humanityAdjustment-=raw-h.maximum;
       const cashDelta=state().cash-actionStartCash;if(cashDelta)cashFlows.push({action:actionIndex,amount:cashDelta});
     }
+    reconcileMagazines(c,rules);
     c=validateCharacter(c,rules);const evaluated=evaluateCharacter(c,rules);
     errors.push(...evaluated.errors.filter(error=>!evaluated.cyberware.warnings.includes(error)));
     if(c.campaign.hp!==null&&c.campaign.hp>(evaluated.derived.find(d=>d.id==='hp')?.value??0))errors.push('Aktuelle TP überschreiten das Maximum.');
@@ -235,6 +261,6 @@ export function previewSession(character,rules,draft){
 export function completeSession(character,rules,draft){
   const preview=previewSession(character,rules,draft);if(!preview.ok)return {ok:false,error:preview.errors.join(' ')};
   const next=preview.character;
-  next.campaign.history.push({id:draft.id,number:draft.number,date:draft.date,name:draft.name,notes:draft.notes,before:preview.before,after:preview.after,changes:preview.changes,log:preview.log,...(preview.recovery?.ok?{recoveryPlan:preview.recovery}:{}),correctionOf:draft.actions[0]?.type==='correction'?draft.actions[0].reportId:null});
+  next.campaign.history.push({id:draft.id,number:draft.number,date:draft.date,name:draft.name,notes:draft.notes,before:preview.before,after:preview.after,changes:preview.changes,log:preview.log,endStatus:sessionEndStatus(next,rules),...(preview.recovery?.ok?{recoveryPlan:preview.recovery}:{}),correctionOf:draft.actions[0]?.type==='correction'?draft.actions[0].reportId:null});
   try{return {ok:true,character:validateCharacter(next,rules),report:next.campaign.history.at(-1)};}catch(error){return {ok:false,error:error.message};}
 }

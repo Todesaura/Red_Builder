@@ -1,4 +1,4 @@
-import {roleRank} from './campaign-state.js?v=shopping1';
+import {roleRank} from './campaign-state.js?v=magazines1';
 import { attributeLabel, localizeAttributeText } from './attribute-labels.js';
 import { renderRolePoints, rolePointsSummary } from './ui-role-points.js?v=inline1';
 import { escapeHtml as e } from './html.js';

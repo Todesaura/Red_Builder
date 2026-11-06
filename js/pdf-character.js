@@ -1,6 +1,7 @@
-import { characterSheetData } from './pdf-character-data.js?v=shopping1';
-import { characterSheetFields, TEMPLATE_SHA256 } from './pdf-character-layout.js?v=shopping1';
-import { drawCheatsheet } from './pdf-cheatsheet.js?v=critical1';
+import { characterSheetData } from './pdf-character-data.js?v=group1';
+import { characterSheetFields, fitTemplatePageToA4, TEMPLATE_SHA256 } from './pdf-character-layout.js?v=freedlc1';
+import { drawCheatsheet } from './pdf-cheatsheet.js?v=luck1';
+import { drawPawn, standardPawnPortrait, usesGalleryPawn } from './pdf-pawn.js?v=pawn4';
 
 export const TEMPLATE_URL = new URL('../data/Charakterblatt.pdf', import.meta.url);
 export const FONT_URL = new URL('../vendor/fonts/Ubuntu-R.ttf', import.meta.url);
@@ -35,10 +36,11 @@ function splitWord(word,font,size,width) {
 export async function generateCharacterSheet(character, rules, options = {}) {
   // Recheck independently of the UI before loading assets or creating a download.
   const data=characterSheetData(character,rules,options.state);
-  const [{PDFDocument,rgb}, {default:fontkit}, template, fontBytes] = await Promise.all([
+  const [pdfLib, {default:fontkit}, template, fontBytes] = await Promise.all([
     import('../vendor/pdf-lib/pdf-lib.esm.min.js'), import('../vendor/fontkit/fontkit.es.min.js'),
     options.templateBytes ?? loadPdfAsset(TEMPLATE_URL), options.fontBytes ?? loadPdfAsset(FONT_URL)
   ]);
+  const {PDFDocument,rgb}=pdfLib;
   const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',template))).map(value=>value.toString(16).padStart(2,'0')).join('');
   if(digest!==TEMPLATE_SHA256)throw new Error('Die PDF-Vorlage wurde verändert. Die Feldzuordnung muss vor dem Export angepasst werden.');
   const pdf=await PDFDocument.load(template);
@@ -50,6 +52,8 @@ export async function generateCharacterSheet(character, rules, options = {}) {
   const supported=new Set(font.getCharacterSet());
   const text=value=>String(value??'').normalize('NFC').replace(/\r\n?/g,'\n').replace(/\t/g,'    ').replace(/[\u0000-\u0008\u000b-\u001f\u007f]/g,'').replace(/./gu,char=>char==='\n'||supported.has(char.codePointAt(0))?char:`[U+${char.codePointAt(0).toString(16).toUpperCase()}]`);
   const form=pdf.getForm(), fullValues=[];
+  const pages=pdf.getPages();
+  const templateLayouts=pages.map((page,index)=>fitTemplatePageToA4(page,index===2,pdfLib));
   const field=(name,page,x,y,width,height,value,size,multiline=false,center=false)=>{
     const f=form.createTextField(name);
     if(multiline)f.enableMultiline();
@@ -60,8 +64,8 @@ export async function generateCharacterSheet(character, rules, options = {}) {
     return f;
   };
   for(const cell of characterSheetFields(data)) {
-    const page=pdf.getPage(cell.page),scale=page.getWidth()/1500;
-    const w=cell.w*scale,h=cell.h*scale;
+    const page=pages[cell.page], {x,top,unit,fontScale}=templateLayouts[cell.page];
+    const w=cell.w*unit,h=cell.h*unit;
     const value=text(cell.value),preview=text(cell.displayValue??cell.value),minimum=cell.minSize??6.5;
     let size=cell.size, lines=wrapPdfText(preview,font,size,w-5);
     const fits = () => (lines.length===1?font.heightAtSize(size):lines.length*size*1.2) <= h-1.5;
@@ -75,19 +79,23 @@ export async function generateCharacterSheet(character, rules, options = {}) {
       while(last && font.widthOfTextAtSize(last+' …',size)>w-5)last=last.slice(0,-1);
       display=[...short,last+' …'].join('\n');
     }
-    const created=field(cell.name,page,cell.x*scale,page.getHeight()-(cell.y+cell.h)*scale,w,h,display,size,display.includes('\n'), /^(stats(?:Base)?\.|hp\.|death\.|humanity\.)/.test(cell.name)||/\.(rank|attribute|base|sp|penalty|rof|magazine|foundation)$/.test(cell.name));
+    const scale=unit*fontScale;
+    const created=field(cell.name,page,x+cell.x*scale,top-(cell.y+cell.h)*scale,w*fontScale,h*fontScale,display,size*fontScale,display.includes('\n'), /^(stats(?:Base)?\.|hp\.|death\.|humanity\.)/.test(cell.name)||/\.(rank|attribute|base|sp|penalty|rof|magazine|foundation)$/.test(cell.name));
     if(display!==value)fullValues.push([created,value]);
   }
+  let image;
   if(data.portrait) {
-    let image;
     if(data.portrait.startsWith('data:image/png'))image=await pdf.embedPng(data.portrait);
     else if(data.portrait.startsWith('data:image/jpeg'))image=await pdf.embedJpg(data.portrait);
     else if(options.portraitBytes)image=await pdf.embedPng(options.portraitBytes);
     else throw new Error('Das WebP-Porträt muss für den PDF-Export umgewandelt werden.');
-    const page=pdf.getPage(0),scale=page.getWidth()/1500,box={x:112*scale,y:page.getHeight()-345*scale,w:248*scale,h:239*scale};
+    const page=pages[0], {x,top,unit,fontScale}=templateLayouts[0];
+    const scale=unit*fontScale,box={x:x+112*scale,y:top-345*scale,w:248*scale,h:239*scale};
     const factor=Math.min(box.w/image.width,box.h/image.height);
     page.drawImage(image,{x:box.x+(box.w-image.width*factor)/2,y:box.y+(box.h-image.height*factor)/2,width:image.width*factor,height:image.height*factor});
   }
+  const pawnImage=usesGalleryPawn(character)?image:options.pawnPortraitBytes&&await pdf.embedJpg(options.pawnPortraitBytes);
+  drawPawn(pages[2],pawnImage,text(data.name),{...pdfLib,font,wrap:wrapPdfText});
   drawCheatsheet(pdf,data,{font,rgb,wrap:wrapPdfText,text});
   pdf.getPages().forEach((page,i)=>page.drawText(`${i+1} / ${pdf.getPageCount()} - RED//BUILDER`,{x:page.getWidth()-144,y:14,size:6,font,color:rgb(0.4,0.4,0.4)}));
   pdf.setTitle(text(`${data.name} - Cyberpunk RED Charactersheet`));pdf.setAuthor('RED//BUILDER');pdf.setSubject('Charakterdaten aus dem lokalen Generator');
@@ -105,9 +113,13 @@ async function webpToPng(portrait) {
   canvas.getContext('2d').drawImage(bitmap,0,0);bitmap.close();
   return canvas.toDataURL('image/png');
 }
-export async function downloadCharacterSheet(character,rules,state={}) {
-  const portraitBytes=await webpToPng(character.portrait);
-  const result=await generateCharacterSheet(character,rules,{state,portraitBytes});
+export async function downloadCharacterSheet(character,rules,state={},pawnGender='M') {
+  const fallback=usesGalleryPawn(character)?null:standardPawnPortrait(character.role,pawnGender);
+  const [portraitBytes,pawnPortraitBytes]=await Promise.all([
+    webpToPng(character.portrait),
+    fallback&&loadPdfAsset(new URL('../'+fallback.thumbnail,import.meta.url))
+  ]);
+  const result=await generateCharacterSheet(character,rules,{state,portraitBytes,pawnPortraitBytes});
   const blob=new Blob([result.bytes],{type:'application/pdf'}),url=URL.createObjectURL(blob);
   const link=document.createElement('a');link.href=url;link.download=result.filename;document.body.append(link);link.click();link.remove();
   setTimeout(()=>URL.revokeObjectURL(url),60000);

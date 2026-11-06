@@ -1,5 +1,17 @@
 // Compact printed table labels. Full catalog descriptions remain editable form values.
 export const CYBERWARE_PRINT_SUMMARIES={
+ 'appetite-controller':'Kein HUM-Verlust bei Hunger',
+ 'external-vidscreen':'Bildschirm unter der Haut',
+ 'mood-eye':'Augenfarbe zeigt Stimmung',
+ 'kibblewarmer':'Kibble-Ofen im Cyberarm',
+ 'personal-shredder':'Aktenvernichter im Cyberarm',
+ 'deathtrance':'Totstellen; aktiv: −4',
+ 'watch-man':'Agent im Cyberarm',
+ 'gang-jazzler':'Würgen: SG 13 / bewusstlos',
+ 'integrated-cyberscanner':'Scan bis 2 m; 1 Min.',
+ 'quick-change-faceplate':'Wechselgesicht; 1 Aktion',
+ 'quick-digits':'Paar: +1 auf Feinmotorik',
+ 'sycust-cyberspine':'Kontorsion +1; gehärtet',
  'holo-palm':'Handprojektor; Agent nötig',
  'perfect-fit':'Paar: kein Schuhwerk-Abzug',
  'neutongue':'Geschmack; Agent-Anschluss',
@@ -52,6 +64,13 @@ export const CYBERWARE_PRINT_SUMMARIES={
 };
 
 export const CYBERWARE_PRINT_NAMES={
+ 'kibblewarmer':'KibbleWarmer',
+ 'personal-shredder':'Personal Shredder',
+ 'watch-man':'Watch-Man',
+ 'gang-jazzler':'Gang Jazzler',
+ 'integrated-cyberscanner':'Cyberarm-Scanner',
+ 'quick-change-faceplate':'Wechselgesicht-Halterung',
+ 'quick-digits':'Quick Digits',
  'muscle-bone-lace':'Muskel-/Knochenverstärkung',
  'voice-stress-analyzer':'Stimmanalysator',
  'braindance-recorder':'Braindance-Aufzeichner',

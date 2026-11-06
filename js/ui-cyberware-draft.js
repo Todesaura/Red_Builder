@@ -1,7 +1,7 @@
 import {cyberwareRemovalItems} from './cyberware.js?v=shopping1';
 import {humanityRollText} from './campaign-rules.js?v=shopping1';
-import {previewSession,createSessionDraft} from './session-report.js?v=shopping1';
-import {evaluateCharacter} from './rules.js?v=shopping1';
+import {previewSession,createSessionDraft} from './session-report.js?v=group1';
+import {evaluateCharacter} from './rules.js?v=group1';
 import { attributeLabel } from './attribute-labels.js';
 import { escapeHtml as e } from './html.js';
 import { evaluateCyberwareDraft } from './cyberware-draft.js?v=shopping1';

@@ -1,5 +1,5 @@
-import {evaluateCharacter} from './rules.js?v=shopping1';
-import {characterSheetReadiness,characterSheetDraftErrors} from './pdf-character-data.js?v=shopping1';
+import {evaluateCharacter} from './rules.js?v=group1';
+import {characterSheetReadiness,characterSheetDraftErrors} from './pdf-character-data.js?v=group1';
 import {equipmentWarnings} from './equipment-warnings.js?v=shopping1';
 
 const issue=(label,view,extra={})=>({label,view,...extra});

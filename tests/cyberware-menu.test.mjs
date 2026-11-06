@@ -7,6 +7,9 @@ import { evaluateCharacter } from '../js/rules.js';
 import { catalogEntries,previewInstallation,initialInstallationLocation } from '../js/cyberware-ui-model.js';
 import { renderCyberware } from '../js/ui-cyberware.js';
 import { renderInstalledCyberware } from '../js/ui-cyberware-details.js';
+import { quickAddCyberware } from '../js/cyberware-quick-add.js';
+import { commitCyberwareDraft } from '../js/cyberware-draft.js';
+import { applyPlayAction } from '../js/play-tracking.js';
 const json=async name=>JSON.parse(await readFile(new URL(`../data/${name}.json`,import.meta.url),'utf8'));
 const rules=await json('rules');rules.skillRules=await json('skills');rules.cyberwareRules=await json('cyberware');rules.equipmentRules=await json('equipment');
 const character=()=>{const c=createCharacter(rules);c.name='Nyx';c.role='solo';return c;};
@@ -26,8 +29,39 @@ test('Regelzugehörigkeit ist unabhängig von Installationsbereich und Budgettyp
 test('Kategorie, Suche, Sortierung und Installierbarkeitsfilter verwenden echte Voraussetzungen',()=>{
  const c=character(),evaluated=evaluateCharacter(c,rules);
  assert.ok(catalogEntries(c,rules,{...state,cyberCategory:'neural'},evaluated).some(item=>item.id==='neural-link'));
- assert.deepEqual(catalogEntries(c,rules,{...state,cyberCategory:'limbs',onlyInstallable:true,cyberSort:'price'},evaluated).map(item=>item.id).sort(),['cyberarm','cyberleg','holo-palm','perfect-fit','talon-foot','tool-hand']);
+ assert.deepEqual(catalogEntries(c,rules,{...state,cyberCategory:'limbs',onlyInstallable:true,cyberSort:'price'},evaluated).map(item=>item.id).sort(),['cyberarm','cyberleg','gang-jazzler','holo-palm','perfect-fit','quick-digits','talon-foot','tool-hand']);
  assert.deepEqual(catalogEntries(c,rules,{...state,cyberSearch:'Nails'},evaluated).map(item=>item.id),['show-off-nails']);
+});
+
+test('Gratis-DLCs: die neuen Implantate lassen sich über den Shop mit passenden Grundlagen einbauen',()=>{
+ const items=['appetite-controller','external-vidscreen','mood-eye','kibblewarmer','personal-shredder','deathtrance','watch-man','gang-jazzler','integrated-cyberscanner','quick-change-faceplate','quick-digits','sycust-cyberspine'];
+ for(const id of items){
+   const c=character(),offer=quickAddCyberware(c,rules,[],id);
+   assert.ok(offer.ok,id+': '+offer.error);
+   assert.ok(commitCyberwareDraft(c,rules,offer.additions).ok,id);
+   assert.deepEqual(validateCharacter(c,rules).cyberware,c.cyberware,id);
+ }
+ const c=character(),scanner=quickAddCyberware(c,rules,[],'integrated-cyberscanner','arm-left');
+ assert.deepEqual(scanner.additions.map(i=>i.catalogId),['cyberarm','integrated-cyberscanner']);
+ assert.equal(scanner.cost,1000);
+ assert.ok(commitCyberwareDraft(c,rules,scanner.additions).ok);
+ assert.ok(commitCyberwareDraft(c,rules,quickAddCyberware(c,rules,[],'integrated-cyberscanner','arm-left').additions).ok);
+ assert.equal(quickAddCyberware(c,rules,[],'watch-man','arm-left').ok,false);
+ const mood=character(),offer=quickAddCyberware(mood,rules,[],'mood-eye');
+ assert.deepEqual(offer.additions.map(i=>i.catalogId),['neural-link','mood-eye']);
+ assert.ok(commitCyberwareDraft(mood,rules,offer.additions).ok);
+ assert.equal(evaluateCharacter(mood,rules).funds.fashionRemaining,700);
+});
+
+test('Cyberspine gibt genau +1 auf Kontorsion und verhindert Wirbelsäulenverletzung samt Zusatzschaden',()=>{
+ const c=character(),before=evaluateCharacter(c,rules).skills.find(s=>s.id==='contortionist').base;
+ assert.ok(commitCyberwareDraft(c,rules,quickAddCyberware(c,rules,[],'sycust-cyberspine').additions).ok);
+ assert.equal(evaluateCharacter(c,rules).skills.find(s=>s.id==='contortionist').base,before+1);
+ const snapshot=structuredClone(c),action={type:'critical',slot:'body',injury:'spinal-injury',addBonus:true,notes:''};
+ assert.match(applyPlayAction(c,rules,action).error,/verhindert diese Verletzung/);
+ assert.deepEqual(c,snapshot);
+ c.campaign.cyberDamaged.push(c.cyberware.items[0].id);
+ assert.ok(applyPlayAction(c,rules,action).ok);
 });
 test('Einzelne Systemkategorien erzwingen keine Links/Rechts-Auswahl',()=>{
  assert.equal(initialInstallationLocation(rules.cyberwareRules.items.find(item=>item.id==='neutongue')),'internal');

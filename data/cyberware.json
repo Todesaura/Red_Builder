@@ -24,6 +24,14 @@
     "cemk": {
       "title": "Cyberpunk: Edgerunners Mission Kit, S. 35 (Preisindex von RTG)",
       "url": "https://rtalsoriangames.com/wp-content/uploads/2026/01/RTG-CPR-DLC-NightMarketIndexv1.24.pdf"
+    },
+    "gearmas": {
+      "title": "RTG: The 12 Days of Gearmas v1.01 (2023)",
+      "url": "https://rtalsoriangames.com/wp-content/uploads/2023/12/RTG-CPR-DLC-12DaysofGearmasv1.01.pdf"
+    },
+    "redmas": {
+      "title": "RTG: The 12 Days of REDmas (2024)",
+      "url": "https://rtalsoriangames.com/wp-content/uploads/2024/12/RTG-CPR-DLC-12DaysofREDmas.pdf"
     }
   },
   "locations": [
@@ -1326,6 +1334,334 @@
       },
       "humanityRoll": {
         "dice": 4,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "appetite-controller",
+      "name": "Appetite Controller",
+      "category": "internal",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "deals",
+      "source": "Must Have Cyberware Deals, S. 2",
+      "description": "Unterdrückt über den Biomonitor den Hunger und verhindert dadurch bedingten Menschlichkeitsverlust durch Langzeitstress. Verhungern bleibt möglich: Ab sieben Tagen ohne Essen täglich eine Todesrettung zu Tagesbeginn, mit kumulativ +1 auf den Wurf je weiterem Tag.",
+      "installationSlots": [
+        "internal"
+      ],
+      "requirements": {
+        "requires": [
+          "biomonitor"
+        ],
+        "exclusive": "appetite-controller"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "external-vidscreen",
+      "name": "External Vidscreen",
+      "category": "external",
+      "cost": 100,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "deals",
+      "source": "Must Have Cyberware Deals, S. 2–3",
+      "description": "Flexibler Bildschirm unter der Haut. Zeigt Inhalte eines verbundenen Agents oder eines Speicherchips in der Chipware-Buchse.",
+      "installationSlots": [
+        "external"
+      ],
+      "requirements": {},
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "mood-eye",
+      "name": "Mood Eye",
+      "category": "accessories",
+      "cost": 100,
+      "humanity": 0,
+      "maxHumanityLoss": 0,
+      "install": "Mall",
+      "sourceId": "deals",
+      "source": "Must Have Cyberware Deals, S. 3",
+      "description": "Farbwechselnde Linse, die über den Neural Link deine Stimmung anzeigt. Emotion vortäuschen: Schauspiel SG 21. Abschalten jederzeit ohne Aktion.",
+      "installationSlots": [
+        "fashion"
+      ],
+      "requirements": {
+        "requires": [
+          "neural-link"
+        ]
+      },
+      "funding": "fashion",
+      "humanityRoll": {
+        "dice": 0,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "kibblewarmer",
+      "name": "PersonalPak KibbleWarmer",
+      "category": "limbs",
+      "cost": 100,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "deals",
+      "source": "Must Have Cyberware Deals, S. 4",
+      "description": "Mini-Ofen im Unterarm für eine PersonalPak-Kibble-Portion.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "personal-shredder",
+      "name": "Pursuit Security Inc. Personal Shredder",
+      "category": "limbs",
+      "cost": 100,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "deals",
+      "source": "Must Have Cyberware Deals, S. 4",
+      "description": "Versteckter Aktenvernichter im Cyberarm mit Auffangbehälter für Papierschnipsel.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "deathtrance",
+      "name": "DeathTrance",
+      "category": "neural",
+      "cost": 500,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "cybermas",
+      "source": "The 12 Days of Cybermas v1.02, S. 3",
+      "description": "Als Aktion Vitalzeichen drosseln und sich totstellen. Aktiv: −4 auf alle Aktionen. Lebenszeichen erkennbar mit Medizintechnik SG 17 oder Kriminologie, Deduktion oder Wahrnehmung SG 21. Jederzeit ohne Aktion abschaltbar.",
+      "effects": [
+        {
+          "type": "situational",
+          "target": "deathtrance",
+          "value": 0,
+          "description": "Bei Aktivierung −4 auf alle Aktionen. Der Malus gilt nur in der Trance."
+        }
+      ],
+      "installationSlots": [
+        "neural"
+      ],
+      "requirements": {
+        "parentType": "neural",
+        "exclusive": "deathtrance"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "watch-man",
+      "name": "Psiberstuff Watch-Man",
+      "category": "limbs",
+      "cost": 100,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Mall",
+      "sourceId": "cybermas",
+      "source": "The 12 Days of Cybermas v1.02, S. 4",
+      "description": "Vollwertiger Agent mit ausklappbarem Bildschirm im Cyberarm.",
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "gang-jazzler",
+      "name": "Cybermatrix Gang Jazzler",
+      "category": "limbs",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "cybermas",
+      "source": "The 12 Days of Cybermas v1.02, S. 3",
+      "description": "Beim Würgen im Haltegriff statt Schaden die ganze Batterie entladen. Ziel würfelt Folter/Drogen widerstehen SG 13. Bei Fehlschlag 1 Minute bewusstlos, unabhängig von TP. Ersatzakku 50 eb, Ladezeit 1 Stunde. Im Arm ohne Probe verdeckbar.",
+      "effects": [
+        {
+          "type": "situational",
+          "target": "grapple",
+          "value": 0,
+          "description": "Nur beim Würgen im Haltegriff einsetzbar. Bei Fehlschlag gegen SG 13 wird das Ziel für 1 Minute bewusstlos."
+        }
+      ],
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm",
+        "allowNatural": true
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "integrated-cyberscanner",
+      "name": "Integrierter Cyberscanner",
+      "category": "limbs",
+      "cost": 500,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "gearmas",
+      "source": "The 12 Days of Gearmas v1.01, S. 2",
+      "description": "Scannt installierte Cyberware aus bis zu 2 m Entfernung, wenn das Ziel 1 Minute stillhält. Gehärtete, von einem Tech aufgewertete oder unbekannte Cyberware führt zu einer Fehlermeldung. Ausgabe am Arm, auf dem Chyron oder einem verknüpften Agent.",
+      "slots": 2,
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 2,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "quick-change-faceplate",
+      "name": "Quick Change Faceplate Mount",
+      "category": "internal",
+      "cost": 1000,
+      "humanity": 14,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "redmas",
+      "source": "The 12 Days of REDmas, S. 4",
+      "description": "Halterung ersetzt das Gesicht. Gesichtsplatte mit einer Aktion anbringen oder abnehmen. Eine individuell gestaltete Platte ist enthalten, weitere kosten je 100 eb.",
+      "installationSlots": [
+        "internal"
+      ],
+      "requirements": {
+        "exclusive": "faceplate-mount"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 4,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "quick-digits",
+      "name": "Rocklin Augmentics Quick Digits",
+      "category": "limbs",
+      "cost": 250,
+      "humanity": 3,
+      "maxHumanityLoss": 2,
+      "install": "Klinik",
+      "sourceId": "redmas",
+      "source": "The 12 Days of REDmas, S. 4",
+      "description": "Ab zwei Quick Digits: +1 als Ergänzungsprobe auf Verbergen/Entdecken, Kontorsion mit den Händen, Erste Hilfe, Fälschen, Gebärdensprache, Sanitäter, Schlösser knacken und Taschendiebstahl. Stapelt sich nicht mit weiteren Ergänzungsboni.",
+      "effects": [
+        {
+          "type": "situational",
+          "target": "quick-digits-pair",
+          "value": 0,
+          "description": "Der Bonus setzt zwei eingebaute Quick Digits voraus und zählt als Ergänzungsbonus."
+        }
+      ],
+      "installationSlots": [
+        "arm-left",
+        "arm-right"
+      ],
+      "requirements": {
+        "parentType": "arm",
+        "allowNatural": true,
+        "uniquePerLocation": true
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 1,
+        "divisor": 1
+      }
+    },
+    {
+      "id": "sycust-cyberspine",
+      "name": "Sycust Cyberspine",
+      "category": "internal",
+      "cost": 1000,
+      "humanity": 7,
+      "maxHumanityLoss": 2,
+      "install": "Krankenhaus",
+      "sourceId": "redmas",
+      "source": "The 12 Days of REDmas, S. 5",
+      "description": "+1 auf Kontorsion. Verhindert Folgen und Zusatzschaden der kritischen Wirbelsäulenverletzung. Gegen EMP-Effekte gehärtet. Kann als Austrittsöffnung für einen Cybersnake dienen.",
+      "slots": 3,
+      "effects": [
+        {
+          "type": "skill",
+          "target": "contortionist",
+          "value": 1,
+          "description": "+1 auf Kontorsion."
+        },
+        {
+          "type": "injury-immunity",
+          "target": "spinal-injury",
+          "description": "Immun gegen Folgen und Zusatzschaden der kritischen Wirbelsäulenverletzung."
+        }
+      ],
+      "installationSlots": [
+        "internal"
+      ],
+      "requirements": {
+        "exclusive": "cyberspine"
+      },
+      "funding": "cash",
+      "humanityRoll": {
+        "dice": 2,
         "divisor": 1
       }
     }

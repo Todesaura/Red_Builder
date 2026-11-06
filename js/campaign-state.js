@@ -1,4 +1,4 @@
-export const createCampaign = () => ({sessionUnlocked:false,active:false,cashAdjustment:0,ip:0,roleRank:4,skillPointsAdded:0,humanityAdjustment:0,hp:null,stabilized:false,speedhealDates:[],injuries:[],armorLoss:{},ammoSpent:{},cyberInventory:[],cyberDamaged:[],reputation:0,obligations:[],contacts:[],enemies:[],goals:[],events:[],history:[]});
+export const createCampaign = () => ({sessionUnlocked:false,active:false,cashAdjustment:0,ip:0,roleRank:4,skillPointsAdded:0,humanityAdjustment:0,hp:null,stabilized:false,speedhealDates:[],injuries:[],armorLoss:{},cyberArmorLoss:{head:0,body:0},ammoSpent:{},magazines:{},cyberInventory:[],cyberDamaged:[],reputation:0,obligations:[],contacts:[],enemies:[],goals:[],events:[],history:[]});
 const integer=(n,min,max)=>Number.isSafeInteger(n)&&n>=min&&n<=max;
 const text=(s,max=1000)=>typeof s==='string'&&s.length<=max;
 export function validateCampaign(input,rules) {
@@ -6,6 +6,15 @@ export function validateCampaign(input,rules) {
   const c=createCampaign();
   if(typeof input.active!=='boolean')throw Error('Ungültiger Kampagnenstatus.');
   c.active=input.active;
+  const armorLoss=input.cyberArmorLoss??{head:0,body:0};
+  if(!armorLoss||!integer(armorLoss.head,0,100)||!integer(armorLoss.body,0,100))throw Error('Ungültiger implantierter Rüstungsschaden.');
+  c.cyberArmorLoss={head:armorLoss.head,body:armorLoss.body};
+  const magazines=input.magazines??{};
+  if(!magazines||typeof magazines!=='object'||Array.isArray(magazines)||Object.keys(magazines).length>500)throw Error('Ungültige Magazine.');
+  c.magazines=Object.fromEntries(Object.entries(magazines).map(([key,m])=>{
+    if(!/^[a-z0-9@_-]+#[1-9]\d{0,2}$/.test(key)||key.length>180||!m||!integer(m.rounds,0,1000)||!rules.equipmentRules?.items.some(i=>i.kind==='ammo'&&i.id===m.ammoId))throw Error('Ungültiger Magazinstand.');
+    return [key,{ammoId:m.ammoId,rounds:m.rounds}];
+  }));
   if(input.sessionUnlocked !== undefined && typeof input.sessionUnlocked !== "boolean")throw Error("Ungültiger Session-Zugang.");
   c.sessionUnlocked=input.sessionUnlocked??false;
   for(const [key,min,max] of [['cashAdjustment',-100000000,100000000],['ip',0,1000000],['roleRank',4,10],['skillPointsAdded',0,5000],['humanityAdjustment',-100000,100000],['reputation',0,10]]){

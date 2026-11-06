@@ -1346,6 +1346,7 @@ input::placeholder {
 .weapon-catalog-group { margin:14px 0; border:1px solid var(--line); border-radius:5px; }
 .weapon-catalog-group > summary { cursor:pointer; padding:18px; font-weight:700; }
 .weapon-catalog-group > summary small { float:right; color:var(--muted); font-weight:400; }
+.weapon-catalog-group > summary .weapon-recommendation-preview { display:block; clear:both; margin-top:8px; color:#8fe0aa; font-size:13px; line-height:1.6; font-weight:400; overflow-wrap:anywhere; }
 .weapon-catalog-group > .equipment-grid { padding:0 16px 16px; }
 .weapon-catalog-group .inline-note { grid-column:1/-1; }
 .inventory article { flex-wrap:wrap; }
@@ -1448,8 +1449,6 @@ input::placeholder {
 .living-costs .monthly-income dd{color:#8ee4b1}
 .living-budget-total{border-top:2px solid #739681;padding-top:18px;margin-top:20px}
 @media(max-width:650px){.lifepath-sections,.living-costs .living-budget-items{grid-template-columns:1fr}}
-.drug-filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
-.drug-filters label{display:grid;gap:6px}.drug-filters select{width:100%;min-width:0}
 .drug-application{padding:16px;border:1px solid var(--line);margin:16px 0}
 .drug-card details{margin:12px 0}.drug-card dl{margin:12px 0}
 .drug-card dt{font-weight:700;color:var(--mint);margin-top:12px}
@@ -1516,3 +1515,87 @@ input::placeholder {
 .attribute-risk{padding:12px;margin:14px 0;border-left:3px solid #e4b65f;border-radius:4px;background:#332b1e;color:#f1d9a8}.attribute-risk strong{font-size:12px;line-height:1.5;display:block}.attribute-risk p{font-size:12px;line-height:1.65;margin:7px 0 0}.shopping-installed{display:block;width:100%;min-height:44px;margin-top:9px;padding:8px 12px;border:1px solid #537264;border-radius:5px;color:#d8f0df;background:#1d3628;text-align:left;font-size:12px}.shopping-installed:focus-visible{outline:2px solid var(--mint);outline-offset:2px}.installed-instructions{max-width:720px;font-size:13px!important}.installed-main{min-width:0}.installed-main>strong{font-size:15px;line-height:1.5;overflow-wrap:anywhere}.installed-entry .installed-location{font-size:12px;line-height:1.6;color:#c9d8d0}.installed-info{margin-top:9px;font-size:12px;line-height:1.6}.installed-info summary{cursor:pointer;color:var(--mint);padding:5px 0}.installed-entry .installed-info small{font-size:12px;line-height:1.7;overflow-wrap:anywhere}.installed-remove{min-height:44px!important;font-size:12px!important;white-space:normal;line-height:1.5}.installed-cyberware{scroll-margin-top:260px}.removal-panel{overflow-wrap:anywhere}.removal-panel form button{min-height:44px}
 @media(max-width:700px){.installed-heading{display:block}.installed-heading h2{font-size:19px;line-height:1.5}.installed-heading>small{display:block;font-size:12px;line-height:1.6}.installed-entry{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;border:1px solid #3b4c45;border-radius:8px;margin:12px 0;padding:14px;background:#151d19;min-width:0;max-width:100%}.installed-entry>div{min-width:0;max-width:100%}.installed-entry>ul{min-width:0;max-width:100%;padding-left:10px}.installed-entry>button{width:100%;text-align:center}.installed-child{background:#1b2520;padding:11px}.installed-main>strong{font-size:16px}.shopping-hints{display:none}.shopping-installed{font-size:12px}.removal-panel form{display:grid;grid-template-columns:minmax(0,1fr)}.removal-panel input{width:100%;max-width:none}.removal-panel form button{width:100%}.installed-info summary{min-height:36px;display:flex;align-items:center}}
 @media(max-width:650px){.attribute-card.attribute-low{grid-column:1/-1}.attribute-risk p{font-size:13px;line-height:1.65}.installed-info summary{display:list-item;min-height:44px;padding-top:10px}}
+/* Keep owned items separate from shopping; use desktop width for both panels. */
+.shop-owned-layout { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:24px; align-items:start; margin:24px 0; }
+.shop-owned-layout > * { min-width:0; margin:0; padding:22px; border:1px solid var(--border); background:#11151b; }
+.shop-owned-layout h3 { margin-top:0; }
+.shop-owned-layout .inventory { margin-bottom:0; }
+.shop-owned-layout .inventory article { align-items:flex-start; }
+.shop-owned-layout .inventory article > div { min-width:0; overflow-wrap:anywhere; }
+.shop-owned-layout .inventory article > button { flex-shrink:0; }
+.shop-owned-layout .armor-slots { grid-template-columns:1fr; gap:14px; }
+.shop-owned-layout .armor-loadout p { font-size:13px; line-height:1.6; }
+.shop-catalog { border-top:2px solid #444c59; padding-top:24px; margin-top:28px; }
+.shop-catalog > h3:first-child { margin-top:0; font-size:21px; }
+.shop-budget-help { margin:14px 0 20px; padding:12px 16px; border:1px solid var(--border); }
+.shop-budget-help > summary { cursor:pointer; font-size:13px; }
+.shop-budget-help .wallet { margin:16px 0 0; }
+.character-files { margin:20px 0; padding:18px; border:1px solid var(--border); background:#11151b; }
+.character-files h3 { margin:0 0 8px; }
+.character-files p,.character-files small { font-size:13px; line-height:1.6; }
+.character-file-actions { display:flex; flex-wrap:wrap; gap:12px; margin:14px 0; }
+.character-file-actions button { min-height:44px; }
+.character-files p:empty { display:none; }
+.shop-body .body-editor { position:static; width:100%; max-width:none; max-height:none; border:0; padding:0; margin:0; }
+@media(max-width:800px) {
+ .shop-owned-layout { grid-template-columns:1fr; gap:16px; }
+ .shop-owned-layout > * { padding:16px; }
+}
+.play-heading { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+.play-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:24px 0; }
+.play-metrics > div,.play-panel { padding:18px; border:1px solid var(--border); background:#11151b; min-width:0; }
+.play-metrics span { display:block; font-size:12px; color:var(--muted); margin-bottom:8px; }
+.play-metrics strong { font-size:21px; }
+.play-columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; margin-bottom:20px; }
+.play-panel { margin-bottom:16px; overflow-wrap:anywhere; }
+.play-panel h3 { margin:0 0 14px; }.play-panel h4 { margin:18px 0 8px; }
+.play-panel p,.play-panel li { font-size:14px; line-height:1.65; }
+.play-panel details { margin:12px 0; }.play-panel summary { cursor:pointer; line-height:1.6; min-height:32px; }
+.play-weapon { border-bottom:1px solid var(--border); padding-bottom:14px; }
+.play-skills { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 24px; margin-top:18px; }
+.play-skills > div { display:flex; justify-content:space-between; gap:12px; font-size:13px; }.play-skills strong { white-space:nowrap; }
+.play-nav { width:100%; margin-top:16px; }
+@media(max-width:800px) { .play-columns { grid-template-columns:1fr; }.play-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }.play-skills { grid-template-columns:1fr; } }
+.play-tracker-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+.play-tracker-grid > section { min-width:0; border-top:1px solid var(--border); padding-top:12px; }
+.play-tracker-actions { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:10px 0; }
+.play-tracker-actions input { width:85px; min-width:0; padding:10px; }
+.play-tracker-actions button { min-height:44px; }
+.play-tracking label { display:block; font-size:13px; line-height:1.6; }
+.play-tracking form { margin:14px 0; }
+@media(max-width:1000px) { .play-tracker-grid { grid-template-columns:1fr; } }
+.play-magazine { padding:12px 0; border-bottom:1px solid var(--border); }
+.play-magazine select { width:100%; min-width:0; font-size:13px; }
+.play-magazine .play-tracker-actions { align-items:stretch; }
+.play-tracker-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.play-tracker-grid > section:last-child { grid-column:1/-1; }
+.play-magazines { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+.play-critical-dialog { width:min(560px,calc(100% - 24px)); max-height:90vh; overflow:auto; border:1px solid var(--border); background:#11151b; color:var(--text); padding:24px; }
+.play-critical-dialog::backdrop { background:#000b; }
+.play-critical-dialog label { display:block; margin:16px 0 8px; line-height:1.5; }
+.play-critical-dialog select,.play-critical-dialog textarea { width:100%; max-width:none; }
+.play-critical-dialog textarea { min-height:90px; }
+.play-critical-dialog p,.play-critical-dialog small { font-size:13px; line-height:1.6; }
+.play-critical-dialog .play-critical-bonus { display:flex; gap:10px; align-items:start; }
+.play-magazine { min-width:0; padding:16px; border:1px solid var(--border); }
+@media(max-width:800px) { .play-tracker-grid,.play-magazines { grid-template-columns:1fr; } }
+.dm-main { max-width:1400px; padding:32px; }
+.dm-nav { text-decoration:none; font-size:12px; padding:12px; }
+.dm-players { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; margin-top:24px; }
+.dm-character { border-top:1px solid var(--border); margin:16px 0; padding-top:16px; }
+.dm-character > small { display:block; margin-top:10px; color:var(--muted); }
+.dm-dead .dm-attendance strong { text-decoration:line-through; color:var(--muted); }
+.dm-attendance { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.dm-character p,.dm-character li { font-size:14px; line-height:1.6; }
+.dm-character details { margin:16px 0; }.dm-character summary { min-height:38px; cursor:pointer; }
+.dm-character form { display:grid; gap:10px; margin-top:12px; }
+.dm-character form label,.dm-fields label { display:grid; gap:6px; font-size:13px; }
+.dm-character form input,.dm-character form select { width:100%; max-width:none; }
+.dm-fields { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-bottom:16px; }
+.dm-fields input { width:100%; max-width:none; }.dm-main button { min-height:44px; }
+#group-sync-status:empty { display:none; }
+@media(max-width:800px) { .dm-main { padding:20px 16px; }.dm-players,.dm-fields { grid-template-columns:1fr; } }
+.dm-players { align-items:start; }
+.dm-character > details { margin:8px 0; }
+.dm-character > button.text-button { display:block; min-height:32px; padding:4px 0; margin:4px 0; }
+.dm-character > small { margin-top:4px; font-size:11px; }

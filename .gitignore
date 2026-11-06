@@ -4,3 +4,4 @@ Thumbs.db
 test-results/
 tmp/
 output/
+.local/

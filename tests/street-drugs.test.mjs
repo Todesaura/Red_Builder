@@ -32,13 +32,12 @@ test('Kaufkorrektur erstattet nur unbenutzte Dosen, andere Ausrüstung bleibt ge
  const c=completeCharacter(),d=drugs[0];buyEquipment(c,rules,d.id);buyEquipment(c,rules,d.id);useStreetDrug(c,rules,d.id);removeEquipment(c,d.id);assert.equal(evaluateFunds(c,rules).remaining,2550-d.cost);
  buyEquipment(c,rules,'agent');const before=structuredClone(c);assert.equal(useStreetDrug(c,rules,'agent').ok,false);assert.deepEqual(c,before);
 });
-test('Eigenes Kaufmenü: alphabetisch, aufklappbare Regeln, Preis-/Quellen-/Wirkungsfilter',()=>{
+test('Eigenes Kaufmenü: alphabetisch, aufklappbare Regeln und alle Drogen ohne Suchfilter',()=>{
  const c=completeCharacter(),v=evaluateCharacter(c,rules),html=renderStreetDrugs(c,rules,v);
  assert.equal((html.match(/data-drug-card=/g)??[]).length,18);assert.equal((html.match(/data-buy-equipment="drug-/g)??[]).length,18);
  assert.equal(rules.equipmentRules.items.find(i=>i.id==='airhypo').cost,50);assert.ok(html.includes('data-buy-equipment="airhypo"'));
  assert.ok(html.indexOf('data-drug-card="drug-berserker"')<html.indexOf('data-drug-card="drug-black-lace"'));
- assert.equal((renderStreetDrugs(c,rules,v,{drugFilters:{price:'10'}}).match(/data-drug-card=/g)??[]).length,2);
- assert.equal((renderStreetDrugs(c,rules,v,{drugFilters:{type:'NET'}}).match(/data-drug-card=/g)??[]).length,1);
- assert.equal((renderStreetDrugs(c,rules,v,{drugFilters:{source:drugs.find(d=>d.name==='Emerald City').drug.source}}).match(/data-drug-card=/g)??[]).length,1);
+ assert.doesNotMatch(html,/data-drug-filter|drug-filters|type="search"/);
+ assert.equal((renderStreetDrugs(c,rules,v,{drugFilters:{price:'10'}}).match(/data-drug-card=/g)??[]).length,18);
  assert.ok(html.includes('Gegnern verabreichen'));assert.ok(html.includes('Airhypo'));assert.ok(!html.includes('Spielzeit vorspulen'));
 });

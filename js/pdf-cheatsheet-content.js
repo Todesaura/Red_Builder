@@ -183,7 +183,7 @@ export function quickReferenceColumns(data) {
     section('DEIN ZUG / AKTIONEN',[
       `**1 Bewegungsaktion (${move} m) + 1 Aktion**. Rennen statt Aktion: nochmals **${move} m**; Bewegung aufteilbar. Initiative: höher zuerst, Gleichstand neu würfeln.`,
       '**Aktion:** Angriff, Nachladen, Aufstehen, Stabilisieren, Fertigkeit. Zugängliche Waffe ziehen/fallen lassen: frei.',
-      `Glück: **${data.derived.luck} Punkte/Sitzung**. Vor Probe **mehrere Punkte zugleich** möglich, je +1; keine Todesrettung. Natürliche 10: +1W10, 1: -1W10; keine Kette.`
+      `Glück: **${data.derived.luck} Punkte pro Sitzung**. Hausregel: **Vor dem Wurf ankündigen**, **nach dem Wurf** entscheiden, wie viele Punkte du ausgibst. Mehrere Punkte zugleich möglich, je +1. Kein Glück bei Todesrettungen. Natürliche 10: +1W10, 1: -1W10; keine Kette.`
     ]),
     section('ANGREIFEN / VERTEIDIGEN',[
       '**Fernkampf:** Basis + 1W10 über Tabelle oder Ausweichen (Ziel mit Reflexe 8+; vorher ansagen/zuerst würfeln).',
