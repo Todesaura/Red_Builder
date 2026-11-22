@@ -1,9 +1,12 @@
-import { PORTRAITS } from './portrait-catalog.js?v=shopping1';
+import { PORTRAITS } from './portrait-catalog.js?v=creationfix1';
 
 const mm = value => value * 72 / 25.4;
-const bodyHeight = mm(40);
+const bodyHeightMM = 40;
+const tabHeightMM = 14;
+export const PAWN_HEIGHT_MM = 2 * (bodyHeightMM + tabHeightMM);
+const bodyHeight = mm(bodyHeightMM);
 const bodyWidth = mm(22);
-const tabHeight = mm(4);
+const tabHeight = mm(tabHeightMM);
 const tabWidth = mm(18);
 
 export function usesGalleryPawn(character) {
@@ -16,13 +19,14 @@ export function standardPawnPortrait(role, gender) {
 }
 
 export function drawPawn(page, image, name, {
-  font, rgb, degrees, wrap, pushGraphicsState, popGraphicsState, rectangle, clip, endPath
+  font, rgb, degrees, wrap, pushGraphicsState, popGraphicsState, rectangle, clip, endPath,
+  left: positionLeft, bottom: positionBottom, heading = true
 }) {
   const ink = rgb(0.11, 0.12, 0.15), guide = rgb(0.38, 0.40, 0.43);
-  const right = page.getWidth() - mm(5), left = right - bodyWidth;
+  const left = positionLeft ?? page.getWidth() - mm(5) - bodyWidth, right = left + bodyWidth;
   const center = right - bodyWidth / 2;
   const tabLeft = center - tabWidth / 2, tabRight = center + tabWidth / 2;
-  const bottom = mm(5) + tabHeight, fold = bottom + bodyHeight, top = fold + bodyHeight;
+  const bottom = (positionBottom ?? mm(5)) + tabHeight, fold = bottom + bodyHeight, top = fold + bodyHeight;
   const line = ([x1,y1], [x2,y2], color=ink, dashArray) => page.drawLine({
     start:{x:x1,y:y1}, end:{x:x2,y:y2}, thickness:0.6, color, dashArray
   });
@@ -30,7 +34,7 @@ export function drawPawn(page, image, name, {
     x:center-font.widthOfTextAtSize(value,size)/2, y, size, font, color:ink
   });
 
-  label('PAPIERFIGUR', top + mm(9), 11);
+  if (heading) label('PAPIERFIGUR', top + tabHeight + mm(5), 11);
 
   const nameSize = 8, nameMaxWidth = bodyWidth - mm(2);
   const wrapped = wrap(name.replace(/\s+/g, ' '), font, nameSize, nameMaxWidth);

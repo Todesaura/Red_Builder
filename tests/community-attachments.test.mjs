@@ -114,7 +114,7 @@ test('Jeder einzelne Community-Aufsatz passt für alle Rollen auf eine lesbare A
 test('Unterlaufwaffe und Aufsätze stehen auf Blatt und Cheatsheet ohne Zustandsänderung',async()=>{
  const c=completeCharacter();buy(c,'assault-rifle');fit(c,'assault-rifle','underbarrel-pistol');fit(c,'assault-rifle','reflex-sight');fit(c,'assault-rifle','finish');
  const before=structuredClone(c),{bytes}=await generateCharacterSheet(c,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(bytes);
- assert.equal(pdf.getPageCount(),4);assert.match(pdf.getForm().getTextField('weapons.1.name').getText(),/Unterlaufpistole/);assert.equal(pdf.getForm().getTextField('weapons.1.magazine').getText(),'10');assert.deepEqual(c,before);
+ assert.equal(pdf.getPageCount(),5);assert.match(pdf.getForm().getTextField('weapons.1.name').getText(),/Unterlaufpistole/);assert.equal(pdf.getForm().getTextField('weapons.1.magazine').getText(),'10');assert.deepEqual(c,before);
 });
 
 test('Bezahlbare Kombination aus zwei Waffen, Zusatzlauf und sieben Aufsätzen bleibt für jede Rolle A4',async()=>{

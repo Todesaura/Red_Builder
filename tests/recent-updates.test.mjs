@@ -10,18 +10,22 @@ import {evaluateCharacter} from '../js/rules.js';
 import {renderSkills} from '../js/ui-skills.js';
 
 test('Sieben Budgetfragen enthalten exakt die vorgegebenen Monatsbeträge und Antwortzahlen',()=>{
- const expected={security:[0,25,50,100,150,250],housing:[0,0,100,250,500,1000,1500,2500,0],neighborhood:[0,50,100,150],lifestyle:[100,300,600,1500],dependents:[0,50,100,150,250,400],commitments:[0,150,250,200,-200,-100],pastime:[0,25,50,100,150,200]};
+ const expected={security:[0,25,50,100,150,250,75,400],housing:[0,0,100,250,500,1000,1500,2500,0,350,3000],neighborhood:[0,50,100,150,25,80],lifestyle:[100,300,600,1500,200,900],dependents:[0,50,100,150,250,400,75,500],commitments:[0,150,250,200,-200,-100,100,-150],pastime:[0,25,50,100,150,200,75,300]};
  assert.deepEqual(DAILY_LIFEPATH_QUESTIONS.map(q=>q.id),Object.keys(expected));
  for(const q of DAILY_LIFEPATH_QUESTIONS){assert.deepEqual(q.monthlyCosts,expected[q.id]);assert.equal(q.options.length,expected[q.id].length);}
 });
-test('Jede neue Auswahl bis zur neunten Wohnoption bleibt beim Speichern eindeutig',()=>{
+test('Alle Budgetantworten bleiben beim Speichern eindeutig; ungültige Auswahlen werden abgewiesen',()=>{
  const c=completeCharacter();
  for(const q of DAILY_LIFEPATH_QUESTIONS)for(let i=0;i<q.options.length;i++){
   assert.ok(chooseLifepath(c,q.id,LIFEPATH_CHOICES[i]).ok);
   const safe=validateLifepath(JSON.parse(JSON.stringify(c.lifepath)));
   assert.equal(safe[q.id].choice,LIFEPATH_CHOICES[i]);assert.equal(livingCosts({...c,lifepath:safe}).items.find(item=>item.id===q.id).amount,q.monthlyCosts[i]);
  }
- assert.equal(chooseLifepath(c,'lifestyle','fifth').ok,false);
+ for(const q of DAILY_LIFEPATH_QUESTIONS){
+  const before=structuredClone(c.lifepath);
+  assert.equal(chooseLifepath(c,q.id,LIFEPATH_CHOICES[q.options.length]??'invalid').ok,false);
+  assert.deepEqual(c.lifepath,before);
+ }
 });
 test('Alle alten Budgetvorschläge behalten Text und ursprünglichen Preis statt neue Positionen zu übernehmen',()=>{
  const c=completeCharacter();

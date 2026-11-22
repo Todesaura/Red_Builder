@@ -63,7 +63,7 @@ test('Kaufkarten bleiben kompakt; Erklärungen stehen in einer aufklappbaren Ans
 test('Erzeugtes PDF enthält genau ein Cheatsheet statt wiederholter Anhänge',async()=>{
   const c=completeCharacter();buyEquipment(c,rules,'smg');buyEquipment(c,rules,'shotgun');
   const {bytes}=await generateCharacterSheet(c,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(bytes);
-  assert.equal(pdf.getPageCount(),4);
+  assert.equal(pdf.getPageCount(),5);
   assert.ok(pdf.getPage(3).node.Contents());
   assert.equal(pdf.getForm().getFields().some(f=>f.getName().startsWith('appendix.')),false);
 });

@@ -10,7 +10,7 @@ import { draftCharacter } from './cyberware-draft.js?v=shopping1';
 import { evaluateCharacter } from './rules.js?v=group1';
 import { renderCyberwareDraft, renderRemoval } from './ui-cyberware-draft.js?v=mobile1';
 import { renderCustomEquipmentSummary } from './ui-custom-equipment.js';
-import { renderEquipment } from './ui-equipment.js?v=shoplabels1';
+import { renderEquipment } from './ui-equipment.js?v=creationfix1';
 import { escapeHtml as e } from './html.js';
 import { renderBody } from './ui-body.js?v=shopping1';
 import { catalogEntries, availableLocations, candidateErrors } from './cyberware-ui-model.js?v=shopping1';

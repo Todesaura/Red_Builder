@@ -1,6 +1,7 @@
 import { localizeAttributeText } from './attribute-labels.js';
 import {germanNetText} from './netrunner-german.js';
-import {quickReferenceColumns} from './pdf-cheatsheet-content.js?v=luck1';
+import {meleeReferenceColumns,meleeAttackRows} from './pdf-combat-reference.js?v=humanshield1';
+import {quickReferenceColumns} from './pdf-cheatsheet-content.js?v=combatpages2';
 import { WEAPON_PROFILES,weaponProfile } from './weapon-options.js?v=shopping1';
 
 // Cyberpunk RED core, p. 173: single-shot and Autofire are separate tables.
@@ -55,6 +56,69 @@ export function cheatsheetColumns(data) {
   return quickReferenceColumns(data).map(column=>column.map(([title,rows])=>[cheatsheetGerman(title),rows.map(cheatsheetGerman)]));
 }
 
+export function drawCombatCheatsheet(pdf,data,{font,rgb,text}) {
+  const width=841.89,height=595.28,margin=22,gap=14;
+  const columnWidth=(width-2*margin-2*gap)/3;
+  const bold=pdf.embedStandardFont('Helvetica-Bold');
+  const red=rgb(.7,.08,.12),ink=rgb(.08,.12,.16),pale=rgb(.94,.96,.96);
+  const rows=meleeAttackRows(data,cheatsheetWeaponRows(data)).map(row=>({...row,criticalChance:criticalInjuryChance(row.damage)}));
+  const columns=meleeReferenceColumns(data);
+  const rowHeight=rows.length>6?11.5:15;
+  const tableBottom=height-108-rows.length*rowHeight;
+  const contentTop=tableBottom-24;
+  let plan;
+  for(const size of [10,9.5,9,8.5]) {
+    const groups=columns.map(column=>column.map(([title,paragraphs])=>({title,paragraphs:paragraphs.map(value=>richLines(value,font,bold,size,columnWidth-12,text))})));
+    const bottoms=groups.map(cards=>contentTop-cards.reduce((sum,card)=>sum+24+card.paragraphs.reduce((total,lines)=>total+lines.length*size*1.2+5,0),0));
+    if(Math.min(...bottoms)>=40){plan={size,groups,bottoms};break;}
+  }
+  if(!plan)throw new Error('Die Nahkampf-Referenz enthält zu viele Waffen für eine lesbare Seite.');
+  const page=pdf.addPage([width,height]);
+  page.drawRectangle({x:0,y:height-5,width,height:5,color:red});
+  const label=(value,x,y,size=8,f=font,color=ink)=>page.drawText(text(String(value)),{x,y,font:f,size,color});
+  const fitted=(value,x,y,width,size=8,f=font,color=ink)=>{
+    let valueText=text(String(value));
+    while(valueText&&f.widthOfTextAtSize(valueText,size)>width)size-=.2;
+    label(valueText,x,y,size,f,color);
+  };
+  label('Cheatsheet 2',margin,height-32,23,bold,red);
+  fitted(`${data.name} / ${data.role} / Rang ${data.rank}`,181,height-29,width-205,11,bold);
+  page.drawRectangle({x:margin,y:height-71,width:width-2*margin,height:30,color:pale});
+  label(`Initiative ${data.derived.initiative} + 1W10    Bewegung ${data.attributes.MOVE.effective*2} m    Trefferpunkte ${data.campaign?(data.health.current+'/'+data.derived.hp):data.derived.hp}    Kopf / Körper ${data.armor.headSP} / ${data.armor.bodySP}    Ausweichen ${skillBase(data,'evasion')} + 1W10`,margin+7,height-55,9,bold);
+  label(`Menschlichkeit ${data.humanity.current}/${data.humanity.maximum} / Empathie ${data.attributes.EMP.effective}    Rüstungsabzug -${data.armor.penalty} bereits enthalten; situative Boni extra.`,margin+7,height-66,8,font,rgb(.32,.38,.42));
+  label('NAHKAMPF / WÜRFEL / RÜSTUNG · Krit. % je Schadenswurf nach Treffer.',margin,height-86,8.5,bold,red);
+  const widths=[190,50,45,52,75,55,width-2*margin-467];
+  const heads=['Waffe / Modus','Schaden','Krit. %','Angriffe','Würfel','Reichweite','Rüstung / Verteidigung'];
+  page.drawRectangle({x:margin,y:height-108,width:width-2*margin,height:16,color:ink});
+  let tx=margin;
+  heads.forEach((head,index)=>{label(head,tx+3,height-103,7.5,bold,rgb(1,1,1));tx+=widths[index];});
+  rows.forEach((row,index)=>{
+    const y=height-108-rowHeight-index*rowHeight;
+    if(index%2===0)page.drawRectangle({x:margin,y:y-2,width:width-2*margin,height:rowHeight,color:pale});
+    const values=[row.name,row.damage,(row.criticalChance*100).toFixed(1).replace('.',',')+'%',row.rof,`${row.base}+1W10`,`${row.reach} m`,`${row.armor==='halb'?'Halbe Rüstung (aufrunden)':'Volle Rüstung'} / gegen Ausweichen`];
+    tx=margin;
+    values.forEach((value,index)=>{fitted(value,tx+3,y+2,widths[index]-5,8,index===4?bold:font);tx+=widths[index];});
+  });
+  const bounds=[];
+  plan.groups.forEach((cards,index)=>{
+    const x=margin+index*(columnWidth+gap);let y=contentTop;
+    for(const card of cards){
+      const top=y;
+      page.drawRectangle({x,y:y-3,width:columnWidth,height:15,color:pale});
+      page.drawText(card.title,{x:x+6,y,font:bold,size:9,color:red});y-=19;
+      for(const lines of card.paragraphs){
+        for(const runs of lines){let cursor=x+6;for(const run of runs){page.drawText(run.text,{x:cursor,y,font:run.font,size:plan.size,color:ink});cursor+=run.font.widthOfTextAtSize(run.text,plan.size);}y-=plan.size*1.2;}
+        y-=5;
+      }
+      y-=5;bounds.push({title:card.title,top,bottom:y,column:index});
+    }
+  });
+  page.drawText('Cyberpunk RED S. 169-178, 184 (menschlicher Schutzschild); Edgerunner Folio S. 5; RTG-Regelklärungen 1.3 S. 4.',{x:margin,y:18,font,size:7,color:ink});
+  return {page,rows,layout:{fontSize:plan.size,bounds,tableBottom}};
+}
+
+const skillBase=(data,id)=>data.skills.find(entry=>entry.id===id)?.base??0;
+
 // Small rich-text wrapper: bold labels/formulas keep their measured font width.
 function richLines(value,font,bold,size,width,text) {
   const runs=[];
@@ -79,7 +143,7 @@ function richLines(value,font,bold,size,width,text) {
 
 // One A4 landscape page; cards are atomic, so a rule never continues in another column.
 export function drawCheatsheet(pdf,data,{font,rgb,text,preferPortrait=false,compactOverride=false}) {
-  const rows=cheatsheetWeaponRows(data),columns=cheatsheetColumns(data);
+  const rows=cheatsheetWeaponRows(data).filter(row=>!row.melee),columns=cheatsheetColumns(data);
   // Very large inventories retain aimed values in a column; suppressive rules stay below.
   const compactModes=compactOverride||rows.length>26;
   const tableRows=compactModes?rows.filter(row=>!['aimed','suppressive'].includes(row.mode)):rows;
@@ -132,7 +196,7 @@ export function drawCheatsheet(pdf,data,{font,rgb,text,preferPortrait=false,comp
     line(label,x,y,size,color,f);
   };
   page.drawRectangle({x:0,y:height-5,width,height:5,color:red});
-  line('Cheatsheet',margin,height-32,23,red,bold);
+  line('Cheatsheet 1',margin,height-32,23,red,bold);
   oneLine(`${data.name} / ${data.role} / Rang ${data.rank}`,181,height-29,width-205,11,ink,bold);
   page.drawRectangle({x:margin,y:height-71,width:width-2*margin,height:30,color:pale});
   const vitals=`Initiative ${data.derived.initiative} + 1W10    Bewegung ${data.attributes.MOVE.effective*2} m    Trefferpunkte ${data.campaign?(data.health.current+'/'+data.derived.hp):data.derived.hp}`;
@@ -140,7 +204,7 @@ export function drawCheatsheet(pdf,data,{font,rgb,text,preferPortrait=false,comp
   const humanity=`Menschlichkeit ${data.humanity.current}/${data.humanity.maximum} / Empathie ${data.attributes.EMP.effective}`;
   line(portrait?vitals:vitals+'    '+defense,margin+7,height-55,9,ink,bold);
   line(portrait?defense+'    '+humanity:humanity+`    Rüstungsabzug -${data.armor.penalty} bereits enthalten; situative Boni extra.`,margin+7,height-66,8,muted);
-  line('WAFFEN / WÜRFEL / DISTANZ (m) · Krit. % je Schadenswurf nach Treffer; NET: nicht anwendbar.',margin,height-86,8.5,red,bold);
+  line('FERNKAMPF / WÜRFEL / DISTANZ (m) · Krit. % je Schadenswurf nach Treffer; NET: nicht anwendbar.',margin,height-86,8.5,red,bold);
   const factor=(width-2*margin)/794;
   const widths=portrait?[110,35,32,28,55,45,...Array(8).fill((width-2*margin-305)/8)]:[125,40,36,50,60,43,...Array(8).fill(55)].map(n=>n*factor);
   const heads=['Waffe / Modus','Schaden','Krit. %',portrait?'A/M':'Angr./Mag.','Würfel',compactModes?'Gezielt':'Schuss',...RANGE_BANDS.map(range=>portrait?range.replace(' m',''):range)];
@@ -150,7 +214,7 @@ export function drawCheatsheet(pdf,data,{font,rgb,text,preferPortrait=false,comp
     const size=Math.min(i<6?(portrait?6.8:7.5):7.1,(widths[i]-5)/bold.widthOfTextAtSize(text(head),1));
     oneLine(head,x+3,height-103,widths[i]-5,size,rgb(1,1,1),bold);x+=widths[i];
   });
-  const actualRows=tableRows.length?tableRows:[{name:'Keine Waffe gekauft',damage:'-',rof:'-',magazine:'-',base:'-',dvs:null}];
+  const actualRows=tableRows.length?tableRows:[{name:'Keine Fernkampfwaffe',damage:'-',rof:'-',magazine:'-',base:'-',dvs:null}];
   actualRows.forEach((row,index)=>{
     const y=height-108-rowHeight-index*rowHeight;
     if(index%2===0)page.drawRectangle({x:margin,y:y-2,width:width-2*margin,height:rowHeight,color:pale});

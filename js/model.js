@@ -1,6 +1,6 @@
 import {createCampaign,validateCampaign,campaignSkillConfig,roleRank} from './campaign-state.js?v=magazines1';
 import { createLifepath, validateLifepath } from './lifepath.js?v=finance1';
-import { PORTRAITS } from './portrait-catalog.js?v=shopping1';
+import { PORTRAITS } from './portrait-catalog.js?v=creationfix1';
 import { createRolePoints, validateRolePoints } from './role-points.js?v=shopping1';
 import { createSkills, validateSkillState } from './skills.js?v=shopping1';
 import { createCyberware, validateCyberware } from './cyberware.js?v=shopping1';

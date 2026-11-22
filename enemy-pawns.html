@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>RED//BUILDER · Gegnerfiguren</title>
+  <link rel="stylesheet" href="./styles.css?v=enemies2">
+  <link rel="icon" href="./assets/favicon.svg">
+  <script type="module" src="./js/ui-enemy-pawns.js?v=pawnbase1"></script>
+</head>
+<body>
+  <main class="dm-main">
+    <div class="play-heading"><h1>Gegnerfiguren drucken</h1><a class="secondary" href="./dm.html">Zur Spielleitung</a></div>
+    <p>Wähle die Anzahl je Gegnertyp. Sechs Porträts wechseln automatisch durch, ab der siebten Figur wiederholen sie sich. Jede Figur erhält eine Nummer und dasselbe Porträt auf Vorder- und Rückseite.</p>
+    <p>Wie die Spielerfiguren haben sie einen 40 mm hohen und 22 mm breiten Bildkörper. Die 14-mm-Stecklaschen bieten 1 cm zusätzlichen Abstand zwischen Name und Halterung. Drucke das PDF in tatsächlicher Größe (100 %).</p>
+    <form id="enemy-pawns-form">
+      <div class="enemy-pawn-options" id="enemy-pawn-options"></div>
+      <div class="play-tracker-actions"><strong id="enemy-pawns-total" aria-live="polite"></strong><button type="submit" class="primary" id="enemy-pawns-download" disabled>Druck-PDF erstellen</button></div>
+    </form>
+    <p role="status" id="enemy-pawns-status" aria-live="polite"></p>
+    <noscript>Bitte aktiviere JavaScript, um Gegnerfiguren auszuwählen.</noscript>
+  </main>
+</body>
+</html>

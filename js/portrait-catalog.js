@@ -41,6 +41,14 @@ export const PORTRAITS = [
     "thumbnail": "data/portraits/thumbnails/Exec-M-5.jpg"
   },
   {
+    "id": "Exec-M-6",
+    "role": "exec",
+    "gender": "M",
+    "number": 6,
+    "src": "data/portraits/Exec-M-6.png",
+    "thumbnail": "data/portraits/thumbnails/Exec-M-6.jpg"
+  },
+  {
     "id": "Exec-W-1",
     "role": "exec",
     "gender": "W",
@@ -79,6 +87,14 @@ export const PORTRAITS = [
     "number": 5,
     "src": "data/portraits/Exec-W-5.png",
     "thumbnail": "data/portraits/thumbnails/Exec-W-5.jpg"
+  },
+  {
+    "id": "Exec-W-6",
+    "role": "exec",
+    "gender": "W",
+    "number": 6,
+    "src": "data/portraits/Exec-W-6.png",
+    "thumbnail": "data/portraits/thumbnails/Exec-W-6.jpg"
   },
   {
     "id": "Fixer-M-1",
@@ -121,6 +137,14 @@ export const PORTRAITS = [
     "thumbnail": "data/portraits/thumbnails/Fixer-M-5.jpg"
   },
   {
+    "id": "Fixer-M-6",
+    "role": "fixer",
+    "gender": "M",
+    "number": 6,
+    "src": "data/portraits/Fixer-M-6.png",
+    "thumbnail": "data/portraits/thumbnails/Fixer-M-6.jpg"
+  },
+  {
     "id": "Fixer-W-1",
     "role": "fixer",
     "gender": "W",
@@ -159,6 +183,14 @@ export const PORTRAITS = [
     "number": 5,
     "src": "data/portraits/Fixer-W-5.png",
     "thumbnail": "data/portraits/thumbnails/Fixer-W-5.jpg"
+  },
+  {
+    "id": "Fixer-W-6",
+    "role": "fixer",
+    "gender": "W",
+    "number": 6,
+    "src": "data/portraits/Fixer-W-6.png",
+    "thumbnail": "data/portraits/thumbnails/Fixer-W-6.jpg"
   },
   {
     "id": "Lawman-M-1",
@@ -201,6 +233,14 @@ export const PORTRAITS = [
     "thumbnail": "data/portraits/thumbnails/Lawman-M-5.jpg"
   },
   {
+    "id": "Lawman-M-6",
+    "role": "lawman",
+    "gender": "M",
+    "number": 6,
+    "src": "data/portraits/Lawman-M-6.png",
+    "thumbnail": "data/portraits/thumbnails/Lawman-M-6.jpg"
+  },
+  {
     "id": "Lawman-W-1",
     "role": "lawman",
     "gender": "W",
@@ -239,6 +279,14 @@ export const PORTRAITS = [
     "number": 5,
     "src": "data/portraits/Lawman-W-5.png",
     "thumbnail": "data/portraits/thumbnails/Lawman-W-5.jpg"
+  },
+  {
+    "id": "Lawman-W-6",
+    "role": "lawman",
+    "gender": "W",
+    "number": 6,
+    "src": "data/portraits/Lawman-W-6.png",
+    "thumbnail": "data/portraits/thumbnails/Lawman-W-6.jpg"
   },
   {
     "id": "Media-M-1",
@@ -281,6 +329,14 @@ export const PORTRAITS = [
     "thumbnail": "data/portraits/thumbnails/Media-M-5.jpg"
   },
   {
+    "id": "Media-M-6",
+    "role": "media",
+    "gender": "M",
+    "number": 6,
+    "src": "data/portraits/Media-M-6.png",
+    "thumbnail": "data/portraits/thumbnails/Media-M-6.jpg"
+  },
+  {
     "id": "Media-W-1",
     "role": "media",
     "gender": "W",
@@ -319,6 +375,14 @@ export const PORTRAITS = [
     "number": 5,
     "src": "data/portraits/Media-W-5.png",
     "thumbnail": "data/portraits/thumbnails/Media-W-5.jpg"
+  },
+  {
+    "id": "Media-W-6",
+    "role": "media",
+    "gender": "W",
+    "number": 6,
+    "src": "data/portraits/Media-W-6.png",
+    "thumbnail": "data/portraits/thumbnails/Media-W-6.jpg"
   },
   {
     "id": "Medtech-M-1",
@@ -361,6 +425,14 @@ export const PORTRAITS = [
     "thumbnail": "data/portraits/thumbnails/Medtech-M-5.jpg"
   },
   {
+    "id": "Medtech-M-6",
+    "role": "medtech",
+    "gender": "M",
+    "number": 6,
+    "src": "data/portraits/Medtech-M-6.png",
+    "thumbnail": "data/portraits/thumbnails/Medtech-M-6.jpg"
+  },
+  {
     "id": "Medtech-W-1",
     "role": "medtech",
     "gender": "W",
@@ -399,6 +471,14 @@ export const PORTRAITS = [
     "number": 5,
     "src": "data/portraits/Medtech-W-5.png",
     "thumbnail": "data/portraits/thumbnails/Medtech-W-5.jpg"
+  },
+  {
+    "id": "Medtech-W-6",
+    "role": "medtech",
+    "gender": "W",
+    "number": 6,
+    "src": "data/portraits/Medtech-W-6.png",
+    "thumbnail": "data/portraits/thumbnails/Medtech-W-6.jpg"
   },
   {
     "id": "Netrunner-M-1",
@@ -441,6 +521,14 @@ export const PORTRAITS = [
     "thumbnail": "data/portraits/thumbnails/Netrunner-M-5.jpg"
   },
   {
+    "id": "Netrunner-M-6",
+    "role": "netrunner",
+    "gender": "M",
+    "number": 6,
+    "src": "data/portraits/Netrunner-M-6.png",
+    "thumbnail": "data/portraits/thumbnails/Netrunner-M-6.jpg"
+  },
+  {
     "id": "Netrunner-W-1",
     "role": "netrunner",
     "gender": "W",
@@ -479,6 +567,14 @@ export const PORTRAITS = [
     "number": 5,
     "src": "data/portraits/Netrunner-W-5.png",
     "thumbnail": "data/portraits/thumbnails/Netrunner-W-5.jpg"
+  },
+  {
+    "id": "Netrunner-W-6",
+    "role": "netrunner",
+    "gender": "W",
+    "number": 6,
+    "src": "data/portraits/Netrunner-W-6.png",
+    "thumbnail": "data/portraits/thumbnails/Netrunner-W-6.jpg"
   },
   {
     "id": "Nomad-M-1",
@@ -521,6 +617,14 @@ export const PORTRAITS = [
     "thumbnail": "data/portraits/thumbnails/Nomad-M-5.jpg"
   },
   {
+    "id": "Nomad-M-6",
+    "role": "nomad",
+    "gender": "M",
+    "number": 6,
+    "src": "data/portraits/Nomad-M-6.png",
+    "thumbnail": "data/portraits/thumbnails/Nomad-M-6.jpg"
+  },
+  {
     "id": "Nomad-W-1",
     "role": "nomad",
     "gender": "W",
@@ -559,6 +663,14 @@ export const PORTRAITS = [
     "number": 5,
     "src": "data/portraits/Nomad-W-5.png",
     "thumbnail": "data/portraits/thumbnails/Nomad-W-5.jpg"
+  },
+  {
+    "id": "Nomad-W-6",
+    "role": "nomad",
+    "gender": "W",
+    "number": 6,
+    "src": "data/portraits/Nomad-W-6.png",
+    "thumbnail": "data/portraits/thumbnails/Nomad-W-6.jpg"
   },
   {
     "id": "Rockerboy-M-1",
@@ -601,6 +713,14 @@ export const PORTRAITS = [
     "thumbnail": "data/portraits/thumbnails/Rockerboy-M-5.jpg"
   },
   {
+    "id": "Rockerboy-M-6",
+    "role": "rockerboy",
+    "gender": "M",
+    "number": 6,
+    "src": "data/portraits/Rockerboy-M-6.png",
+    "thumbnail": "data/portraits/thumbnails/Rockerboy-M-6.jpg"
+  },
+  {
     "id": "Rockerboy-W-1",
     "role": "rockerboy",
     "gender": "W",
@@ -639,6 +759,14 @@ export const PORTRAITS = [
     "number": 5,
     "src": "data/portraits/Rockerboy-W-5.png",
     "thumbnail": "data/portraits/thumbnails/Rockerboy-W-5.jpg"
+  },
+  {
+    "id": "Rockerboy-W-6",
+    "role": "rockerboy",
+    "gender": "W",
+    "number": 6,
+    "src": "data/portraits/Rockerboy-W-6.png",
+    "thumbnail": "data/portraits/thumbnails/Rockerboy-W-6.jpg"
   },
   {
     "id": "Solo-M-1",
@@ -681,6 +809,14 @@ export const PORTRAITS = [
     "thumbnail": "data/portraits/thumbnails/Solo-M-5.jpg"
   },
   {
+    "id": "Solo-M-6",
+    "role": "solo",
+    "gender": "M",
+    "number": 6,
+    "src": "data/portraits/Solo-M-6.png",
+    "thumbnail": "data/portraits/thumbnails/Solo-M-6.jpg"
+  },
+  {
     "id": "Solo-W-1",
     "role": "solo",
     "gender": "W",
@@ -719,6 +855,14 @@ export const PORTRAITS = [
     "number": 5,
     "src": "data/portraits/Solo-W-5.png",
     "thumbnail": "data/portraits/thumbnails/Solo-W-5.jpg"
+  },
+  {
+    "id": "Solo-W-6",
+    "role": "solo",
+    "gender": "W",
+    "number": 6,
+    "src": "data/portraits/Solo-W-6.png",
+    "thumbnail": "data/portraits/thumbnails/Solo-W-6.jpg"
   },
   {
     "id": "Tech-M-1",
@@ -761,6 +905,14 @@ export const PORTRAITS = [
     "thumbnail": "data/portraits/thumbnails/Tech-M-5.jpg"
   },
   {
+    "id": "Tech-M-6",
+    "role": "tech",
+    "gender": "M",
+    "number": 6,
+    "src": "data/portraits/Tech-M-6.png",
+    "thumbnail": "data/portraits/thumbnails/Tech-M-6.jpg"
+  },
+  {
     "id": "Tech-W-1",
     "role": "tech",
     "gender": "W",
@@ -799,5 +951,13 @@ export const PORTRAITS = [
     "number": 5,
     "src": "data/portraits/Tech-W-5.png",
     "thumbnail": "data/portraits/thumbnails/Tech-W-5.jpg"
+  },
+  {
+    "id": "Tech-W-6",
+    "role": "tech",
+    "gender": "W",
+    "number": 6,
+    "src": "data/portraits/Tech-W-6.png",
+    "thumbnail": "data/portraits/thumbnails/Tech-W-6.jpg"
   }
 ];

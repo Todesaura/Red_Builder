@@ -1586,6 +1586,13 @@ input::placeholder {
 #group-sync-status:empty { display:none; }
 @media(max-width:800px) { .dm-main { padding:20px 16px; }.dm-players,.dm-fields { grid-template-columns:1fr; } }
 .dm-players { align-items:start; }
+.enemy-pawn-options { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin:24px 0; }
+.enemy-pawn-option { margin:0; }
+.enemy-pawn-previews { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:16px 0; }
+.enemy-pawn-previews img { width:100%; height:auto; aspect-ratio:2/3; object-fit:cover; border-radius:4px; }
+.enemy-pawn-option h2 { font-size:18px; margin:0 0 8px; }
+.enemy-pawn-option label { display:grid; gap:6px; }
+.enemy-pawn-option input { width:90px; max-width:100%; }
 .dm-character > details { margin:8px 0; }
 .dm-character > button.text-button { display:block; min-height:32px; padding:4px 0; margin:4px 0; }
 .dm-character > small { margin-top:4px; font-size:11px; }

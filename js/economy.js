@@ -98,8 +98,9 @@ export function buyWeaponWithAmmo(character, rules, catalogId) {
 export function removeEquipment(character, catalogId) {
   const entry = character.equipment.items.find(item => item.catalogId === catalogId);
   if (!entry) return;
-  entry.quantity--;
-  character.equipment.items = character.equipment.items.filter(item => item.quantity > 0);
+  character.equipment.items = character.equipment.items
+    .map(item => item.catalogId===catalogId?{...item,quantity:item.quantity-1}:item)
+    .filter(item => item.quantity>0);
   if(!character.equipment.items.some(item=>item.catalogId===catalogId)) character.equipment.attachments=(character.equipment.attachments??[]).filter(a=>a.weaponId!==catalogId);
   if (!character.equipment.items.some(item => item.catalogId === catalogId)) for (const slot of ['head', 'body']) if (character.equipment.armor?.[slot] === catalogId) character.equipment.armor[slot] = null;
 }

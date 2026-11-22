@@ -45,7 +45,7 @@ test('Vorlage bleibt unverändert; erzeugtes PDF hat echte editierbare Felder un
   generated=await generateCharacterSheet(c,rules,{templateBytes,fontBytes});
   assert.deepEqual(templateBytes,source);assert.deepEqual(c,snapshot);
   assert.equal((await PDFDocument.load(templateBytes)).getForm().getFields().length,0);
-  const pdf=await PDFDocument.load(generated.bytes),form=pdf.getForm();assert.equal(pdf.getPageCount(),4);
+  const pdf=await PDFDocument.load(generated.bytes),form=pdf.getForm();assert.equal(pdf.getPageCount(),5);
   assert.equal(form.getTextField('identity.name').getText(),'Nyx Müller');for(const entry of evaluateCharacter(c,rules).skills)assert.equal(form.getTextField(`skills.${entry.id}.rank`).getText(),String(entry.level));assert.equal(form.getTextField('identity.rank').getText(),'4');
   assert.equal(form.getTextField('money.remaining').getText(),'2520 eb · Fashion-Zuschuss übrig: 800 eb');
   assert.equal(form.getFields().some(f=>f.getName().startsWith('appendix.')),false);
@@ -75,7 +75,7 @@ test('Zusätzliche Sprachen und Gegenstände bleiben ohne Zusatzseiten in den be
   c.equipment.custom=Array.from({length:20},(_,i)=>({id:`custom-${i+1}`,name:`Gegenstand Nummer ${i+1}`,cost:0,quantity:1,notes:`Notiz zum Gegenstand ${i+1}: vollständig erhalten.`}));
   assert.equal(characterSheetReadiness(c,rules).ready,true);
   const result=await generateCharacterSheet(c,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(result.bytes);
-  assert.equal(pdf.getPageCount(),4);
+  assert.equal(pdf.getPageCount(),5);
   const text=pdf.getForm().getFields().map(f=>f.getText()).join('\n');
   for(const word of ['Portugiesisch','Italienisch','Polnisch','Gegenstand Nummer 20','Notiz zum Gegenstand 20: vollständig erhalten.'])assert.ok(text.includes(word),word);
 });
@@ -109,7 +109,7 @@ test('Papierfigur auf A4-Seite 3 nutzt das Galerieporträt oder ein eigenes Stan
     c.portraitSource=gallerySelected?gallery.id:null;
     const {bytes}=await generateCharacterSheet(c,rules,{templateBytes,fontBytes,pawnPortraitBytes:fallback});
     const pdf=await PDFDocument.load(bytes);
-    assert.equal(pdf.getPageCount(),4);
+    assert.equal(pdf.getPageCount(),5);
     for (const page of pdf.getPages()) {
       const {width,height}=page.getSize();
       assert.ok(Math.abs(width*25.4/72-297)<0.01 && Math.abs(height*25.4/72-210)<0.01);
@@ -123,8 +123,8 @@ test('Papierfigur begrenzt lange Namen auf zwei gespiegelte Zeilen innerhalb der
   const pdf=await PDFDocument.create(), font=await pdf.embedFont(StandardFonts.Helvetica);
   const width=297*72/25.4;
   const right=width-5*72/25.4, left=right-22*72/25.4;
-  const drawn=[];
-  const page={getWidth:()=>width,drawLine:()=>{},drawText:(text,options)=>drawn.push({text,...options})};
+  const drawn=[], lines=[];
+  const page={getWidth:()=>width,drawLine:line=>lines.push(line),drawText:(text,options)=>drawn.push({text,...options})};
   for (const [name, expectedLines, truncated] of [
     ['Nyx Müller',1,false],
     ['Nyx Morgan von Hohenfels',2,false],
@@ -132,12 +132,17 @@ test('Papierfigur begrenzt lange Namen auf zwei gespiegelte Zeilen innerhalb der
     ['Alexandra „Stahlauge“ von Hohenfels-Winter',2,true]
   ]) {
     drawn.length=0;
+    lines.length=0;
     drawPawn(page,null,name,{font,rgb,degrees,wrap:wrapPdfText});
     const front=drawn.slice(1).filter(line=>!line.rotate);
     const back=drawn.slice(1).filter(line=>line.rotate?.angle===180);
     assert.equal(front.length,expectedLines,name);
     assert.deepEqual(front.map(line=>line.text),back.map(line=>line.text));
     assert.equal(front.at(-1).text.endsWith('…'),truncated,name);
+    const lowestEdge=Math.min(...lines.flatMap(line=>[line.start.y,line.end.y]));
+    const highestEdge=Math.max(...lines.flatMap(line=>[line.start.y,line.end.y]));
+    assert.ok(Math.min(...front.map(line=>line.y))-lowestEdge>=15*72/25.4);
+    assert.ok(Math.abs((highestEdge-lowestEdge)*25.4/72-108)<0.01);
     if (!truncated) assert.equal(front.map(line=>line.text).join(' '),name);
     for (const line of [...front,...back]) {
       const measured=font.widthOfTextAtSize(line.text,line.size);

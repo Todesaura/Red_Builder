@@ -13,7 +13,7 @@ export function roleReference(data) {
   const title=`${data.ability} / RANG ${r}`;
   switch(data.roleId) {
     case 'solo': return [section(title,[
-      `**Passiv / bereits enthalten:** Initiative ${roll(data.derived.initiative)}; Angriffe +${b.attack??0}; Wahrnehmung ${roll(s('perception'))}.`,
+      `**Passiv / bereits enthalten:** Angriffe +${b.attack??0}; Wahrnehmung ${roll(s('perception'))}.`,
       `Erster Treffer je Runde: **+${b.firstDamage??0} Schaden** vor Rüstung. Erster erlittener Schaden je Runde: **-${b.damageDeflection??0}**.`,
       b.damageDeflection?'Schaden abfangen verhindert keinen Rüstungsabtrag bei vorheriger Durchdringung.':null,
       `Angriffs-Patzer abfangen: **${b.fumbleRecovery?'aktiv (keinen Zusatz-W10 abziehen)':'nicht aktiv'}**.`,
@@ -173,9 +173,10 @@ function weaponAttachmentReference(data) {
 }
 
 export function quickReferenceColumns(data) {
-  const s=id=>skill(data,id), bonus=data.attackBonus??0, move=stat(data,'MOVE')*2;
-  const modes=new Set(data.attackOptions.flatMap(e=>e.options.map(o=>o.id)));
-  const aimed=data.attackOptions.map(e=>[e.item.name,e.options.find(o=>o.id==='aimed')]).filter(([,o])=>o);
+  const s=id=>skill(data,id), move=stat(data,'MOVE')*2;
+  const ranged=data.attackOptions.filter(e=>e.item.skill!=='melee-weapon');
+  const modes=new Set(ranged.flatMap(e=>e.options.map(o=>o.id)));
+  const aimed=ranged.map(e=>[e.item.name,e.options.find(o=>o.id==='aimed')]).filter(([,o])=>o);
   const auto=data.attackOptions.flatMap(e=>e.options.filter(o=>o.id==='autofire'));
   const suppress=data.attackOptions.flatMap(e=>e.options.filter(o=>o.id==='suppressive'));
   const suppressRolls=new Set(suppress.map(o=>o.base)).size===1?roll(suppress[0].base):data.attackOptions.flatMap(e=>e.options.filter(o=>o.id==='suppressive').map(o=>`${e.item.shortName??e.item.name}: ${roll(o.base)}`)).join('; ');
@@ -185,13 +186,12 @@ export function quickReferenceColumns(data) {
       '**Aktion:** Angriff, Nachladen, Aufstehen, Stabilisieren, Fertigkeit. Zugängliche Waffe ziehen/fallen lassen: frei.',
       `Glück: **${data.derived.luck} Punkte pro Sitzung**. Hausregel: **Vor dem Wurf ankündigen**, **nach dem Wurf** entscheiden, wie viele Punkte du ausgibst. Mehrere Punkte zugleich möglich, je +1. Kein Glück bei Todesrettungen. Natürliche 10: +1W10, 1: -1W10; keine Kette.`
     ]),
-    section('ANGREIFEN / VERTEIDIGEN',[
-      '**Fernkampf:** Basis + 1W10 über Tabelle oder Ausweichen (Ziel mit Reflexe 8+; vorher ansagen/zuerst würfeln).',
-      `**Nahkampf:** gegen **Geschicklichkeit + Fertigkeitsrang Ausweichen + situative Modifikatoren + 1W10** des Ziels. Handgemenge ${roll(s('brawling')+bonus)}, 2 Angriffe. Gleichstand verteidigt.`,
+    section('FERNKAMPF / VERTEIDIGEN',[
+      '**Treffen:** Würfelwert über Entfernungs-Schwierigkeit oder Ausweichen (Ziel mit Reflexe 8+; vorher ansagen/zuerst würfeln). Gleichstand verteidigt.',
       `**Dein Ausweichen: ${s('evasion')} + 1W10**${stat(data,'REF')>=8?' auch gegen Beschuss (Reflexe '+stat(data,'REF')+')':'; gegen Beschuss nicht erlaubt (Reflexe '+stat(data,'REF')+' < 8)'}.`
     ]),
     ...([...modes].some(m=>m!=='thrown')?[section('ANGRIFFSARTEN / EIGENE WAFFEN',[
-      aimed.length?`**Gezielt / 1 Aktion, 1 Angriff:** Tabellenbasis + 1W10; **-8 enthalten** (Kurzansicht: Spalte „Gezielt“). Kopf: Schaden nach Kopfrüstung x2. Gegenstand: bei Durchdringung fallen lassen. Bein: bei Durchdringung Gebrochenes Bein +5 Schaden (nur intaktes Bein).`:null,
+      aimed.length?`**Gezielt / 1 Aktion, 1 Angriff:** Tabellenbasis + 1W10; **-8 enthalten** (Kurzansicht: Spalte „Gezielt“). Vor dem Wurf ansagen. Effekte für Kopf, Gegenstand und Bein: **Cheatsheet 2 / Gezielt im Nahkampf**; gelten auch für gezielte Schüsse.`:null,
       auto.length?`**Dauerfeuer / 10 Schuss:** eigene Tabellenzeile; **2W6 x Überschuss**, maximal ${[...new Set(auto.map(o=>'x'+o.maximum))].join('/')}. Danach Körperrüstung; nicht gezielt.`:null,
       suppress.length?`**Unterdrücken / 10 Schuss:** ${suppressRolls} gegen Willenskraft + Konzentration + 1W10 sichtbarer Personen zu Fuß ohne Deckung bis 25 m. Verlierer suchen nächsten Zug Deckung, nötigenfalls Rennen; kein Schaden.`:null,
       modes.has('shell')&&!data.attackOptions.some(e=>e.options.some(m=>m.id==='shell'&&m.pattern))?'**Schrot / 1 Patrone:** Basis der Schrotzeile gegen **13**; sichtbare Ziele im 6 x 6 m-Feld direkt vor dir, einmal **3W6**, je Ziel Körperrüstung / Ausweichen ab Reflexe 8. Nicht gezielt. Flintenlaufgeschoss: normale Zeile, **5W6**, ein Ziel. Magazin nur eine Sorte; Wechsel = Nachladeaktion.':null,
@@ -199,7 +199,7 @@ export function quickReferenceColumns(data) {
       modes.has('arrows')?'**Bogen:** Einlegen im Angriff enthalten; keine Nachladeaktion. Basispfeile wieder einsammelbar.':null
     ])]:[]),
     section('TREFFER / RÜSTUNG / KRITISCH',[
-      '**Schaden - Schutzwert**, mindestens 0. Nahkampfwaffen/Kampfkunst halbieren Schutz (aufrunden), Handgemenge nicht. Normalziel: Körper.',
+      '**Schaden - Schutzwert**, mindestens 0. Normalziel: Körper. Nahkampf und dessen Rüstungsregeln stehen auf Cheatsheet 2.',
       'Durchdrungen: Trefferpunkte senken, **Schutzwert -1** (panzerbrechend -2) bis Reparatur; Kopf/Körper getrennt.',
       '**2+ Sechsen im Schadenswurf:** kritische Verletzung + **5 Direktschaden** (ignoriert Rüstung; kein Kopfbonus). Spielleitung: **2W6**, Kopftabelle bei Kopftreffer, sonst Körpertabelle.',
       '**Deckung:** stoppt Beschuss bis 0 Trefferpunkte; kein Restschaden desselben Treffers. Kopf muss erreichbar sein.'
@@ -213,7 +213,6 @@ export function quickReferenceColumns(data) {
     ]),
     ...((data.campaign?.injuries??[]).some(i=>['active','quickfix'].includes(i.status))?[section('DEINE VERLETZUNGEN',data.campaign.injuries.filter(i=>['active','quickfix'].includes(i.status)).slice(0,3).map(i=>`**${i.name} / ${INJURY_STATUS[i.status]}:** ${i.notes.length>160?i.notes.slice(0,150)+'… vollständig im Bogen.':i.notes}`))]:[]),
     ...equipmentReference(data),
-    ...[...new Map(data.attackOptions.filter(e=>e.item.cyberwareId).map(e=>[e.item.cyberwareId,section(e.item.name.toUpperCase()+' / CYBERWAFFE',[`${e.item.qualityBonus?'**Exzellente Qualität: +1 bereits in den Würfelwerten enthalten.** ':''}${e.item.cyberRule}`])])).values()],
     ...weaponAttachmentReference(data),
     ...((data.ammo??[]).some(e=>e.definition.ammoType)?[section('DEINE SPEZIALMUNITION',[...new Map(data.ammo.filter(e=>e.definition.ammoType).map(e=>[e.definition.ammoType,`**${e.definition.name.split(' · ').at(-1)}:** ${e.definition.description}`])).values()])]:[]),
     ...grenadeReference(data),

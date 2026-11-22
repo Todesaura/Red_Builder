@@ -1,5 +1,5 @@
 import {bindGroupSync} from './group-client.js?v=group1';
-import {applyPlayAction} from './play-tracking.js?v=freedlc1';
+import {applyPlayAction} from './play-tracking.js?v=creationfix1';
 import {canOpenPlay} from './ui-play.js?v=sessionend1';
 import {characterJson, characterJsonFilename, readCharacterFile} from './character-files.js?v=group1';
 import {acknowledgeRecommendations,resetDraftRecommendationHints} from './recommendation-hints.js?v=shoplabels1';
@@ -13,16 +13,16 @@ import { removeCustomEquipment } from './custom-equipment.js';
 import { lifepathChoiceNavigation, chooseLifepath, editLifepath, evaluateLifepath } from './lifepath.js?v=finance1';
 import { assignRolePoint, choosePharmaceutical } from './role-points.js?v=shopping1';
 import { equipArmor } from './armor.js?v=magazines1';
-import { createCharacter } from './model.js?v=group1';
+import { createCharacter } from './model.js?v=creationfix1';
 import { assignAttribute, applyRecommendation, pointsRemaining, evaluateCharacter } from './rules.js?v=group1';
 import { removeCyberware, canUndoCyberwarePurchase, cyberwareRemovalItems } from './cyberware.js?v=shopping1';
 import { addToCyberwareDraft, removeFromCyberwareDraft, commitCyberwareDraft } from './cyberware-draft.js?v=shopping1';
 import { baseStats, bindBodyDrag } from './ui-body.js?v=shopping1';
 import { initialInstallationLocation } from './cyberware-ui-model.js?v=shopping1';
-import { buyEquipment, removeEquipment, useStreetDrug, buyWeaponWithAmmo, saveCustomEquipment, addWeaponAttachment, removeWeaponAttachment } from './economy.js?v=shopcompact1';
+import { buyEquipment, removeEquipment, useStreetDrug, buyWeaponWithAmmo, saveCustomEquipment, addWeaponAttachment, removeWeaponAttachment } from './economy.js?v=creationfix1';
 import { loadCharacter, saveCharacter, STORAGE_KEY } from './storage.js?v=group1';
-import { render } from './ui.js?v=shoplabels1';
-import { readPortrait, readGalleryPortrait } from './portraits.js?v=shopping1';
+import { render } from './ui.js?v=humanshield1';
+import { readPortrait, readGalleryPortrait, ensureDefaultPortrait } from './portraits.js?v=creationfix1';
 import { assignSkill, addSpecialty, skillPointsRemaining, markSkillsEdited, resetSkillPoints, restoreRequiredSkills } from './skills.js?v=shopping1';
 import { applySkillRecommendation, automaticallyRecommendSkills, isInitialSkillAllocation } from './skill-recommendations.js?v=shopping1';
 
@@ -65,6 +65,16 @@ async function start() {
     document.getElementById('announcement').textContent = state.error || (state.view === 'lifepath' ? `${evaluateLifepath(state.character).answered} Lebensweg-Fragen beantwortet.` : '') || (state.view === 'role-abilities' ? `Rollenfähigkeit Rang ${evaluateCharacter(state.character,rules).roleAbilities.rank}. ${evaluateCharacter(state.character, rules).roleAbilities.remaining} Rollenpunkte übrig.` : '') || (cyber ? `${cyber.entries.length} Komponenten eingebaut. Kosten ${cyber.cost} Eurobucks. Menschlichkeit ${cyber.current}, Maximum ${cyber.maximum}.` : state.view === 'skills' ? `${skillPointsRemaining(state.character, rules)} Fertigkeitspunkte übrig.` : state.character.method === 'recommendation'
       ? 'Rollenspezifische Empfehlung ausgewählt. 62 Punkte verteilt.'
       : `${pointsRemaining(state.character, rules)} Punkte übrig.`);
+  }
+  async function fillMissingPortrait() {
+    if (state.storageBlocked || state.character.portrait || !state.character.role) return;
+    const character=state.character, request=++portraitRequest;
+    try {
+      const changed=await ensureDefaultPortrait(character,{isCurrent:()=>state.character===character&&request===portraitRequest});
+      if(changed){persist();refresh();groupSync.schedule();}
+    } catch(error) {
+      if(state.character===character&&request===portraitRequest){state.error=error.message;refresh();}
+    }
   }
   function setWeaponSection(key,expanded){
     const open=new Set(state.weaponSections??[]);
@@ -131,6 +141,7 @@ async function start() {
     resetCharacterUi(state,result.character);
     state.storageStatus='saved';state.storageMessage='';state.archivedCharacters=archivedCharacters(rules);
     navigate('identity');
+    void fillMissingPortrait();
     document.getElementById('announcement').textContent='Charakter geöffnet. Der vorherige Stand bleibt unter Gespeicherte Charaktere erhalten.';
     document.getElementById('character-name')?.focus();
     groupSync.schedule();
@@ -402,10 +413,12 @@ async function start() {
       if (state.pdfExportBusy) return;
       const readiness = characterSheetReadiness(state.character,rules,state);
       if (!readiness.ready) { state.error=readiness.errors.join(' '); refresh(); return; }
-      const snapshot=structuredClone(state.character), pawnGender=state.pdfPawnGender;
       state.pdfExportBusy=true;state.pdfExportMessage='';state.error='';refresh();
       try {
-        const { downloadCharacterSheet } = await import('./pdf-character.js?v=freedlc1');
+        await fillMissingPortrait();
+        if(!state.character.portrait)throw new Error('Das Standardporträt konnte nicht geladen werden. Bitte erneut versuchen.');
+        const snapshot=structuredClone(state.character), pawnGender=state.pdfPawnGender;
+        const { downloadCharacterSheet } = await import('./pdf-character.js?v=humanshield1');
         const filename=await downloadCharacterSheet(snapshot,rules,{},pawnGender);
         state.pdfExportMessage=`PDF erstellt: ${filename}. Der Download wurde gestartet.`;
       } catch (error) { state.error=`Charactersheet konnte nicht erstellt werden: ${error.message}`; }
@@ -519,8 +532,9 @@ async function start() {
       ++portraitRequest;
       state.character.role = button.dataset.role;
       automaticallyRecommendSkills(state.character, rules);
+      void fillMissingPortrait();
     }
-    else if (button.dataset.action === 'remove-portrait') { ++portraitRequest; state.character.portrait = null; state.character.portraitSource = null; }
+    else if (button.dataset.action === 'remove-portrait') { ++portraitRequest; state.character.portrait = null; state.character.portraitSource = null; void fillMissingPortrait(); }
     else if (button.dataset.action === 'customize-recommendation') {
       if (Object.values(state.character.allocations.points).some(value => value !== rules.pointBuy.min) && !window.confirm('Deine eigene Punkteverteilung mit der aktuellen Empfehlung ersetzen?')) return;
       const result = applyRecommendation(state.character, rules);
@@ -558,6 +572,7 @@ async function start() {
     refresh();
   });
   navigate(views.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'identity');
+  void fillMissingPortrait();
 }
 
 start().catch(error => {

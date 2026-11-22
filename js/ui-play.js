@@ -1,4 +1,4 @@
-import {renderPlayTracking} from './ui-play-tracking.js?v=critical1';
+import {renderPlayTracking} from './ui-play-tracking.js?v=creationfix1';
 import {ammunitionRemaining} from './play-tracking.js?v=critical1';
 import {characterSheetReadiness, characterSheetData} from './pdf-character-data.js?v=group1';
 import {escapeHtml as e} from './html.js';

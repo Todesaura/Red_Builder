@@ -1,7 +1,7 @@
-import { characterSheetData } from './pdf-character-data.js?v=group1';
+import { characterSheetData } from './pdf-character-data.js?v=creationfix1';
 import { characterSheetFields, fitTemplatePageToA4, TEMPLATE_SHA256 } from './pdf-character-layout.js?v=freedlc1';
-import { drawCheatsheet } from './pdf-cheatsheet.js?v=luck1';
-import { drawPawn, standardPawnPortrait, usesGalleryPawn } from './pdf-pawn.js?v=pawn4';
+import { drawCheatsheet, drawCombatCheatsheet } from './pdf-cheatsheet.js?v=humanshield1';
+import { drawPawn, standardPawnPortrait, usesGalleryPawn } from './pdf-pawn.js?v=creationfix1';
 
 export const TEMPLATE_URL = new URL('../data/Charakterblatt.pdf', import.meta.url);
 export const FONT_URL = new URL('../vendor/fonts/Ubuntu-R.ttf', import.meta.url);
@@ -97,6 +97,7 @@ export async function generateCharacterSheet(character, rules, options = {}) {
   const pawnImage=usesGalleryPawn(character)?image:options.pawnPortraitBytes&&await pdf.embedJpg(options.pawnPortraitBytes);
   drawPawn(pages[2],pawnImage,text(data.name),{...pdfLib,font,wrap:wrapPdfText});
   drawCheatsheet(pdf,data,{font,rgb,wrap:wrapPdfText,text});
+  drawCombatCheatsheet(pdf,data,{font,rgb,text});
   pdf.getPages().forEach((page,i)=>page.drawText(`${i+1} / ${pdf.getPageCount()} - RED//BUILDER`,{x:page.getWidth()-144,y:14,size:6,font,color:rgb(0.4,0.4,0.4)}));
   pdf.setTitle(text(`${data.name} - Cyberpunk RED Charactersheet`));pdf.setAuthor('RED//BUILDER');pdf.setSubject('Charakterdaten aus dem lokalen Generator');
   form.updateFieldAppearances(font);

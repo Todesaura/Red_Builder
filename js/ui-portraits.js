@@ -1,4 +1,4 @@
-import { PORTRAITS } from './portrait-catalog.js?v=shopping1';
+import { PORTRAITS } from './portrait-catalog.js?v=creationfix1';
 import { escapeHtml } from './html.js';
 
 export function portraitsForRole(role) {

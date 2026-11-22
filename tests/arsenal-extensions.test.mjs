@@ -71,14 +71,14 @@ test('Spezialmunition folgt kompatiblem Kaliber und Kataloggruppen bleiben auskl
  const html=renderEquipment(c,rules,evaluateCharacter(c,rules),'weapons',{weaponSections:['ammo']});
  for(const id of ['ap','incendiary','rubber'])assert.match(html,new RegExp(`data-buy-equipment="ammo-rifle-${id}"`));
  assert.doesNotMatch(html,/data-buy-equipment="ammo-heavy-pistol-ap"/);
- assert.match(html,/<details class="weapon-catalog-group" data-weapon-section="ammo" open>/);
+ assert.match(html,/<details[^>]* data-weapon-section="ammo" open>/);
  assert.match(html,/Waffe erweitern/);assert.match(html,/Sturmgewehr – Militech/);
 });
 
-test('Export enthält Granaten, Aufsätze und konkrete Würfel ohne Charakteränderung auf vier Seiten',async()=>{
+test('Export enthält Granaten, Aufsätze und konkrete Würfel ohne Charakteränderung auf fünf Seiten',async()=>{
  const c=completeCharacter();buy(c,'assault-rifle','hand-grenade-frag','hand-grenade-smoke','ammo-rifle-ap');addWeaponAttachment(c,rules,'assault-rifle','scope');addWeaponAttachment(c,rules,'assault-rifle','extended-mag');
  const before=structuredClone(c),{bytes}=await generateCharacterSheet(c,rules,{templateBytes,fontBytes});
- const pdf=await PDFDocument.load(bytes);assert.equal(pdf.getPageCount(),4);assert.equal(pdf.getForm().getTextField('weapons.0.magazine').getText(),'35');assert.match(pdf.getForm().getTextField('equipment.0.name').getText(),/Zielfernrohr/);assert.deepEqual(c,before);
+ const pdf=await PDFDocument.load(bytes);assert.equal(pdf.getPageCount(),5);assert.equal(pdf.getForm().getTextField('weapons.0.magazine').getText(),'35');assert.match(pdf.getForm().getTextField('equipment.0.name').getText(),/Zielfernrohr/);assert.deepEqual(c,before);
 });
 
 test('Neue Ausrüstung bleibt für alle zehn Rollen auf einer A4-Cheatsheet-Seite lesbar',async()=>{

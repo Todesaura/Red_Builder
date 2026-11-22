@@ -7,6 +7,7 @@ import {validateCharacter} from '../js/model.js';
 import {evaluateCharacter} from '../js/rules.js';
 import {characterSheetReadiness,characterSheetData} from '../js/pdf-character-data.js';
 import {cheatsheetColumns,drawCheatsheet} from '../js/pdf-cheatsheet.js';
+import {meleeReferenceColumns} from '../js/pdf-combat-reference.js';
 import {generateCharacterSheet} from '../js/pdf-character.js';
 import {renderEquipment} from '../js/ui-equipment.js';
 import {PDFDocument,rgb} from '../vendor/pdf-lib/pdf-lib.esm.min.js';
@@ -68,9 +69,9 @@ test('Bestehende Überbestände bleiben vollständig ladbar und blockieren den E
 test('Kaufmenü zeigt Grenzen und sperrt konkrete Kaufbuttons; Ausweichen erklärt Attribut, Fertigkeit und Modifikatoren',async()=>{
  const c=completeCharacter();buy(c,'medium-pistol','light-melee','assault-rifle');const ev=evaluateCharacter(c,rules),html=renderEquipment(c,rules,ev,'weapons');
  assert.match(html,/Einhandwaffen: <strong>2 \/ 2/);assert.match(html,/Zweihandwaffen: <strong>1 \/ 1/);assert.match(html,/id="buy-equipment-shotgun"[^>]*disabled/);assert.match(html,/Limit erreicht/);
- const data=characterSheetData(c,rules),content=JSON.stringify(cheatsheetColumns(data));assert.match(content,/Geschicklichkeit \+ Fertigkeitsrang Ausweichen \+ situative Modifikatoren \+ 1W10/);
+ const data=characterSheetData(c,rules),content=JSON.stringify(meleeReferenceColumns(data));assert.match(content,/Geschicklichkeit \+ Fertigkeitsrang Ausweichen \+ situative Modifikatoren \+ 1W10/);
  const pdf=await PDFDocument.create();pdf.registerFontkit(fontkit);const font=await pdf.embedFont(fontBytes),labels=[],addPage=pdf.addPage.bind(pdf);
  pdf.addPage=(...args)=>{const page=addPage(...args),draw=page.drawText.bind(page);page.drawText=(text,options)=>{labels.push(text);return draw(text,options);};return page;};
- drawCheatsheet(pdf,data,{font,rgb,text:String});assert.ok(labels.includes('Bis 2 m / Ziel: GES + Ausweichen + Mod. + 1W10'));
- buy(c,'hand-grenade-frag','hand-grenade-incendiary','hand-grenade-smoke');const before=structuredClone(c),result=await generateCharacterSheet(c,rules,{templateBytes,fontBytes});assert.equal((await PDFDocument.load(result.bytes)).getPageCount(),4);assert.deepEqual(c,before);
+ const ranged=drawCheatsheet(pdf,data,{font,rgb,text:String});assert.ok(ranged.rows.every(row=>!row.melee));assert.ok(!labels.includes('Bis 2 m / Ziel: GES + Ausweichen + Mod. + 1W10'));
+ buy(c,'hand-grenade-frag','hand-grenade-incendiary','hand-grenade-smoke');const before=structuredClone(c),result=await generateCharacterSheet(c,rules,{templateBytes,fontBytes});assert.equal((await PDFDocument.load(result.bytes)).getPageCount(),5);assert.deepEqual(c,before);
 });

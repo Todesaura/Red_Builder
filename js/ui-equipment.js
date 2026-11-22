@@ -98,7 +98,7 @@ export function renderEquipment(character,rules,evaluated,category,state={}){
       const grenades=entries.filter(item=>grenadeGroup(item)===index);
       return grenades.length?`<h3 class="weapon-group-heading">${name}</h3>${grenades.map(card).join('')}`:'';
     }).join(''):entries.map(card).join('');
-    return `<details class="weapon-catalog-group" data-weapon-section="${key}" ${state.weaponSections?.includes(key)?'open':''}><summary>${label} <small>${entries.length} Optionen</small></summary>${grid(`<details class="shop-group-help" id="shop-help-${key}"><summary>Regeln kurz erklärt</summary><p>${help}</p></details>${content}`)}</details>`;
+    return `<details id="weapon-catalog-${key}" class="weapon-catalog-group" data-weapon-section="${key}" ${state.weaponSections?.includes(key)?'open':''}><summary>${label} <small>${entries.length} Optionen</small></summary>${grid(`<details class="shop-group-help" id="shop-help-${key}"><summary>Regeln kurz erklärt</summary><p>${help}</p></details>${content}`)}</details>`;
   }
 
   const loadout=category==='weapons'?evaluateLoadout(character,rules):null;

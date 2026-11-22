@@ -10,6 +10,7 @@ import {installedCyberWeapons} from '../js/cyberware-weapons.js';
 import {characterSheetData} from '../js/pdf-character-data.js';
 import {characterSheetFields} from '../js/pdf-character-layout.js';
 import {cheatsheetWeaponRows,cheatsheetColumns} from '../js/pdf-cheatsheet.js';
+import {meleeReferenceColumns} from '../js/pdf-combat-reference.js';
 import {generateCharacterSheet} from '../js/pdf-character.js';
 import {equipmentWarnings} from '../js/equipment-warnings.js';
 import {buyEquipment} from '../js/economy.js';
@@ -48,7 +49,7 @@ test('Gorilla-Arme ändern keine echte KRA/TP/Todesrettung; exzellente Qualität
   assert.ok(!equipmentWarnings(c,rules,after).some(w=>w.id==='physical-weapon'));
 });
 test('Monodraht hat 6 m Reichweite und kritische Auswahl; Waffen auf Seite 1 und Cheatsheet',()=>{
-  const c=completeCharacter();add(c,'monowire');const data=characterSheetData(c,rules),rows=cheatsheetWeaponRows(data),text=JSON.stringify(cheatsheetColumns(data));
+  const c=completeCharacter();add(c,'monowire');const data=characterSheetData(c,rules),rows=cheatsheetWeaponRows(data),text=JSON.stringify(meleeReferenceColumns(data));
   assert.equal(rows[0].reach,6);assert.equal(rows[1].reach,6);assert.equal(rows[0].base,data.skills.find(s=>s.id==='melee-weapon').base);assert.equal(rows[0].damage,'3W6');assert.equal(rows[0].rof,2);
   assert.match(text,/zweimal auf der Verletzungstabelle/);assert.match(text,/Zusatzschaden nur einmal/);assert.match(characterSheetFields(data).find(f=>f.name==='weapons.0.name').value,/Monodraht/);
 });
@@ -75,7 +76,7 @@ test('Deutsche und englische Suchnamen finden die passenden Cyberwaffen',()=>{
 test('Alle Rollen exportieren mit jeder CEMK-Waffe genau ein A4-Cheatsheet ohne Datenänderung',async()=>{
   for(const role of rules.roles)for(const id of ['mantis-blade','gorilla-arm','monowire']){
     const c=completeCharacter(role.id);add(c,id);const before=structuredClone(c),result=await generateCharacterSheet(c,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(result.bytes);
-    assert.equal(pdf.getPageCount(),4,role.id+' / '+id);const p=pdf.getPages()[3],dimensions=[p.getWidth(),p.getHeight()].sort((a,b)=>a-b);assert.ok(Math.abs(dimensions[0]-595.28)<1);assert.ok(Math.abs(dimensions[1]-841.89)<1);assert.deepEqual(c,before);
+    assert.equal(pdf.getPageCount(),5,role.id+' / '+id);const p=pdf.getPages()[3],dimensions=[p.getWidth(),p.getHeight()].sort((a,b)=>a-b);assert.ok(Math.abs(dimensions[0]-595.28)<1);assert.ok(Math.abs(dimensions[1]-841.89)<1);assert.deepEqual(c,before);
     assert.match(pdf.getForm().getTextField('weapons.0.name').getText(),/Mantisklinge|Gorilla-Arm|Monodraht/);
   }
 });

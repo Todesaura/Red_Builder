@@ -47,7 +47,7 @@ test('Netz-Anleitung erklärt Aktionen, Ablauf, Verteidigung, Integrität und ko
 test('Seite 1 enthält Net-Präfix und korrekte Integritätswerte zusätzlich zur normalen Waffe, ohne Kaufmutation',async()=>{
  const c=completeCharacter('netrunner');buy(c,'net-program-sword','medium-pistol');const before=structuredClone(c);
  const {bytes}=await generateCharacterSheet(c,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(bytes),form=pdf.getForm();
- assert.equal(pdf.getPageCount(),4);assert.equal(form.getTextField('weapons.0.name').getText(),'(Net) 1x Schwert');assert.equal(form.getTextField('weapons.0.damage').getText(),'2/3W6');
+ assert.equal(pdf.getPageCount(),5);assert.equal(form.getTextField('weapons.0.name').getText(),'(Net) 1x Schwert');assert.equal(form.getTextField('weapons.0.damage').getText(),'2/3W6');
  assert.equal(form.getTextField('weapons.0.rof').getText(),'-');assert.equal(form.getTextField('weapons.0.magazine').getText(),'-');assert.match(form.getTextField('weapons.0.notes').getText(),/Basis 5/);
  assert.equal(form.getTextField('weapons.1.name').getText(),'1x '+rules.equipmentRules.items.find(i=>i.id==='medium-pistol').name);assert.equal(form.getTextField('identity.ability').getText(),'Schnittstelle');
  for(const name of ['weapons.0.name','weapons.0.damage','weapons.0.notes'])for(const widget of form.getTextField(name).acroField.getWidgets())assert.ok(widget.dict.get(PDFName.of('AP')));
@@ -58,6 +58,6 @@ test('Viele gekaufte Hilfsprogramme und Netz-Anleitung bleiben auf genau einer C
  for(const item of rules.equipmentRules.items.filter(i=>i.netrunner?.group==='programs'))buy(c,item.id);
  buy(c,'cyberdeck-standard','virtuality-goggles','light-melee','armor-leathers-head','armor-leathers-body');
  const {bytes}=await generateCharacterSheet(c,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(bytes);
- assert.equal(pdf.getPageCount(),4);assert.equal(pdf.getPage(3).getWidth(),595.28);assert.equal(pdf.getPage(3).getHeight(),841.89);
+ assert.equal(pdf.getPageCount(),5);assert.equal(pdf.getPage(3).getWidth(),595.28);assert.equal(pdf.getPage(3).getHeight(),841.89);
  const allValues=pdf.getForm().getFields().map(f=>f.getText()).join('\n');assert.match(allValues,/\(Net\).*Schwert/);assert.match(allValues,/Bannhammer/);assert.doesNotMatch(allValues,/Sword|Banhammer|Speedy Gonzalvez/);
 });

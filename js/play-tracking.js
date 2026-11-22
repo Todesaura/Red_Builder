@@ -63,6 +63,13 @@ export function applyPlayAction(character,rules,action) {
         const base=rules.equipmentRules.items.find(item=>item.id===worn.id);
         c.campaign.armorLoss[worn.id]=Math.min(base.sp,(c.campaign.armorLoss[worn.id]??0)+amount);
       }
+    } else if(action.type==='grenade') {
+      const item=rules.equipmentRules.items.find(item=>item.id===action.id&&item.kind==='grenade');
+      const entry=c.equipment.items.find(entry=>entry.catalogId===action.id);
+      if(!item||!entry||amount>entry.quantity)throw Error('Nicht genügend Handgranaten vorhanden.');
+      entry.quantity-=amount;
+      c.equipment.items=c.equipment.items.filter(entry=>entry.quantity>0);
+      c.campaign.cashAdjustment-=item.cost*amount;
     } else if(action.type==='ammo') {
       const item=rules.equipmentRules.items.find(item=>item.id===action.id&&item.kind==='ammo');
       if(!item)throw Error('Unbekannte Munition.');

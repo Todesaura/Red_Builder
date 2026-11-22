@@ -9,7 +9,8 @@ import {buyEquipment} from '../js/economy.js';
 import {equipArmor} from '../js/armor.js';
 import {weaponOptions} from '../js/weapon-options.js';
 import {generateCharacterSheet,wrapPdfText} from '../js/pdf-character.js';
-import {RANGE_BANDS,SINGLE_SHOT_DVS,AUTOFIRE_DVS,criticalInjuryChance,cheatsheetWeaponRows,cheatsheetColumns,drawCheatsheet} from '../js/pdf-cheatsheet.js';
+import {RANGE_BANDS,SINGLE_SHOT_DVS,AUTOFIRE_DVS,criticalInjuryChance,cheatsheetWeaponRows,cheatsheetColumns,drawCheatsheet,drawCombatCheatsheet} from '../js/pdf-cheatsheet.js';
+import {meleeReferenceColumns} from '../js/pdf-combat-reference.js';
 
 test('Kritische Verletzungen: Wahrscheinlichkeit entspricht vollständig ausgezählten Würfelergebnissen',()=>{
   for(let dice=1;dice<=4;dice++){
@@ -60,9 +61,10 @@ test('Nur eigene Waffen erscheinen, mit eigenen Moduszeilen und aktuellen Basisw
   assert.equal(rows.find(r=>r.id==='shotgun.shell').shell,true);
   assert.equal(rows.some(r=>r.id==='assault-rifle'),false);assert.deepEqual(c,before);
 });
-test('Leerer Bestand erklärt Handgemenge ohne erfundene Schussmodi',()=>{
+test('Leerer Bestand erklärt Handgemenge auf Seite 2 ohne erfundene Schussmodi auf Seite 1',()=>{
   const data=characterSheetData(completeCharacter(),rules),text=JSON.stringify(cheatsheetColumns(data));
-  assert.deepEqual(cheatsheetWeaponRows(data),[]);assert.match(text,/Handgemenge/);
+  assert.deepEqual(cheatsheetWeaponRows(data),[]);assert.doesNotMatch(text,/Handgemenge/);
+  assert.match(JSON.stringify(meleeReferenceColumns(data)),/Handgemenge/);
   assert.doesNotMatch(text,/Autofeuer:|Unterdrücken:|Schrot:|Explosion:/);
 });
 test('Cheatsheet nennt Zugablauf, Verwundung, echte Todesrettungsmechanik und aktuelle Rollenpunkte',()=>{
@@ -70,12 +72,12 @@ test('Cheatsheet nennt Zugablauf, Verwundung, echte Todesrettungsmechanik und ak
   for(const part of ['1 Bewegungsaktion','Glück:','Bewegungswert um 6','Todesrettungsabzüge','Natürliche 10 oder Fehlschlag','Stabilisieren / Aktion:','Chirurgie:','Medizintechnik:','Kopf'])assert.ok(text.includes(part),part);
   assert.doesNotMatch(text,/halbe Bewegung|Lebensweg - vollständige/);
 });
-test('Alle zehn Rollen erzeugen genau drei Originalseiten und eine lesbare Cheatsheet-Seite',async()=>{
+test('Alle zehn Rollen erzeugen genau drei Originalseiten und zwei lesbare Cheatsheet-Seiten',async()=>{
   for(const role of rules.roles){
     const c=completeCharacter(role.id),before=structuredClone(c);
     const {bytes}=await generateCharacterSheet(c,rules,{templateBytes,fontBytes});
     const pdf=await PDFDocument.load(bytes);
-    assert.equal(pdf.getPageCount(),4,role.id);assert.ok(pdf.getPage(3).getWidth()>pdf.getPage(3).getHeight());
+    assert.equal(pdf.getPageCount(),5,role.id);assert.ok(pdf.getPage(3).getWidth()>pdf.getPage(3).getHeight());
     assert.deepEqual(c,before);
   }
 });
@@ -84,14 +86,47 @@ test('Auch das gesamte Katalogarsenal passt auf genau eine Cheatsheet-Seite ohne
   data.attackOptions=rules.equipmentRules.items.filter(item=>item.kind==='weapon').map(item=>({item,quantity:1,options:weaponOptions(item,v)}));
   const pdf=await PDFDocument.create();pdf.registerFontkit(fontkit);const font=await pdf.embedFont(fontBytes);
   const {rows,page}=drawCheatsheet(pdf,data,{font,rgb,wrap:wrapPdfText,text:String});
-  assert.equal(rows.filter(r=>!r.id.includes('.')).length,19);assert.equal(rows.length,43);
+  assert.equal(rows.filter(r=>!r.id.includes('.')).length,11);assert.equal(rows.length,27);
   assert.equal(pdf.getPageCount(),1);assert.equal(page.getWidth(),595.28);assert.equal(page.getHeight(),841.89);
 });
 
-test('NET-Kaufwerte und deutsche Regeln bleiben im vierseitigen Export erhalten',async()=>{
+test('NET-Kaufwerte und deutsche Regeln bleiben im fünfseitigen Export erhalten',async()=>{
   const c=completeCharacter('netrunner');buyEquipment(c,rules,'net-program-sword');buyEquipment(c,rules,'net-hardware-backup-drive');
   const {bytes}=await generateCharacterSheet(c,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(bytes);
-  assert.equal(pdf.getPageCount(),4);
+  assert.equal(pdf.getPageCount(),5);
   const values=pdf.getForm().getFields().map(f=>f.getText()).join('\n');
   for(const part of ['Schwert','Angriff 1','Verteidigung 0','Integrität 0','Sicherungslaufwerk','2 Optionsplätze'])assert.ok(values.includes(part),part);
+});
+
+test('Fernkampf und Nahkampf sind für jede Rolle getrennt, vollständig und auf zwei lesbaren Seiten',async()=>{
+  const pdf=await PDFDocument.create();pdf.registerFontkit(fontkit);const font=await pdf.embedFont(fontBytes);
+  for(const role of rules.roles){
+    const c=completeCharacter(role.id);
+    assert.ok(buyEquipment(c,rules,'medium-pistol').ok);
+    assert.ok(buyEquipment(c,rules,'light-melee').ok);
+    const before=structuredClone(c),data=characterSheetData(c,rules);
+    const ranged=drawCheatsheet(pdf,data,{font,rgb,text:String});
+    const melee=drawCombatCheatsheet(pdf,data,{font,rgb,text:String});
+    assert.ok(ranged.rows.some(row=>row.id==='medium-pistol'));
+    assert.ok(ranged.rows.every(row=>!row.melee));
+    const allRows=cheatsheetWeaponRows(data);
+    const text=JSON.stringify(meleeReferenceColumns(data));
+    const weapon=allRows.find(row=>row.id==='light-melee');
+    assert.equal(melee.rows.find(row=>row.id==='light-melee').base,weapon.base);
+    assert.equal(melee.rows.find(row=>row.id==='light-melee.aimed').base,weapon.aimed);
+    assert.equal(melee.rows.find(row=>row.id==='light-melee').armor,'halb');
+    assert.equal(melee.rows.find(row=>row.id==='brawling').armor,'voll');
+    assert.equal(melee.rows.find(row=>row.id==='light-melee').criticalChance,0);
+    assert.doesNotMatch(JSON.stringify(cheatsheetColumns(data)),/Handgemenge|WÜRGEN|GREIFEN/);
+    assert.doesNotMatch(text,/Nachladen|Deckung schützt|Punkte pro Sitzung|Mindestens zwei Sechsen/);
+    assert.ok(melee.layout.fontSize>=8.5,role.id);
+    assert.ok(melee.layout.bounds.every(bound=>bound.bottom>=40),role.id);
+    assert.ok(melee.layout.bounds.every(bound=>bound.top<melee.layout.tableBottom),role.id);
+    for(const column of [0,1,2]){
+      const bounds=melee.layout.bounds.filter(bound=>bound.column===column);
+      for(let i=1;i<bounds.length;i++)assert.ok(bounds[i].top<=bounds[i-1].bottom);
+    }
+    assert.deepEqual(c,before);
+  }
+  assert.equal(pdf.getPageCount(),20);
 });

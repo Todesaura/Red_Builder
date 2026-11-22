@@ -13,13 +13,13 @@ import {generateCharacterSheet} from '../js/pdf-character.js';
 import {cheatsheetColumns,cheatsheetWeaponRows,drawCheatsheet} from '../js/pdf-cheatsheet.js';
 import {CYBERWARE_PRINT_SUMMARIES,CYBERWARE_PRINT_NAMES} from '../js/pdf-cyberware-summary.js';
 
-test('Jede Rolle hat fünf männliche und fünf weibliche Porträts einschließlich Nummer 5',()=>{
-  assert.equal(PORTRAITS.length,100);
+test('Jede Rolle hat sechs männliche und sechs weibliche Porträts einschließlich Nummer 6',()=>{
+  assert.equal(PORTRAITS.length,120);
   for(const role of rules.roles)for(const gender of ['M','W']){
-    assert.deepEqual(PORTRAITS.filter(p=>p.role===role.id&&p.gender===gender).map(p=>p.number),[1,2,3,4,5]);
+    assert.deepEqual(PORTRAITS.filter(p=>p.role===role.id&&p.gender===gender).map(p=>p.number),[1,2,3,4,5,6]);
   }
-  const c=completeCharacter();c.portrait='data:image/jpeg;base64,YWJj';c.portraitSource='Solo-W-5';
-  assert.equal(validateCharacter(c,rules).portraitSource,'Solo-W-5');
+  const c=completeCharacter();c.portrait='data:image/jpeg;base64,YWJj';c.portraitSource='Solo-W-6';
+  assert.equal(validateCharacter(c,rules).portraitSource,'Solo-W-6');
 });
 
 test('Alle Cyberware-Kurztexte und Namen passen ungekürzt in die schmalsten PDF-Zellen',async()=>{
@@ -64,7 +64,7 @@ test('Galerieporträt Nummer 5 wird tatsächlich ins PDF eingebettet',async()=>{
   const c=completeCharacter(),jpeg=await readFile(new URL('../data/portraits/thumbnails/Solo-W-5.jpg',import.meta.url));
   c.portrait='data:image/jpeg;base64,'+jpeg.toString('base64');c.portraitSource='Solo-W-5';
   const {bytes}=await generateCharacterSheet(c,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(bytes);
-  assert.equal(pdf.getPageCount(),4);
+  assert.equal(pdf.getPageCount(),5);
   const images=pdf.getPage(0).node.Resources().lookup(PDFName.of('XObject'));
   assert.ok(images.keys().length>=2);
 });

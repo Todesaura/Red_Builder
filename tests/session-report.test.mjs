@@ -250,8 +250,8 @@ test('Schritt-8-Ansicht zeigt eine Frage statt des vollständigen Formulars und 
   assert.ok(!html.includes('<script>bad'));assert.ok(!html.includes('data-session-configurator'));assert.ok(!html.includes('data-session-form="gear"'));assert.ok(!html.includes('data-session-complete'));
 });
 
-test('Kampagnenwerte erscheinen im bestehenden vierseitigen PDF und der Rollenrang ist dynamisch',async()=>{
+test('Kampagnenwerte erscheinen im bestehenden fünfseitigen PDF und der Rollenrang ist dynamisch',async()=>{
   const character=finish(c(),[money(80),{type:'health',mode:'damage',amount:12},{type:'role',to:5}],300),data=characterSheetData(character,rules),fields=characterSheetFields(data);
   assert.equal(fields.find(f=>f.name==='hp.current').value,'33');assert.equal(fields.find(f=>f.name==='identity.rank').value,'5');assert.match(fields.find(f=>f.name==='identity.notes').value,/IP: 0/);assert.equal(fields.find(f=>f.name==='campaign.ip').value,'0 IP verfügbar');assert.equal(fields.find(f=>f.name==='campaign.reputation').value,'0');
-  const result=await generateCharacterSheet(character,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(result.bytes);assert.equal(pdf.getPageCount(),4);assert.equal(pdf.getForm().getTextField('hp.current').getText(),'33');assert.equal(pdf.getForm().getTextField('identity.rank').getText(),'5');
+  const result=await generateCharacterSheet(character,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(result.bytes);assert.equal(pdf.getPageCount(),5);assert.equal(pdf.getForm().getTextField('hp.current').getText(),'33');assert.equal(pdf.getForm().getTextField('identity.rank').getText(),'5');
 });

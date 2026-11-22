@@ -1,9 +1,22 @@
-import { PORTRAITS } from './portrait-catalog.js?v=shopping1';
+import { PORTRAITS } from './portrait-catalog.js?v=creationfix1';
 
-export async function readGalleryPortrait(id) {
+export async function ensureDefaultPortrait(character, {random=Math.random, read=id=>readGalleryPortrait(id,true), isCurrent=()=>true}={}) {
+  if (character.portrait || !character.role) return false;
+  const role=character.role;
+  const choices=PORTRAITS.filter(entry=>entry.role===role);
+  if (!choices.length) return false;
+  const entry=choices[Math.min(choices.length-1,Math.floor(random()*choices.length))];
+  const portrait=await read(entry.id);
+  if (!isCurrent() || character.role!==role || character.portrait) return false;
+  character.portrait=portrait;
+  character.portraitSource=entry.id;
+  return true;
+}
+
+export async function readGalleryPortrait(id, useThumbnail=false) {
   const entry = PORTRAITS.find(portrait => portrait.id === id);
   if (!entry) throw new Error('Dieses Porträt ist nicht in der Galerie.');
-  const response = await fetch(new URL('../' + entry.src, import.meta.url));
+  const response = await fetch(new URL('../' + (useThumbnail?entry.thumbnail:entry.src), import.meta.url));
   if (!response.ok) throw new Error('Das Porträt konnte nicht geladen werden. Bitte erneut versuchen.');
   return readPortrait(await response.blob());
 }

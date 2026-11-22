@@ -42,9 +42,9 @@ test('Normale und militärische Varianten teilen das bestehende Dreierlimit und 
  const html=renderEquipment(c,rules,evaluateCharacter(c,rules),'weapons');assert.ok(html.indexOf('>Normale Granaten<')<html.indexOf('>Militärische Granaten<'));assert.match(html,/>Spezialgranaten</);
 });
 
-test('Neue Varianten und reduzierter Brandschaden erscheinen im vierseitigen PDF ohne Zustandsänderung',async()=>{
+test('Neue Varianten und reduzierter Brandschaden erscheinen im fünfseitigen PDF ohne Zustandsänderung',async()=>{
  const c=completeCharacter();for(const id of ['hand-grenade-normal-frag','hand-grenade-normal-incendiary','hand-grenade-incendiary'])assert.ok(buyEquipment(c,rules,id).ok);
  const before=structuredClone(c),{bytes}=await generateCharacterSheet(c,rules,{templateBytes,fontBytes}),pdf=await PDFDocument.load(bytes),f=pdf.getForm();
- assert.equal(pdf.getPageCount(),4);assert.equal(f.getTextField('weapons.0.damage').getText(),'4W6');assert.equal(f.getTextField('weapons.1.damage').getText(),'3W6');assert.equal(f.getTextField('weapons.2.damage').getText(),'6W6');
+ assert.equal(pdf.getPageCount(),5);assert.equal(f.getTextField('weapons.0.damage').getText(),'4W6');assert.equal(f.getTextField('weapons.1.damage').getText(),'3W6');assert.equal(f.getTextField('weapons.2.damage').getText(),'6W6');
  assert.equal(f.getTextField('weapons.2.name').getText(),'1x Militärische Brandgranate');assert.deepEqual(c,before);
 });
